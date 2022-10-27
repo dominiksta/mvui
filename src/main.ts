@@ -1,4 +1,5 @@
 import Html from "./html"
+import { Subject } from "./observables";
 
 const testEl = Html.Div([
   Html.H1('Heading'),
@@ -9,3 +10,29 @@ const testEl = Html.Div([
 
 document.body.appendChild(testEl);
 
+
+
+// const obs$ = new Observable<number>((next) => {
+//   next(1);
+//   next(2);
+//   console.log("hi");
+//   next(3);
+//   setTimeout(() => {
+//     next(4);
+//     // subscriber.complete();
+//   }, 1000);
+// })
+//
+// // obs$.subscribe(v => console.log(v));
+// obs$.map(v => v + 1).subscribe(console.log)
+//
+
+const subj$ = new Subject(0);
+// subj$.subscribe(console.log);
+// subj$.map(v => v + 1).subscribe(console.log);
+// subj$.map(v => v + 1).map(v => v + 1).subscribe(console.log);
+subj$.map(v => v + 1).filter(v => v % 2 == 0).subscribe(console.log);
+
+setInterval(() => {
+  subj$.next(subj$.value + 1);
+}, 500)
