@@ -1,0 +1,23 @@
+# Some docs: https://EditorConfig.org
+
+root = true # top-most EditorConfig file
+
+[*]
+end_of_line = lf # unix style line endings
+insert_final_newline = true # newline at end of file
+charset = utf-8 # encoding
+max_line_length = 90 # Suggested maximum of 80 characters per line
+
+[*.js]
+indent_style = space
+indent_size = 2
+quote_type = single
+
+[*.ts]
+indent_style = space
+indent_size = 2
+quote_type = single
+
+[*.json]
+indent_style = space
+indent_size = 2
