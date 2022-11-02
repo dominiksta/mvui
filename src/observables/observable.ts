@@ -17,7 +17,7 @@ export default class Observable<T> {
    * 'Subscribe' to this observable with a function. Whenever a new value is emitted (that
    * is, the `next` function passed to the subscriber in the constructor is called),
    * `observer` will be called with the new value.
-   * Returns a Subscription object that you may want to store to later be able to
+   * Returns a 'unsubscribe' function that you may want to store to later be able to
    * unsubscribe. Note that if an observable does not complete, not unsubscribing is a
    * memory leak.
    */
@@ -36,6 +36,10 @@ export default class Observable<T> {
   // helpers
   // ----------------------------------------------------------------------
 
+  /**
+   * The only purpose of this is to call the constructor without binding `this` in passed
+   * arguments.
+   */
   private static _create<T>(
     definition: (next: (value: T) => void) => TeardownLogic
   ) {
@@ -62,5 +66,32 @@ export default class Observable<T> {
       return this._subscribe(v => { if (filter(v)) next(v) })
     })
   }
-  
+
+  /**
+   * 'Select' a subset of this Observable and only update when the selected subset has
+   * changed. Change is defined by `equalityCheck`, which by default is checking for
+   * reference equality.
+   */
+  select<SelectedT>(
+    selector: (value: T) => SelectedT,
+    equalityCheck: (
+      current: SelectedT, previous: SelectedT | typeof UNDEFINED
+    ) => boolean = (current, previous) => current === previous,
+  ): Observable<SelectedT> {
+    return Observable._create(next => {
+      let previousValue: SelectedT | typeof UNDEFINED = UNDEFINED;
+      this._subscribe(v => {
+        const selected = selector(v);
+        if (!equalityCheck(selected, previousValue)) {
+          next(selected);
+          previousValue = selected;
+        }
+      })
+    })
+  }
+
 }
+
+// guaranteed unique value to identify initial values (currently only in the `select`
+// operator)
+const UNDEFINED = Symbol();

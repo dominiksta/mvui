@@ -29,6 +29,9 @@ export default class Subject<T> extends Observable<T> {
     }
   }
 
+  /** Completing a subject just means clearing all its subscriptions. */
+  complete() { this.observers = []; }
+
   /** Set a new value and trigger all subscriptions with that new value */
   next(value: T) {
     this._value = value;
