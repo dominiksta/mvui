@@ -80,7 +80,7 @@ export default class Observable<T> {
   ): Observable<SelectedT> {
     return Observable._create(next => {
       let previousValue: SelectedT | typeof UNDEFINED = UNDEFINED;
-      this._subscribe(v => {
+      return this._subscribe(v => {
         const selected = selector(v);
         if (!equalityCheck(selected, previousValue)) {
           next(selected);
