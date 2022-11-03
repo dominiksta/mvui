@@ -1,28 +1,38 @@
 const path = require('path');
 
 module.exports = {
+  entry: './src/main.ts',
+  output: {
+    filename: 'script/main.js',
+    path: path.resolve(__dirname, 'dist'),
+  },
   mode: 'development',
   devtool: 'source-map',
-  entry: './src/main.ts',
   devServer: {
     hot: true,
-    static: path.join(__dirname, 'dist'),
+    static: path.resolve(__dirname, 'dist'),
     host: '127.0.0.1',
   },
   module: {
     rules: [
       {
         test: /\.ts?$/,
-        use: 'ts-loader',
         exclude: /node-modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                '@babel/preset-env',
+              ],
+            },
+          },
+          'ts-loader'
+        ]
       },
     ],
   },
   resolve: {
     extensions: [ '.js', '.ts' ],
-  },
-  output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'dist', 'script'),
   },
 };
