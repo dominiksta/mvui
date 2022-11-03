@@ -1,6 +1,5 @@
 import Html from "./html"
-import { Observable, Subject } from "./observables";
-import PromisedSubject from "./observables/promised-subject";
+import { Observable, Subject, PromisedSubject } from "./observables";
 import sleep from "./util/time";
 
 const testEl = Html.Div([
