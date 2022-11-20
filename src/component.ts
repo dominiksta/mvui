@@ -4,12 +4,6 @@ import { Observable } from "./observables";
 import { camelToDash } from "./util/strings";
 import { applyCSSStyleDeclaration } from "./util/css";
 
-// function _Component<T extends HTMLElement>(baseElement: Newable<T>) {
-//   return class extends baseElement {
-//
-//   }
-// }
-
 export default abstract class Component extends HTMLElement {
 
   protected abstract render(): TemplateElement<any>[];
@@ -87,8 +81,15 @@ export default abstract class Component extends HTMLElement {
       } else if (el.children instanceof Observable) {
         this.subscribe(
           el.children, v => {
-            thisEl.innerText = v as string;
-            // console.debug("next");
+            if (v instanceof Array && v[0] instanceof TemplateElement) {
+              thisEl.innerHTML = '';
+              for (let child of v) thisEl.appendChild(this._renderTemplate(child));
+            } else if (v instanceof TemplateElement) {
+              thisEl.innerHTML = '';
+              thisEl.appendChild(this._renderTemplate(v));
+            } else {
+              thisEl.innerText = v as string;
+            }
           }
         );
       } else if (el.children instanceof TemplateElement) {
