@@ -13,7 +13,9 @@ export class CounterComponent extends Component {
         onclick: () => this.count.next(this.count.value + 1)
       }}, 'Increase Count'),
       Html.Span(this.count.map(v => v * 2)),
-      Html.Input({ attrs: { type: "number", value: this.count, disabled: true }})
+      Html.Input({ instance: {
+        type: "nubmer",  value: this.count.map(v => v.toString())
+      }})
     ])
   ];
 }

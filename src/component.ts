@@ -67,7 +67,14 @@ export default abstract class Component extends HTMLElement {
       }
       if (el.props.instance) {
         for (let prop in el.props.instance) {
-          (thisEl as any)[prop] = el.props.instance[prop];
+          const instanceVal = el.props.instance[prop];
+          if (instanceVal instanceof Observable) {
+            this.subscribe(instanceVal, (v) => {
+              (thisEl as any)[prop] = v
+            });
+          } else {
+            (thisEl as any)[prop] = el.props.instance[prop];
+          }
         }
       }
       if (el.props.style) applyCSSStyleDeclaration(thisEl, el.props.style);
