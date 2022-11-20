@@ -9,16 +9,15 @@ export class CounterComponent extends Component {
     Html.FieldSet([
       Html.Legend('Child Component: Reactivity'),
       Html.P('This is a "reactive" Counter'),
-      Html.Button({ attrs: {
+      Html.Button({ events: {
         onclick: () => this.count.next(this.count.value + 1)
       }}, 'Increase Count'),
       Html.Span(this.count.map(v => v * 2)),
-      // Html.Input({ attrs: { type: "number", value: this.count }})
+      Html.Input({ attrs: { type: "number", value: this.count, disabled: true }})
     ])
   ];
 }
 customElements.define('counter-component', CounterComponent);
-
 
 export class TestChildComponent extends Component {
   render = () => [

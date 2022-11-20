@@ -1,22 +1,20 @@
 import { Observable } from "./observables";
 
-// interface TemplateProps<AttrT, InstanceT> {
-//   style?: Partial<CSSStyleDeclaration>,
-//   attrs?: AttrT,
-//   instance?: InstanceT,
-//   // TODO events:
-// }
-// 
-export default class TemplateElement<T extends HTMLElement> {
+type ToStringable = { toString: () => string };
+
+export default class TemplateElement<
+  T extends HTMLElement,
+  // in theory it would be slightly more robust if we would define all
+  // attributes and properties by hand, but this is a reasonable enough
+  // approximation
+  AttrT = Partial<{ [Property in keyof T]: ToStringable | Observable<ToStringable> }>,
+> {
 
   public props: {
     style?: Partial<CSSStyleDeclaration>,
-    // in theory it would be slightly more robust if we would define all
-    // attributes and properties by hand, but this is a reasonable enough
-    // approximation
-    attrs?: Partial<T>,
+    attrs?: AttrT,
+    events?: Partial<GlobalEventHandlers>,
     instance?: Partial<T>,
-    // TODO events:
   } = {}
   public children: string | Observable<any> |
     TemplateElement<any> | TemplateElement<any>[] = []

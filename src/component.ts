@@ -48,9 +48,7 @@ export default abstract class Component extends HTMLElement {
       if (el.props.attrs) {
         for (let attr in el.props.attrs) {
           const attrVal = el.props.attrs[attr]
-          if (attrVal instanceof Function && attr.startsWith('on')) {
-            thisEl.addEventListener(attr.substring(2), attrVal as any);
-          } else if (attrVal instanceof Observable) {
+          if (attrVal instanceof Observable) {
             this.subscribe(
               attrVal, v => {
                 thisEl.setAttribute(camelToDash(attr), v as string)
@@ -60,6 +58,11 @@ export default abstract class Component extends HTMLElement {
           } else {
             thisEl.setAttribute(camelToDash(attr), el.props.attrs[attr] as string);
           }
+        }
+      }
+      if (el.props.events) {
+        for (let key in el.props.events) {
+          thisEl.addEventListener(key.substring(2), (el.props.events as any)[key]);
         }
       }
       if (el.props.instance) {
