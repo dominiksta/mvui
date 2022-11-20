@@ -7,6 +7,10 @@ const Html = {
   H3: TemplateElement.getGeneratorFunction("h3"),
   P: TemplateElement.getGeneratorFunction("p"),
   Input: TemplateElement.getGeneratorFunction("input"),
+  Button: TemplateElement.getGeneratorFunction("button"),
+  Span: TemplateElement.getGeneratorFunction("span"),
+  FieldSet: TemplateElement.getGeneratorFunction("fieldset"),
+  Legend: TemplateElement.getGeneratorFunction("legend"),
 }
 
 export default Html;

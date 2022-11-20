@@ -1,6 +1,12 @@
-import { applyCSSStyleDeclaration } from "./util/css";
-import { camelToDash } from "./util/strings";
+import { Observable } from "./observables";
 
+// interface TemplateProps<AttrT, InstanceT> {
+//   style?: Partial<CSSStyleDeclaration>,
+//   attrs?: AttrT,
+//   instance?: InstanceT,
+//   // TODO events:
+// }
+// 
 export default class TemplateElement<T extends HTMLElement> {
 
   public props: {
@@ -12,7 +18,8 @@ export default class TemplateElement<T extends HTMLElement> {
     instance?: Partial<T>,
     // TODO events:
   } = {}
-  public children: string | TemplateElement<any> | TemplateElement<any>[] = []
+  public children: string | Observable<any> |
+    TemplateElement<any> | TemplateElement<any>[] = []
 
 
   constructor(
@@ -20,7 +27,10 @@ export default class TemplateElement<T extends HTMLElement> {
     childrenOrProps?: TemplateElement<T>['children'] | TemplateElement<T>['props'],
     children?: TemplateElement<T>['children'],
   ) {
-    if (childrenOrProps instanceof Array || typeof childrenOrProps === 'string') {
+    if (
+      childrenOrProps instanceof Array || typeof childrenOrProps === 'string'
+      || childrenOrProps instanceof Observable
+    ) {
       if (children) throw new Error('Invalid arguments');
       this.children = childrenOrProps as any;
     } else {
@@ -28,42 +38,6 @@ export default class TemplateElement<T extends HTMLElement> {
       this.children = children || [];
     }
   }
-
-  public render<T extends HTMLElement>() {
-    const thisEl = this.creator();
-
-    // --- setup attributes, properties, events
-    if (this.props) {
-      if (this.props.attrs) {
-        for (let attr in this.props.attrs) {
-          // TODO: if (template.props.attrs[attr] instanceof Observable)
-          thisEl.setAttribute(camelToDash(attr), this.props.attrs[attr] as string);
-        }
-      }
-      if (this.props.instance) {
-        for (let prop in this.props.instance) {
-          (thisEl as any)[prop] = this.props.instance[prop];
-        }
-      }
-      if (this.props.style) applyCSSStyleDeclaration(thisEl, this.props.style);
-    }
-
-    // --- recurse
-    if (this.children) {
-      if (typeof this.children === 'string') {
-        thisEl.innerText = this.children;
-      } else if (this.children instanceof TemplateElement) {
-        thisEl.appendChild(this.children.render());
-      } else if (this.children instanceof Array) {
-        for (let child of this.children) {
-          thisEl.appendChild(child.render());
-        }
-      }
-    }
-
-    return thisEl;
-  }
-
 
   static getGeneratorFunction<T extends keyof HTMLElementTagNameMap>(
     tagName: T
