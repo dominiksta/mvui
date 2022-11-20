@@ -5,10 +5,49 @@ import { camelToDash } from "./util/strings";
 import { applyCSSStyleDeclaration } from "./util/css";
 import { CONFIG } from "./const";
 import { throttle } from "./util/time";
+import TwoWayMap from "./util/two-way-map";
 
 export default abstract class Component extends HTMLElement {
 
   protected abstract render(): TemplateElement<any>[];
+
+  // ----------------------------------------------------------------------
+  // attribute reflection
+  // ----------------------------------------------------------------------
+
+  private attrReflectionObserver = new MutationObserver((mutationList, _observer) => {
+    for (const mutation of mutationList) {
+      if (mutation.type === 'attributes') {
+        if (this.reflectIgnoreNextAttributeChange) {
+          this.reflectIgnoreNextAttributeChange = false;
+          return;
+        };
+        if (mutation.attributeName === null) return;
+        const prop = this.reflectedAttributes.get(mutation.attributeName);
+        if (prop) {
+          (this as any)[prop] = this.getAttribute(mutation.attributeName);
+          console.log(`The ${mutation.attributeName} attribute was modified.`);
+        }
+      }
+    }
+  });
+
+  // attr name -> prop name
+  private reflectedAttributes = new TwoWayMap<string, string>();
+  private reflectIgnoreNextAttributeChange = false;
+  private reflectAttribute(name: string, value: string) {
+    this.reflectIgnoreNextAttributeChange = true;
+    super.setAttribute(name, value);
+  }
+
+  constructor() {
+    super();
+    this.attrReflectionObserver.observe(this, {attributes: true});
+  }
+
+  // ----------------------------------------------------------------------
+  // lifecycle
+  // ----------------------------------------------------------------------
 
   connectedCallback() {
     CONFIG.APP_DEBUG && this.flash('green');
@@ -31,9 +70,14 @@ export default abstract class Component extends HTMLElement {
     const thisEl = (new (this as any)() as T);
 
     for (let key in thisEl.props) {
-      console.log(`defining ${key}`);
+      // console.log(`defining ${key}`);
       Object.defineProperty(thisEl, key, {
-        set(v: any) { thisEl.props[key].next(v) },
+        set(v: any) {
+          thisEl.props[key].next(v);
+          const attr = thisEl.reflectedAttributes.getReverse(key);
+          console.log(attr, thisEl.reflectedAttributes);
+          if (attr) thisEl.reflectAttribute(attr, v);
+        },
         get() { return thisEl.props[key].value }
       });
     }
@@ -44,16 +88,22 @@ export default abstract class Component extends HTMLElement {
     );
   }
 
+  // ----------------------------------------------------------------------
+  // (public) reactive properties
+  // ----------------------------------------------------------------------
+
   private props: { [key: string]: Subject<any> } = {};
 
   /** Define a reactive instance property based on a subject. */
   protected publicProp<T>(
     name: string, subj$: Subject<T>,
-    reflectToAttribute: false | string = false
+    reflectToAttribute: boolean | string = true
   ) {
     this.props[name] = subj$;
-    if (reflectToAttribute) {
-
+    if (typeof reflectToAttribute === 'string') {
+      this.reflectedAttributes.set(reflectToAttribute, name);
+    } else if (reflectToAttribute === true) {
+      this.reflectedAttributes.set(name, name);
     }
     return undefined as T;
   }
@@ -65,11 +115,19 @@ export default abstract class Component extends HTMLElement {
     ));
   }
 
+  // ----------------------------------------------------------------------
+  // debugging
+  // ----------------------------------------------------------------------
+
   private flash = throttle((color = "blue") => {
     const prevOutline = this.style.outline;
     this.style.outline = `1px solid ${color}`;
     setTimeout(() => this.style.outline = prevOutline, 400);
   }, 500);
+
+  // ----------------------------------------------------------------------
+  // rendering
+  // ----------------------------------------------------------------------
 
   private _renderTemplate<T extends HTMLElement>(el: TemplateElement<T>) {
     const thisEl = el.creator();

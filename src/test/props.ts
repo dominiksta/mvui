@@ -28,6 +28,9 @@ export class SmartComponent extends Component {
       }}, 'Change reactive value'),
       DumbComponent.new({ instance: { value: 'test' }}),
       DumbComponent.new({ instance: { value: this.state }}),
+      DumbComponent.new(
+        { attrs: { value: this.state.map(v => v + ' from attribute') }}
+      ),
     ])
   ]
 }
