@@ -3,12 +3,15 @@ import { Constructor } from "./util/types";
 import { Observable } from "./observables";
 import { camelToDash } from "./util/strings";
 import { applyCSSStyleDeclaration } from "./util/css";
+import { CONFIG } from "./const";
+import { throttle } from "./util/time";
 
 export default abstract class Component extends HTMLElement {
 
   protected abstract render(): TemplateElement<any>[];
 
   connectedCallback() {
+    CONFIG.APP_DEBUG && this.flash('green');
     const toDisplay = this.render();
     for (let el of toDisplay) {
       this.appendChild(this._renderTemplate(el));
@@ -16,6 +19,7 @@ export default abstract class Component extends HTMLElement {
   }
 
   disconnectedCallback() {
+    CONFIG.APP_DEBUG && this.flash('red');
     for (let unsub of this.unsubscribers) unsub();
   }
 
@@ -31,8 +35,16 @@ export default abstract class Component extends HTMLElement {
 
   protected unsubscribers: (() => void)[] = [];
   protected subscribe<T>(obs: Observable<any>, observer: ((value: T) => void)) {
-    this.unsubscribers.push(obs.subscribe(observer));
+    this.unsubscribers.push(obs.subscribe(
+      !CONFIG.APP_DEBUG ? observer : v => { this.flash(); return observer(v) }
+    ));
   }
+
+  private flash = throttle((color = "blue") => {
+    const prevOutline = this.style.outline;
+    this.style.outline = `1px solid ${color}`;
+    setTimeout(() => this.style.outline = prevOutline, 400);
+  }, 500);
 
   private _renderTemplate<T extends HTMLElement>(el: TemplateElement<T>) {
     const thisEl = el.creator();

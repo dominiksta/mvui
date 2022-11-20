@@ -1,6 +1,6 @@
 import TestComponent from "./test-component";
 import { Observable, Subject, PromisedSubject } from "./observables";
-import sleep from "./util/time";
+import { sleep } from "./util/time";
 
 const testComponent = new TestComponent();
 document.body.appendChild(testComponent);
