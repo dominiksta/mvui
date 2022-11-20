@@ -1,16 +1,9 @@
-import Html from "./html"
+import TestComponent from "./test-component";
 import { Observable, Subject, PromisedSubject } from "./observables";
 import sleep from "./util/time";
 
-const testEl = Html.Div([
-  Html.H1('Heading'),
-  Html.H3({ style: { background: 'red' } }, 'Heading Level 3'),
-  Html.P('Here is some text in a paragraph'),
-  Html.Input({ attrs: { type: "number", value: "4" }, instance: { alt: "hi" }})
-]).render()
-
-document.body.appendChild(testEl);
-
+const testComponent = new TestComponent();
+document.body.appendChild(testComponent);
 
 
 // const obs$ = new Observable<number>((next) => {
@@ -45,10 +38,10 @@ document.body.appendChild(testEl);
 // }, 3000)
 
 
-const promised$ = new PromisedSubject(async () => {
-  await sleep(1000);
-  return "hi";
-})
-
-// promised$.map(v => v.data).subscribe(console.warn)
-promised$.data.subscribe(console.warn)
+// const promised$ = new PromisedSubject(async () => {
+//   await sleep(1000);
+//   return "hi";
+// })
+// 
+// // promised$.map(v => v.data).subscribe(console.warn)
+// promised$.data.subscribe(console.warn)

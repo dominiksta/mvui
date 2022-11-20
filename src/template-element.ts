@@ -16,7 +16,7 @@ export default class TemplateElement<T extends HTMLElement> {
 
 
   constructor(
-    public tagName: keyof HTMLElementTagNameMap,
+    public creator: () => T,
     childrenOrProps?: TemplateElement<T>['children'] | TemplateElement<T>['props'],
     children?: TemplateElement<T>['children'],
   ) {
@@ -29,30 +29,14 @@ export default class TemplateElement<T extends HTMLElement> {
     }
   }
 
-
-  static getGeneratorFunction<T extends keyof HTMLElementTagNameMap>(
-    tagName: T
-  ) {
-    return function(
-      childrenOrProps?: TemplateElement<HTMLElementTagNameMap[T]>['children'] |
-        TemplateElement<HTMLElementTagNameMap[T]>['props'],
-      children?: TemplateElement<HTMLElementTagNameMap[T]>['children'],
-    ) {
-      return new TemplateElement<HTMLElementTagNameMap[T]>(
-        tagName, childrenOrProps, children
-      )
-    }
-  }
-
-
-  render() {
-    const thisEl = document.createElement(this.tagName) as T;
+  public render<T extends HTMLElement>() {
+    const thisEl = this.creator();
 
     // --- setup attributes, properties, events
     if (this.props) {
       if (this.props.attrs) {
         for (let attr in this.props.attrs) {
-          // TODO: if (this.props.attrs[attr] instanceof Observable)
+          // TODO: if (template.props.attrs[attr] instanceof Observable)
           thisEl.setAttribute(camelToDash(attr), this.props.attrs[attr] as string);
         }
       }
@@ -78,5 +62,20 @@ export default class TemplateElement<T extends HTMLElement> {
     }
 
     return thisEl;
+  }
+
+
+  static getGeneratorFunction<T extends keyof HTMLElementTagNameMap>(
+    tagName: T
+  ) {
+    return function(
+      childrenOrProps?: TemplateElement<HTMLElementTagNameMap[T]>['children'] |
+        TemplateElement<HTMLElementTagNameMap[T]>['props'],
+      children?: TemplateElement<HTMLElementTagNameMap[T]>['children'],
+    ) {
+      return new TemplateElement<HTMLElementTagNameMap[T]>(
+        () => document.createElement(tagName), childrenOrProps, children
+      )
+    }
   }
 }
