@@ -1,9 +1,9 @@
-import TestComponent from "./test-component";
 import { Observable, Subject, PromisedSubject } from "./observables";
 import { sleep } from "./util/time";
+import TestPage from "./test/page";
 
-const testComponent = new TestComponent();
-document.body.appendChild(testComponent);
+const testPage = new TestPage();
+document.body.appendChild(testPage);
 
 
 // const obs$ = new Observable<number>((next) => {

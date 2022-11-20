@@ -1,6 +1,6 @@
-import { Subject } from "./observables";
-import Component from "./component";
-import Html from "./html";
+import { Subject } from "../observables";
+import Component from "../component";
+import Html from "../html";
 
 export class ReactiveList extends Component {
   list = new Subject(['item 1', 'item 2']);
@@ -24,7 +24,7 @@ export class ReactiveList extends Component {
     ])
   ];
 }
-customElements.define('reactive-list', ReactiveList);
+customElements.define('mvui-test-reactive-list', ReactiveList);
 
 
 export class CounterComponent extends Component {
@@ -44,27 +44,5 @@ export class CounterComponent extends Component {
     ])
   ];
 }
-customElements.define('counter-component', CounterComponent);
-
-export class TestChildComponent extends Component {
-  render = () => [
-    Html.P('I am a Child Component')
-  ];
-}
-customElements.define('test-child-component', TestChildComponent);
-
-export default class TestComponent extends Component {
-  render = () => [
-    Html.Div([
-      Html.H1('Heading'),
-      Html.H3({ style: { background: 'red' } }, 'Heading Level 3'),
-      TestChildComponent.new(),
-      CounterComponent.new(),
-      ReactiveList.new(),
-      Html.P('Here is some text in a paragraph'),
-      Html.Input({ attrs: { type: "number", value: "4" }, instance: { alt: "hi" } }),
-    ])
-  ];
-}
-customElements.define('test-component', TestComponent);
+customElements.define('mvui-test-reactive-counter', CounterComponent);
 

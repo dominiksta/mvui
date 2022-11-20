@@ -1,6 +1,6 @@
 import TemplateElement from "./template-element";
 import { Constructor } from "./util/types";
-import { Observable } from "./observables";
+import { Observable, Subject } from "./observables";
 import { camelToDash } from "./util/strings";
 import { applyCSSStyleDeclaration } from "./util/css";
 import { CONFIG } from "./const";
@@ -23,14 +23,39 @@ export default abstract class Component extends HTMLElement {
     for (let unsub of this.unsubscribers) unsub();
   }
 
-  static new<T extends HTMLElement>(
+  static new<T extends Component>(
     this: Constructor<T>,
-    childrenOrProps?: TemplateElement<any>['children'] | TemplateElement<any>['children'],
+    childrenOrProps?: TemplateElement<T>['children'] | TemplateElement<T>['props'],
+    children?: TemplateElement<T>['children'],
   ): TemplateElement<T> {
-    console.log(childrenOrProps);
+    const thisEl = (new (this as any)() as T);
+
+    for (let key in thisEl.props) {
+      console.log(`defining ${key}`);
+      Object.defineProperty(thisEl, key, {
+        set(v: any) { thisEl.props[key].next(v) },
+        get() { return thisEl.props[key].value }
+      });
+    }
+
     return new TemplateElement(
-      () => (new (this as any)() as T),
+      () => thisEl,
+      childrenOrProps, children
     );
+  }
+
+  private props: { [key: string]: Subject<any> } = {};
+
+  /** Define a reactive instance property based on a subject. */
+  protected publicProp<T>(
+    name: string, subj$: Subject<T>,
+    reflectToAttribute: false | string = false
+  ) {
+    this.props[name] = subj$;
+    if (reflectToAttribute) {
+
+    }
+    return undefined as T;
   }
 
   protected unsubscribers: (() => void)[] = [];
