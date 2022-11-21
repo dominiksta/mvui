@@ -24,7 +24,7 @@ export class SmartComponent extends Component {
     Html.FieldSet([
       Html.Legend('I am a smart component'),
       Html.Button({ events: {
-        onclick: () => this.state.next('second reactive value')
+        click: () => this.state.next('second reactive value')
       }}, 'Change reactive value'),
       DumbComponent.new({ instance: { value: 'test' }}),
       DumbComponent.new({ instance: { value: this.state }}),

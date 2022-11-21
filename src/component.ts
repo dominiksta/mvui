@@ -7,7 +7,9 @@ import { CONFIG } from "./const";
 import { throttle } from "./util/time";
 import TwoWayMap from "./util/two-way-map";
 
-export default abstract class Component extends HTMLElement {
+export default abstract class Component<
+  CustomEventsT extends { [key: string]: any } = {}
+> extends HTMLElement {
 
   protected abstract render(): TemplateElement<any>[];
 
@@ -62,11 +64,47 @@ export default abstract class Component extends HTMLElement {
     for (let unsub of this.unsubscribers) unsub();
   }
 
-  static new<T extends Component>(
+  /**
+   * This is a hack needed to infer the type of custom events of subclasses of components.
+   *
+   * Minimal example of what this is about:
+   *
+   * ```
+   * export class A<T> { t?: T; }
+   * class C extends A<{'lala': 4}> {}
+   *
+   * type ExtractGeneric<T> = T extends A<infer X> ? X : never;
+   *
+   * function f<T1 extends A<T2>, T2 = ExtractGeneric<T1>>(a: T1): T2 {
+   *   return undefined as T2;
+   * }
+   *
+   * const result = f(new C());
+   * const result2 = f(new A<number>());
+   * ```
+   *
+   * Try removing the t? in class A and see how the type system complains. To be hones, I
+   * have no idea why this is happening but it is.
+   *
+   * @internal
+   */
+  private __t?: CustomEventsT;
+
+  /** Get a new {@link TemplateElement} for use in a {@link render} method. */
+  static new<
+    T extends Component<E>,
+    E extends { [key: string]: any } = T extends Component<infer I> ? I : never
+  >(
+    // A note on the implementation: In order for the type inference of the custom events
+    // generic parameter to work, we must not use `E` anywhere in the parameters to this
+    // method. Otherwise, E would be be bound by the parameters we pass when calling this
+    // function instead of being infered from T. This is the only reason why
+    // {@link ComponentTemplateElement} exists.
     this: Constructor<T>,
-    childrenOrProps?: TemplateElement<T>['children'] | TemplateElement<T>['props'],
-    children?: TemplateElement<T>['children'],
-  ): TemplateElement<T> {
+    childrenOrProps?: ComponentTemplateElement<T>['children'] |
+      ComponentTemplateElement<T>['props'],
+    children?: ComponentTemplateElement<T>['children'],
+  ): ComponentTemplateElement<T> {
     const thisEl = (new (this as any)() as T);
 
     for (let key in thisEl.props) {
@@ -82,10 +120,10 @@ export default abstract class Component extends HTMLElement {
       });
     }
 
-    return new TemplateElement(
+    return new TemplateElement<T, E>(
       () => thisEl,
       childrenOrProps, children
-    );
+    ) as ComponentTemplateElement<T>;
   }
 
   // ----------------------------------------------------------------------
@@ -126,6 +164,22 @@ export default abstract class Component extends HTMLElement {
   }, 500);
 
   // ----------------------------------------------------------------------
+  // events
+  // ----------------------------------------------------------------------
+
+  /**
+   * Dispatch an event specified in the generic {@link CustomEventsT} parameter. All
+   * events will be dispatched as an instance of `CustomEvent` with `detail` set to
+   * `value`.
+   */
+  protected dispatch<T extends keyof CustomEventsT>(
+    name: T, value: CustomEventsT[T]
+  ) {
+    if (typeof name !== 'string') return;
+    this.dispatchEvent(new CustomEvent(name, { detail: value }));
+  }
+
+  // ----------------------------------------------------------------------
   // rendering
   // ----------------------------------------------------------------------
 
@@ -151,7 +205,7 @@ export default abstract class Component extends HTMLElement {
       }
       if (el.props.events) {
         for (let key in el.props.events) {
-          thisEl.addEventListener(key.substring(2), (el.props.events as any)[key]);
+          thisEl.addEventListener(key, (el.props.events as any)[key]);
         }
       }
       if (el.props.instance) {
@@ -201,3 +255,8 @@ export default abstract class Component extends HTMLElement {
 
 
 }
+
+/** Helper type to infer the custom events of a Component */
+type ComponentTemplateElement<
+  CompT extends Component<any>,
+> = TemplateElement<CompT, CompT extends Component<infer I> ? I : never>;

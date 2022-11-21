@@ -2,6 +2,7 @@ import Html from "../html";
 import Component from "../component"
 import { SmartComponent } from "./props";
 import { CounterComponent, ReactiveList } from "./reactivity";
+import { EventReceiver } from "./events";
 
 export class BasicChild extends Component {
   render = () => [
@@ -21,6 +22,7 @@ export default class TestPage extends Component {
       Html.P('Here is some text in a paragraph'),
       Html.Input({ attrs: { type: "number", value: "4" }, instance: { alt: "hi" } }),
       SmartComponent.new(),
+      EventReceiver.new(),
     ])
   ];
 }

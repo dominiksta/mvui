@@ -9,10 +9,10 @@ export class ReactiveList extends Component {
   render = () => [
     Html.FieldSet([
       Html.Legend('Child Component: Reactive List'),
-      Html.Button({ events: { onclick: () => {
+      Html.Button({ events: { click: () => {
         this.counter.next(this.counter.value + 1)
       }}}, 'Increment Counter'),
-      Html.Button({ events: { onclick: () => {
+      Html.Button({ events: { click: () => {
         this.list.next([
           ...this.list.value, 'item ' + (this.list.value.length + 1)
         ])
@@ -35,7 +35,7 @@ export class CounterComponent extends Component {
       Html.Legend('Child Component: Reactivity'),
       Html.P('This is a "reactive" Counter'),
       Html.Button({ events: {
-        onclick: () => this.count.next(this.count.value + 1)
+        click: () => this.count.next(this.count.value + 1)
       }}, 'Increase Count'),
       Html.Span(this.count.map(v => v * 2)),
       Html.Input({ instance: {
