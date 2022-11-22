@@ -4,6 +4,8 @@ import TestPage from "./test/page";
 
 const testPage = new TestPage();
 document.body.appendChild(testPage);
+// setTimeout(() => document.body.removeChild(testPage), 200);
+// setTimeout(() => document.body.appendChild(testPage), 600);
 
 
 // const obs$ = new Observable<number>((next) => {

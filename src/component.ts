@@ -67,6 +67,7 @@ export default abstract class Component<
   connectedCallback() {
     this.onAdded();
     CONFIG.APP_DEBUG && this.flash('green');
+    (this.shadowRoot || this).innerHTML = '';
     const toDisplay = this.render();
     for (let el of toDisplay) {
       (this.shadowRoot || this).appendChild(this._renderTemplate(el));
