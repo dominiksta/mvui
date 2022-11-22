@@ -3,6 +3,7 @@ import Component from "../component"
 import { SmartComponent } from "./props";
 import { CounterComponent, ReactiveList } from "./reactivity";
 import { EventReceiver } from "./events";
+import { TemplateReferencesTest1, TemplateReferencesTest2 } from "./template-references";
 
 export class BasicChild extends Component {
   render = () => [
@@ -23,6 +24,8 @@ export default class TestPage extends Component {
       Html.Input({ attrs: { type: "number", value: "4" }, instance: { alt: "hi" } }),
       SmartComponent.new(),
       EventReceiver.new(),
+      TemplateReferencesTest1.new(),
+      TemplateReferencesTest2.new(),
     ])
   ];
 }

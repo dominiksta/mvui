@@ -12,6 +12,7 @@ export default abstract class Component<
 > extends HTMLElement {
 
   protected abstract render(): TemplateElement<any>[];
+  protected static useShadow: boolean = true;
 
   // ----------------------------------------------------------------------
   // attribute reflection
@@ -28,7 +29,7 @@ export default abstract class Component<
         const prop = this.reflectedAttributes.get(mutation.attributeName);
         if (prop) {
           (this as any)[prop] = this.getAttribute(mutation.attributeName);
-          console.log(`The ${mutation.attributeName} attribute was modified.`);
+          // console.log(`The ${mutation.attributeName} attribute was modified.`);
         }
       }
     }
@@ -44,22 +45,40 @@ export default abstract class Component<
 
   constructor() {
     super();
+
+    if ((this.constructor as any).useShadow && !this.shadowRoot) {
+      this.attachShadow({mode: 'open'});
+    }
+
     this.attrReflectionObserver.observe(this, {attributes: true});
+
+    this.onCreated();
   }
 
   // ----------------------------------------------------------------------
   // lifecycle
   // ----------------------------------------------------------------------
 
+  protected onCreated() { }
+  protected onAdded() { }
+  protected onRender() { }
+  protected onRemoved() { }
+
   connectedCallback() {
+    this.onAdded();
     CONFIG.APP_DEBUG && this.flash('green');
     const toDisplay = this.render();
     for (let el of toDisplay) {
-      this.appendChild(this._renderTemplate(el));
+      (this.shadowRoot || this).appendChild(this._renderTemplate(el));
     }
+
+    for (let ref of this.templateRefs) ref.resolve(ref.query());
+
+    this.onRender();
   }
 
   disconnectedCallback() {
+    this.onRemoved();
     CONFIG.APP_DEBUG && this.flash('red');
     for (let unsub of this.unsubscribers) unsub();
   }
@@ -113,7 +132,7 @@ export default abstract class Component<
         set(v: any) {
           thisEl.props[key].next(v);
           const attr = thisEl.reflectedAttributes.getReverse(key);
-          console.log(attr, thisEl.reflectedAttributes);
+          // console.log(attr, thisEl.reflectedAttributes);
           if (attr) thisEl.reflectAttribute(attr, v);
         },
         get() { return thisEl.props[key].value }
@@ -190,7 +209,7 @@ export default abstract class Component<
     if (el.props) {
       if (el.props.attrs) {
         for (let attr in el.props.attrs) {
-          const attrVal = el.props.attrs[attr]
+          const attrVal = (el as any).props.attrs[attr]
           if (attrVal instanceof Observable) {
             this.subscribe(
               attrVal, v => {
@@ -199,7 +218,9 @@ export default abstract class Component<
               }
             );
           } else {
-            thisEl.setAttribute(camelToDash(attr), el.props.attrs[attr] as string);
+            thisEl.setAttribute(
+              camelToDash(attr), (el as any).props.attrs[attr] as string
+            );
           }
         }
       }
@@ -251,6 +272,52 @@ export default abstract class Component<
     }
 
     return thisEl;
+  }
+
+  // ----------------------------------------------------------------------
+  // template references (aka querySelector/All)
+  // ----------------------------------------------------------------------
+
+  private templateRefs: {
+    resolve: (value: any) => void, query: () => any
+  }[] = [];
+
+  query<T extends HTMLElement>(query: string, force: false): Promise<T | null>;
+  query<T extends HTMLElement>(query: string, force?: true): Promise<T>;
+  query<T extends HTMLElement>(
+    query: string, force: boolean = true
+  ): Promise<T | null> {
+    return new Promise<T>(resolve => {
+      this.templateRefs.push({
+        resolve,
+        query: () => {
+          const res = (this.shadowRoot || this).querySelector<T>(query);
+          if (force && res === null) throw new Error('');
+          return res;
+        }
+      });
+    });
+  }
+
+  queryAll<T extends HTMLElement>(
+    query: string, force: false
+  ): Promise<NodeListOf<T> | null>;
+  queryAll<T extends HTMLElement>(
+    query: string, force?: true
+  ): Promise<NodeListOf<T>>;
+  queryAll<T extends HTMLElement>(
+    query: string, force: boolean = true
+  ): Promise<NodeListOf<T> | null> {
+    return new Promise(resolve => {
+      this.templateRefs.push({
+        resolve,
+        query: () => {
+          const res = (this.shadowRoot || this).querySelectorAll<T>(query);
+          if (force && res.length === 0) throw new Error('');
+          return res;
+        }
+      });
+    });
   }
 
 

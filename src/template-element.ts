@@ -11,7 +11,7 @@ export default class TemplateElement<
   // approximation
   AttrT = Partial<{
     [Property in keyof T]: MaybeObservable<T[Property]> | MaybeObservable<ToStringable>
-  }>,
+  } & { class: MaybeObservable<ToStringable> }>,
 > {
 
   public props: {
