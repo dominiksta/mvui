@@ -14,7 +14,7 @@ export class DumbComponent extends Component {
     ])
   ]
 }
-customElements.define('mvui-test-dumb', DumbComponent);
+DumbComponent.register();
 
 export class SmartComponent extends Component {
 
@@ -34,4 +34,4 @@ export class SmartComponent extends Component {
     ])
   ]
 }
-customElements.define('mvui-test-smart', SmartComponent);
+SmartComponent.register();

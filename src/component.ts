@@ -12,7 +12,9 @@ export default abstract class Component<
 > extends HTMLElement {
 
   protected abstract render(): TemplateElement<any>[];
+
   protected static useShadow: boolean = true;
+  protected static tagNameSuffix?: string;
 
   // ----------------------------------------------------------------------
   // attribute reflection
@@ -43,6 +45,10 @@ export default abstract class Component<
     super.setAttribute(name, value);
   }
 
+  // ----------------------------------------------------------------------
+  // initialization
+  // ----------------------------------------------------------------------
+
   constructor() {
     super();
 
@@ -53,6 +59,15 @@ export default abstract class Component<
     this.attrReflectionObserver.observe(this, {attributes: true});
 
     this.onCreated();
+  }
+
+  static register(prefix?: string) {
+    if (!this.tagNameSuffix) this.tagNameSuffix = camelToDash(this.name);
+    customElements.define(
+      (prefix && prefix.length !== 0) ?
+      `${prefix}-${this.tagNameSuffix}` : `mvui-${this.tagNameSuffix}`,
+      this as any
+    );
   }
 
   // ----------------------------------------------------------------------
@@ -293,7 +308,10 @@ export default abstract class Component<
         resolve,
         query: () => {
           const res = (this.shadowRoot || this).querySelector<T>(query);
-          if (force && res === null) throw new Error('');
+          if (force && res === null) throw new Error(
+            `Query '${query}' in component ${this.tagName.toLowerCase()}` +
+              ` did not return results but was set to force`
+          );
           return res;
         }
       });
@@ -314,7 +332,10 @@ export default abstract class Component<
         resolve,
         query: () => {
           const res = (this.shadowRoot || this).querySelectorAll<T>(query);
-          if (force && res.length === 0) throw new Error('');
+          if (force && res.length === 0) throw new Error(
+            `Query '${query}' in component ${this.tagName.toLowerCase()}` +
+              ` did not return results but was set to force`
+          );
           return res;
         }
       });

@@ -10,7 +10,7 @@ export class BasicChild extends Component {
     Html.P('I am a Child Component')
   ];
 }
-customElements.define('mvui-test-basic-child', BasicChild);
+BasicChild.register();
 
 export default class TestPage extends Component {
   render = () => [
@@ -24,9 +24,11 @@ export default class TestPage extends Component {
       Html.Input({ attrs: { type: "number", value: "4" }, instance: { alt: "hi" } }),
       SmartComponent.new(),
       EventReceiver.new(),
-      TemplateReferencesTest1.new(),
+      TemplateReferencesTest1.new({ events: {
+        // error: e => { console.log(e); e.preventDefault() }
+      }}),
       TemplateReferencesTest2.new(),
     ])
   ];
 }
-customElements.define('mvui-test-page', TestPage);
+TestPage.register();

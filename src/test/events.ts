@@ -30,7 +30,7 @@ export class EventEmitter extends Component<Events> {
   ];
   
 }
-customElements.define('mvui-test-event-emitter', EventEmitter);
+EventEmitter.register();
 
 
 export class EventReceiver extends Component {
@@ -52,4 +52,4 @@ export class EventReceiver extends Component {
   ];
   
 }
-customElements.define('mvui-test-event-receiver', EventReceiver);
+EventReceiver.register();

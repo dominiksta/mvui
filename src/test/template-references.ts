@@ -26,7 +26,7 @@ export class TemplateReferencesTest1 extends Component {
     ])
   ]
 }
-customElements.define('mvui-test-template-references1', TemplateReferencesTest1);
+TemplateReferencesTest1.register();
 
 
 export class TemplateReferencesTest2 extends Component {
@@ -48,4 +48,4 @@ export class TemplateReferencesTest2 extends Component {
     ])
   ]
 }
-customElements.define('mvui-test-template-references2', TemplateReferencesTest2);
+TemplateReferencesTest2.register();

@@ -24,7 +24,7 @@ export class ReactiveList extends Component {
     ])
   ];
 }
-customElements.define('mvui-test-reactive-list', ReactiveList);
+ReactiveList.register();
 
 
 export class CounterComponent extends Component {
@@ -44,5 +44,4 @@ export class CounterComponent extends Component {
     ])
   ];
 }
-customElements.define('mvui-test-reactive-counter', CounterComponent);
-
+CounterComponent.register();
