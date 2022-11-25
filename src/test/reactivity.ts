@@ -1,4 +1,4 @@
-import { Subject } from "../observables";
+import { Observable, Subject } from "../observables";
 import Component from "../component";
 import Html from "../html";
 
@@ -29,6 +29,10 @@ ReactiveList.register();
 
 export class CounterComponent extends Component {
   count = new Subject(0);
+  multiplier = new Subject(1);
+  sum = Observable.fromLatest(
+    {c: this.count, m: this.multiplier}
+  );
 
   render = () => [
     Html.FieldSet([
@@ -37,10 +41,10 @@ export class CounterComponent extends Component {
       Html.Button({ events: {
         click: () => this.count.next(this.count.value + 1)
       }}, 'Increase Count'),
-      Html.Span(this.count.map(v => v * 2)),
-      Html.Input({ instance: {
-        type: "number",  value: this.count.map(v => v.toString())
-      }})
+      Html.Button({ events: {
+        click: () => this.multiplier.next(this.multiplier.value + 1)
+      }}, 'Increase Multiplier'),
+      Html.Span(this.sum.map(v => `${v.c} * ${v.m} = ${v.c * v.m}`)),
     ])
   ];
 }

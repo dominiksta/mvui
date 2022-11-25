@@ -29,7 +29,7 @@ export default class Observable<T> {
    * Subscribe without propagating the subscription to the parentage or other any other
    * side effects.
    */
-  protected _subscribe(observer: ((value: T) => void)) {
+  protected _subscribe(observer: ((value: T) => void)): TeardownLogic {
     return this.definition(observer);
   }
 
@@ -65,6 +65,41 @@ export default class Observable<T> {
     return Observable._create(next => {
       return this._subscribe(v => { if (filter(v)) next(v) })
     })
+  }
+
+  /**
+   * Combine the latest values of the given Observables. Emits every time one of the
+   * sources emits, but only once all sources have emitted at least once.
+   *
+   * ## Examples
+   * ```ts
+   * const [counter, multiplier] = [new Subject(2), new Subject(2)];
+   * const sum = Observable.fromLatest(
+   *   {c: counter, m: multiplier}
+   * ).map(v => v.c * v.m);
+   * sum.subscribe(console.log); // => 4
+   * counter.next(3); // => 6
+   * ```
+   */
+  static fromLatest<T extends { [key: string]: Observable<any> }>(
+    sources: T
+  ): Observable<{ [K in keyof T]: T[K] extends Observable<infer I> ? I : never }> {
+    return new Observable(next => {
+      const values: Partial<{
+        [K in keyof T]: T[K] extends Observable<infer I> ? I : never
+      }> = {};
+
+      const sourceKeys = Object.keys(sources);
+
+      const teardowns = sourceKeys.map(key => sources[key]._subscribe(v => {
+        (values as any)[key] = v;
+        if (sourceKeys.filter(k => values[k] === undefined).length === 0) {
+          next(values as any);
+        }
+      }));
+
+      return () => { for (let t of teardowns) if (t) t(); };
+    });
   }
 
   /**

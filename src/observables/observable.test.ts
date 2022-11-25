@@ -1,6 +1,7 @@
 import { test, expect } from '@jest/globals';
 import { arrayCompare } from '../util/datastructure';
 import Observable from './observable';
+import Subject from './subject';
 
 
 test('subscribing to a synchronous definition returns the correct result', () => {
@@ -38,6 +39,20 @@ test('filter operator', () => {
   expect(arrayCompare(result, [2, 3])).toBeTruthy();
 })
 
+test('fromLatest', () => {
+  const [counter, multiplier] = [new Subject(2), new Subject(5)];
+  const sum = Observable.fromLatest(
+    { c: counter, m: multiplier }
+  ).map(v => v.c * v.m);
+
+  let result = 0;
+  sum.subscribe(v => result = v);
+  expect(result).toBe(10);
+  counter.next(4);
+  expect(result).toBe(20);
+  multiplier.next(3);
+  expect(result).toBe(12);
+})
 
 test('map & filter chain', () => {
   const obs$ = new Observable<number>(next => {
