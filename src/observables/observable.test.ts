@@ -41,17 +41,26 @@ test('filter operator', () => {
 
 test('fromLatest', () => {
   const [counter, multiplier] = [new Subject(2), new Subject(5)];
-  const sum = Observable.fromLatest(
+
+  function testSum(sum: Observable<number>) {
+    sum.subscribe(v => {
+      expect(v).toBe(counter.value * multiplier.value);
+    });
+    counter.next(4);
+    multiplier.next(3);
+    counter.next(2);
+    multiplier.next(5);
+  }
+
+  const sumObj = Observable.fromLatest(
     { c: counter, m: multiplier }
   ).map(v => v.c * v.m);
+  testSum(sumObj);
 
-  let result = 0;
-  sum.subscribe(v => result = v);
-  expect(result).toBe(10);
-  counter.next(4);
-  expect(result).toBe(20);
-  multiplier.next(3);
-  expect(result).toBe(12);
+  const sumArr1 = Observable.fromLatest(
+    [counter, multiplier]
+  ).map(([counter, multiplier]) => counter * multiplier);
+  testSum(sumArr1);
 })
 
 test('map & filter chain', () => {
