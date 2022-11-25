@@ -39,6 +39,26 @@ test('filter operator', () => {
   expect(arrayCompare(result, [2, 3])).toBeTruthy();
 })
 
+test('select', () => {
+  const base = new Subject({a: 0, b: '0'});
+  const counters = {a: 0, b: 0};
+  base.select(s => s.a).subscribe(v => {
+    counters.a++;
+    expect(v).toBe(base.value.a)
+  });
+  base.select(s => s.b).subscribe(v => {
+    counters.b++;
+    expect(v).toBe(base.value.b)
+  });
+  base.next({a: 0, b: '1'});
+  base.next({a: 0, b: '2'});
+  base.next({a: 1, b: '2'});
+  base.next({a: 2, b: '2'});
+  base.next({a: 3, b: '2'});
+  expect(counters.a).toBe(4);
+  expect(counters.b).toBe(3);
+})
+
 test('fromLatest', () => {
   const [counter, multiplier] = [new Subject(2), new Subject(5)];
 
