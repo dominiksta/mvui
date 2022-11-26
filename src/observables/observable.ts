@@ -97,6 +97,10 @@ export default class Observable<T> {
     sources: [...{[K in keyof T]: Observable<T[K]>}]
   ): Observable<T>;
 
+  static fromLatest<T extends any[]>(
+    ...sources: [...{[K in keyof T]: Observable<T[K]>}]
+  ): Observable<T>;
+
   static fromLatest<T extends { [key: string]: Observable<any> }>(
     sources: T
   ): Observable<{ [K in keyof T]: T[K] extends Observable<infer I> ? I : never }>;

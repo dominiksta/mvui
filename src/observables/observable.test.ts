@@ -81,6 +81,11 @@ test('fromLatest', () => {
     [counter, multiplier]
   ).map(([counter, multiplier]) => counter * multiplier);
   testSum(sumArr1);
+
+  const sumArr2 = Observable.fromLatest(
+    counter, multiplier
+  ).map(([counter, multiplier]) => counter * multiplier);
+  testSum(sumArr2);
 })
 
 test('map & filter chain', () => {

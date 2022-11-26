@@ -30,7 +30,7 @@ ReactiveList.register();
 export class CounterComponent extends Component {
   private count = new Subject(0);
   private multiplier = new Subject(1);
-  private sum = Observable.fromLatest([this.count, this.multiplier]);
+  private sum = Observable.fromLatest(this.count, this.multiplier);
 
   render = () => [
     Html.FieldSet([
