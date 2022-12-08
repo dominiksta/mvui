@@ -3,8 +3,12 @@ import Component from "../component";
 import Html from "../html";
 
 export class ReactiveList extends Component {
-  list = new Subject(['item 1', 'item 2']);
-  counter = new Subject(0);
+  private list = new Subject(['item 1', 'item 2']);
+  private counter = new Subject(0);
+  private editableList = new Subject([
+    { name: 'name1', value: 'val1' },
+    { name: 'name2', value: 'val2' },
+  ])
 
   render = () => [
     Html.FieldSet([
@@ -21,6 +25,43 @@ export class ReactiveList extends Component {
       Html.Ul(this.list.map(v => v.map(v => Html.Li(v)))),
       Html.H5('List with reactive child elements'),
       Html.Ul(this.list.map(v => v.map(() => Html.Li(this.counter)))),
+
+      Html.H5('Editable list'),
+
+      Html.Button({ events: { click: () => {
+        this.editableList.next([
+          ...this.editableList.value, {
+            name: `name${this.editableList.value.length + 1}`,
+            value: `val${this.editableList.value.length + 1}`,
+          }
+        ]);
+      }}}, 'Add new element'),
+      Html.Ul(
+        this.editableList.map(s => s.length).map(() =>
+          this.editableList.value.map((v, i) =>
+            Html.Li([
+              Html.Span(v.name + ' :'),
+              Html.Input({
+                attrs: { value: v.value },
+                events: {
+                  change: e => {
+                    this.editableList.value[i].value = e.target.value;
+                    this.editableList.next(this.editableList.value);
+                  }
+                }
+              }),
+              Html.Button({
+                style: { color: 'red' },
+                events: { click: () => {
+                  this.editableList.value.splice(i, 1);
+                  console.log(this.editableList.value);
+                  this.editableList.next(this.editableList.value);
+                }}
+              }, 'x')
+            ])
+          )
+        )
+      ),
     ])
   ];
 }
