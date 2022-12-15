@@ -46,8 +46,10 @@ export default class TemplateElement<
     children?: TemplateElement<T>['children'],
   ) {
     if (
-      childrenOrProps instanceof Array || typeof childrenOrProps === 'string'
+      typeof childrenOrProps === 'string'
+      || childrenOrProps instanceof Array
       || childrenOrProps instanceof Observable
+      || childrenOrProps instanceof TemplateElement
     ) {
       if (children) throw new Error('Invalid arguments');
       this.children = childrenOrProps as any;
