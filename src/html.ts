@@ -15,6 +15,8 @@ const Html = {
   Span: TemplateElement.getGeneratorFunction("span"),
   FieldSet: TemplateElement.getGeneratorFunction("fieldset"),
   Legend: TemplateElement.getGeneratorFunction("legend"),
+  Template: TemplateElement.getGeneratorFunction("template"),
+  Slot: TemplateElement.getGeneratorFunction("slot"),
 }
 
 export default Html;
