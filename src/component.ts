@@ -2,10 +2,10 @@ import TemplateElement from "./template-element";
 import { Constructor } from "./util/types";
 import { Observable, Subject } from "./observables";
 import { camelToDash } from "./util/strings";
-import { applyCSSStyleDeclaration } from "./util/css";
 import { CONFIG } from "./const";
 import { throttle } from "./util/time";
 import TwoWayMap from "./util/two-way-map";
+import CSSUtils, { MvuiCSSSheet } from "./util/css";
 
 export default abstract class Component<
   CustomEventsT extends { [key: string]: any } = {}
@@ -15,6 +15,42 @@ export default abstract class Component<
 
   protected static useShadow: boolean = true;
   protected static tagNameSuffix?: string;
+
+  // ----------------------------------------------------------------------
+  // styling
+  // ----------------------------------------------------------------------
+
+  /**
+   * Settings this static property is the primary way of styling a component. The instance
+   * level styles property should only be used for actual instance scoped styles for
+   * performance reasons. A typical use would look like this:
+   *
+   * ```{typescript}
+   * static styles = Component.css({
+   *   'button': {
+   *     'background': 'red'
+   *   }
+   * })
+   * ```
+   */
+  protected static styles: MvuiCSSSheet;
+  protected static css(sheet: MvuiCSSSheet | MvuiCSSSheet[]): MvuiCSSSheet {
+    return sheet instanceof Array ? sheet.reduce(CSSUtils.mergeSheets) : sheet;
+  };
+  protected styles = new Subject<MvuiCSSSheet>({});
+
+  private setInstanceStyles(sheet: MvuiCSSSheet) {
+    let el = (this.shadowRoot || this).querySelector<HTMLStyleElement>(
+      '.mvui-instance-styles'
+    );
+    if (!el) {
+      el = document.createElement('style');
+      el.className = 'mvui-instance-styles';
+      el.nonce = CONFIG.STYLE_SHEET_NONCE;
+      (this.shadowRoot || this).appendChild(el);
+    }
+    el.innerHTML = CSSUtils.sheetToString(sheet);
+  }
 
   // ----------------------------------------------------------------------
   // attribute reflection
@@ -58,11 +94,14 @@ export default abstract class Component<
 
     this.attrReflectionObserver.observe(this, {attributes: true});
 
+    this.styles.subscribe(this.setInstanceStyles.bind(this));
+
     this.onCreated();
   }
 
   static register(prefix?: string) {
-    if (!this.tagNameSuffix) this.tagNameSuffix = camelToDash(this.name);
+    if (!this.tagNameSuffix)
+      this.tagNameSuffix = camelToDash(this.name).substring(1);
     customElements.define(
       (prefix && prefix.length !== 0) ?
       `${prefix}-${this.tagNameSuffix}` : `mvui-${this.tagNameSuffix}`,
@@ -82,7 +121,14 @@ export default abstract class Component<
   connectedCallback() {
     this.onAdded();
     CONFIG.APP_DEBUG && this.flash('green');
+
     (this.shadowRoot || this).innerHTML = '';
+
+    if ((this.constructor as any).styles)
+      CSSUtils.applySheet(
+        CSSUtils.sheetToString((this.constructor as any).styles), this
+      );
+
     const toDisplay = this.render();
     for (let el of toDisplay) {
       (this.shadowRoot || this).appendChild(this._renderTemplate(el));
@@ -257,7 +303,7 @@ export default abstract class Component<
           }
         }
       }
-      if (el.props.style) applyCSSStyleDeclaration(thisEl, el.props.style);
+      if (el.props.style) CSSUtils.applySingleElement(thisEl, el.props.style);
     }
 
     // --- recurse

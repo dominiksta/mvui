@@ -14,3 +14,7 @@ export function arrayCompare<T>(arr1: Array<T>, arr2: Array<T>): boolean {
   }
   return true;
 }
+
+export function uniq<T>(arr: Array<T>): Array<T> {
+  return arr.filter((el, index) => arr.indexOf(el) === index);
+}

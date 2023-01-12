@@ -1,6 +1,7 @@
 
 const defaultConfig = {
-  APP_DEBUG: true
+  APP_DEBUG: true,
+  STYLE_SHEET_NONCE: 'mvui-component',
 };
 
 (window as any).MVUI_CONFIG = defaultConfig;

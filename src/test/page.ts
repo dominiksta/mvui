@@ -5,6 +5,7 @@ import { CounterComponent, ReactiveList } from "./reactivity";
 import { EventReceiver } from "./events";
 import { TemplateReferencesTest1, TemplateReferencesTest2 } from "./template-references";
 import { SlotsTest } from "./slots";
+import { StyledComponent } from "./styles";
 
 export class BasicChild extends Component {
   render = () => [
@@ -19,6 +20,7 @@ export default class TestPage extends Component {
       Html.H1('Heading'),
       Html.H3({ style: { background: 'red' } }, 'Heading Level 3'),
       BasicChild.new(),
+      StyledComponent.new(),
       SlotsTest.new(),
       CounterComponent.new(),
       ReactiveList.new(),
