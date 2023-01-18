@@ -49,17 +49,17 @@ test('subscribe & unsubscribe with operator chain', () => {
   expect((subj$ as any).observers.length).toBe(0);
 })
 
-
 test('completing', () => {
   const subj$ = new Subject(1);
   const result: number[] = [];
+  let completed = false;
 
-  expect((subj$ as any).observers.length).toBe(0);
-
-  const unsubcribe = subj$
-    .map(v => v + 1)
-    .map(v => v + 1)
-    .subscribe(v => result.push(v));
+  subj$
+  .map(v => v + 2)
+  .subscribe({
+    next(v) { result.push(v) },
+    complete() { completed = true; }
+  });
 
   expect((subj$ as any).observers.length).toBe(1);
 
@@ -68,7 +68,9 @@ test('completing', () => {
   expect(arrayCompare(result, [3, 4])).toBeTruthy();
   subj$.next(3);
   expect(arrayCompare(result, [3, 4, 5])).toBeTruthy();
+  expect(completed).toBeFalsy();
   subj$.complete();
+  expect(completed).toBeTruthy();
   subj$.next(4);
   expect(arrayCompare(result, [3, 4, 5])).toBeTruthy();
 

@@ -1,4 +1,4 @@
-import Observable from "./observable";
+import Observable, { Observer } from "./observable";
 
 /**
  * An Observable that holds some modifiable state. Think of a "normal" Observable like a
@@ -13,16 +13,22 @@ export default class Subject<T> extends Observable<T> {
   /** The current value/state */
   get value() { return this._value }
 
-  private observers: ((value: T) => void)[] = [];
+  private observers: Observer<T>[] = [];
 
   constructor(initialValue: T) {
     super((_next) => undefined);
     this._value = initialValue;
   }
 
-  protected _subscribe(observer: ((value: T) => void)) {
+  protected override _subscribe(observer: Observer<T>) {
     this.observers.push(observer);
-    observer(this._value);
+
+    try {
+      observer.next(this._value);
+    } catch(e) {
+      observer.error(e);
+    }
+
     return () => {
       const index = this.observers.indexOf(observer);
       if (index > -1) this.observers.splice(index, 1);
@@ -30,13 +36,19 @@ export default class Subject<T> extends Observable<T> {
   }
 
   /** Completing a subject just means clearing all its subscriptions. */
-  complete() { this.observers = []; }
+  complete() {
+    if (this.completed) throw new Error('Subject was already completed');
+    this.completed = true;
+    for (let observer of this.observers) observer.complete();
+    this.observers = [];
+  }
 
   /** Set a new value and trigger all subscriptions with that new value */
   next(value: T) {
+    if (this.completed) return;
     this._value = value;
     for (let observer of this.observers) {
-      observer(value);
+      observer.next(value);
     }
   }
   

@@ -5,8 +5,8 @@ import Subject from './subject';
 
 
 test('subscribing to a synchronous definition returns the correct result', () => {
-  const obs$ = new Observable<number>(next => {
-    next(1); next(2); next(3);
+  const obs$ = new Observable<number>(observer => {
+    observer.next(1); observer.next(2); observer.next(3);
   })
 
   const result: number[] = [];
@@ -15,10 +15,59 @@ test('subscribing to a synchronous definition returns the correct result', () =>
   expect(arrayCompare(result, [1, 2, 3])).toBeTruthy();
 })
 
+test('completion', () => {
+  const obs$ = new Observable<number>(observer => {
+    observer.next(1);
+    observer.next(2);
+    observer.complete();
+    observer.next(3);
+  })
+
+  let result: number[] = [];
+  let completed = false;
+  obs$.map(v => v + 1).subscribe({
+    next(v) { result.push(v); },
+    error(e) { console.log('e'); },
+    complete() { completed = true; }
+  });
+
+  expect(completed).toBeTruthy();
+  expect(result.length).toBe(2);
+  expect(arrayCompare(result, [2, 3])).toBeTruthy();
+})
+
+test('error handling', () => {
+  const obs$ = new Observable<number>(observer => {
+    observer.next(1);
+    observer.next(2);
+    // note that if we threw in a setTimeout here, the error would not be caught. while
+    // maybe unintuitive, this is actually also how it works in rxjs
+    throw new Error('hi');
+    // observer.complete();
+    observer.next(3);
+  })
+
+  let result: number[] = [];
+  obs$.map(v => v + 1).subscribe({
+    next(v) { result.push(v) },
+    error(e) {
+      expect(e instanceof Error).toBeTruthy();
+      expect(e.message).toBe('hi');
+    },
+    complete() {
+      // complete is not called on error
+      expect(false).toBeTruthy();
+    }
+  });
+
+  expect(result.length).toBe(2);
+  expect(arrayCompare(result, [2, 3])).toBeTruthy();
+})
+
 
 test('map operator', () => {
-  const obs$ = new Observable<number>(next => {
-    next(1); next(2); next(3);
+  const obs$ = new Observable<number>(observer => {
+    observer.next(1); observer.next(2); observer.next(3);
   })
 
   const result: number[] = [];
@@ -29,8 +78,8 @@ test('map operator', () => {
 
 
 test('filter operator', () => {
-  const obs$ = new Observable<number>(next => {
-    next(1); next(2); next(3);
+  const obs$ = new Observable<number>(observer => {
+    observer.next(1); observer.next(2); observer.next(3);
   })
 
   const result: number[] = [];
@@ -89,9 +138,9 @@ test('fromLatest', () => {
 })
 
 test('map & filter chain', () => {
-  const obs$ = new Observable<number>(next => {
-    next(1); next(2); next(3);
-    next(4); next(5); next(6);
+  const obs$ = new Observable<number>(observer => {
+    observer.next(1); observer.next(2); observer.next(3);
+    observer.next(4); observer.next(5); observer.next(6);
   })
 
   const result: (number | string)[] = [];
