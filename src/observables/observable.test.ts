@@ -1,7 +1,10 @@
 import { test, expect } from '@jest/globals';
 import { arrayCompare } from '../util/datastructure';
-import Observable from './observable';
+import Observable, { OperatorFunction } from './observable';
+import { filter, map } from './operators';
+import select from './operators/select';
 import Subject from './subject';
+import { pipe } from './util';
 
 
 test('subscribing to a synchronous definition returns the correct result', () => {
@@ -65,6 +68,19 @@ test('error handling', () => {
 })
 
 
+test('pipe', () => {
+  const obs$ = new Observable<number>(observer => {
+    observer.next(1); observer.next(2); observer.next(3);
+  })
+
+  const result: number[] = [];
+  obs$.pipe(
+    map(v => v + 1), map(v => v + 2),
+  ).subscribe(v => result.push(v));
+  expect(result.length).toBe(3);
+  expect(arrayCompare(result, [4, 5, 6])).toBeTruthy();
+})
+
 test('map operator', () => {
   const obs$ = new Observable<number>(observer => {
     observer.next(1); observer.next(2); observer.next(3);
@@ -91,11 +107,11 @@ test('filter operator', () => {
 test('select', () => {
   const base = new Subject({a: 0, b: '0'});
   const counters = {a: 0, b: 0};
-  base.select(s => s.a).subscribe(v => {
+  base.pipe(select(s => s.a)).subscribe(v => {
     counters.a++;
     expect(v).toBe(base.value.a)
   });
-  base.select(s => s.b).subscribe(v => {
+  base.pipe(select(s => s.b)).subscribe(v => {
     counters.b++;
     expect(v).toBe(base.value.b)
   });
@@ -108,46 +124,48 @@ test('select', () => {
   expect(counters.b).toBe(3);
 })
 
-test('fromLatest', () => {
-  const [counter, multiplier] = [new Subject(2), new Subject(5)];
-
-  function testSum(sum: Observable<number>) {
-    sum.subscribe(v => {
-      expect(v).toBe(counter.value * multiplier.value);
-    });
-    counter.next(4);
-    multiplier.next(3);
-    counter.next(2);
-    multiplier.next(5);
-  }
-
-  const sumObj = Observable.fromLatest(
-    { c: counter, m: multiplier }
-  ).map(v => v.c * v.m);
-  testSum(sumObj);
-
-  const sumArr1 = Observable.fromLatest(
-    [counter, multiplier]
-  ).map(([counter, multiplier]) => counter * multiplier);
-  testSum(sumArr1);
-
-  const sumArr2 = Observable.fromLatest(
-    counter, multiplier
-  ).map(([counter, multiplier]) => counter * multiplier);
-  testSum(sumArr2);
-})
-
 test('map & filter chain', () => {
   const obs$ = new Observable<number>(observer => {
     observer.next(1); observer.next(2); observer.next(3);
     observer.next(4); observer.next(5); observer.next(6);
   })
 
-  const result: (number | string)[] = [];
+  let result: (number | string)[] = [];
   obs$.map(v => v + 2)
     .filter(v => v % 2 === 0)
     .map(v => v === 4 ? 'hi' : v)
     .subscribe(v => result.push(v));
+
   expect(result.length).toBe(3);
   expect(arrayCompare(result, ['hi', 6, 8])).toBeTruthy();
+
+  result = [];
+  obs$.pipe(
+    map(v => v + 2), filter(v => v % 2 === 0), map(v => v === 4 ? 'hi' : v),
+  ).subscribe(v => result.push(v));
+
+  expect(result.length).toBe(3);
+  expect(arrayCompare(result, ['hi', 6, 8])).toBeTruthy();
+})
+
+test('custom operators', () => {
+  const obs$ = new Observable<number>(observer => {
+    observer.next(1); observer.next(2); observer.next(3);
+    observer.next(4); observer.next(5); observer.next(6);
+  })
+
+  const customOperator: () => OperatorFunction<number, number | string> = () =>
+    pipe(
+      map((v: number) => v + 2), filter((v: number) => v % 2 === 0),
+      map(v => v === 4 ? 'hi' : v),
+    );
+
+  const result: (number | string)[] = [];
+  obs$.pipe(
+    customOperator(),
+  ).subscribe(v => result.push(v));
+
+  expect(result.length).toBe(3);
+  expect(arrayCompare(result, ['hi', 6, 8])).toBeTruthy();
+
 })

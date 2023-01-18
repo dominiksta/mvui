@@ -1,3 +1,5 @@
+import { pipe } from "./util";
+
 type TeardownLogic = (() => void) | void;
 
 export type Observer<T> = {
@@ -7,6 +9,9 @@ export type Observer<T> = {
 }
 
 export type ObserverDefinition<T> = Partial<Observer<T>> | ((value: T) => void);
+
+export type OperatorFunction<InputT, ResultT> =
+  (observable: Observable<InputT>) => Observable<ResultT>;
 
 /**
  * A potentially asynchronous series of values which can be subscribed to for basic
@@ -62,148 +67,98 @@ export default class Observable<T> {
     }
   }
 
-  // helpers
-  // ----------------------------------------------------------------------
-
-  /**
-   * The only purpose of this is to call the constructor without binding `this` in passed
-   * arguments.
-   */
-  private static _create<T>(
-    definition: (observer: Observer<T>) => TeardownLogic
-  ) {
-    return new Observable(definition);
-  }
-
   // operators
   // ----------------------------------------------------------------------
 
-  /**
-   * Create a new observable where values are transformed according to `mapper`.
-   */
+  // this mess of types seems to sadly be necessary. this is copied straight from rxjs
+  pipe(): Observable<T>;
+  pipe<A>(op1: OperatorFunction<T, A>): Observable<A>;
+  pipe<A, B>(op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>): Observable<B>;
+  pipe<A, B, C>(
+    op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>
+  ): Observable<C>;
+  pipe<A, B, C, D>(
+    op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>
+  ): Observable<D>;
+  pipe<A, B, C, D, E>(
+    op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
+    op5: OperatorFunction<D, E>
+  ): Observable<E>;
+  pipe<A, B, C, D, E, F>(
+    op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
+    op5: OperatorFunction<D, E>, op6: OperatorFunction<E, F>
+  ): Observable<F>;
+  pipe<A, B, C, D, E, F, G>(
+    op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
+    op5: OperatorFunction<D, E>, op6: OperatorFunction<E, F>,
+    op7: OperatorFunction<F, G>
+  ): Observable<G>;
+  pipe<A, B, C, D, E, F, G, H>(
+    op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
+    op5: OperatorFunction<D, E>, op6: OperatorFunction<E, F>,
+    op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>
+  ): Observable<H>;
+  pipe<A, B, C, D, E, F, G, H, I>(
+    op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
+    op5: OperatorFunction<D, E>, op6: OperatorFunction<E, F>,
+    op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>,
+    op9: OperatorFunction<H, I>
+  ): Observable<I>;
+  pipe<A, B, C, D, E, F, G, H, I>(
+    op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
+    op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
+    op5: OperatorFunction<D, E>, op6: OperatorFunction<E, F>,
+    op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>,
+    op9: OperatorFunction<H, I>,
+    ...operations: OperatorFunction<any, any>[]
+  ): Observable<unknown>;
+
+  pipe(...operations: OperatorFunction<any, any>[]): Observable<any> {
+    return pipe(...operations)(this);
+  }
+
+  /** Shorthand for `.pipe(map(...))` */
   map<ReturnT>(mapper: (value: T) => ReturnT): Observable<ReturnT> {
-    return Observable._create(observer => {
-      return this.subscribe({
+    return _BasicOperators.map(mapper)(this);
+  }
+
+  /** Shorthand for `.pipe(filter(...))` */
+  filter(filter: (value: T) => boolean): Observable<T> {
+    return _BasicOperators.filter(filter)(this);
+  }
+}
+
+/**
+ * We cannot define these outside of this file if we want to have them immediatly
+ * available as class-methods instead of only using pipe because that would result in a
+ * cyclical dependency. rxjs decided to not allow using these as class-methods, which is
+ * not an ideal api for simple use cases.
+ * These are called "basic" because they will likely be used very frequently in common UI
+ * code.
+ * @internal
+ */
+export const _BasicOperators = {
+  map: function <T, ReturnT>(
+    mapper: (value: T) => ReturnT
+  ): OperatorFunction<T, ReturnT> {
+    return orig => new Observable(observer => {
+      return orig.subscribe({
         ...observer,
         next: v => { observer.next(mapper(v)) },
       });
     })
-  }
+  },
 
-  /**
-   * Create a new observable where values are filtered according to `filter`.
-   */
-  filter(filter: (value: T) => boolean): Observable<T> {
-    return Observable._create(observer => {
-      return this.subscribe(v => { if (filter(v)) observer.next(v) })
+  filter: function <T>(filter: (value: T) => boolean): OperatorFunction<T, T> {
+    return orig => new Observable(observer => {
+      return orig.subscribe(v => { if (filter(v)) observer.next(v); })
     })
-  }
-
-  /**
-   * 'Select' a subset of this Observable and only update when the selected subset has
-   * changed. Change is defined by `equalityCheck`, which by default is checking for
-   * reference equality.
-   */
-  select<SelectedT>(
-    selector: (value: T) => SelectedT,
-    equalityCheck: (
-      current: SelectedT, previous: SelectedT | typeof UNDEFINED
-    ) => boolean = (current, previous) => current === previous,
-  ): Observable<SelectedT> {
-    return Observable._create(observer => {
-      let previousValue: SelectedT | typeof UNDEFINED = UNDEFINED;
-      return this.subscribe(v => {
-        const selected = selector(v);
-        if (!equalityCheck(selected, previousValue)) {
-          observer.next(selected);
-          previousValue = selected;
-        }
-      })
-    })
-  }
-
-  // operators: fromLatest
-  // ----------------------------------------------------------------------
-
-  static fromLatest<T extends any[]>(
-    sources: [...{[K in keyof T]: Observable<T[K]>}]
-  ): Observable<T>;
-
-  static fromLatest<T extends any[]>(
-    ...sources: [...{[K in keyof T]: Observable<T[K]>}]
-  ): Observable<T>;
-
-  static fromLatest<T extends { [key: string]: Observable<any> }>(
-    sources: T
-  ): Observable<{ [K in keyof T]: T[K] extends Observable<infer I> ? I : never }>;
-
-  /**
-   * Combine the latest values of the given Observables. Emits every time one of the
-   * sources emits, but only once all sources have emitted at least once.
-   *
-   * ## Examples
-   * ```ts
-   * const [counter, multiplier] = [new Subject(2), new Subject(2)];
-   * const sum = Observable.fromLatest(
-   *   {c: counter, m: multiplier}
-   * ).map(v => v.c * v.m);
-   * sum.subscribe(console.log); // => 4
-   * counter.next(3); // => 6
-   * ```
-   */
-  static fromLatest(
-    ...args: any[]
-  ): any {
-    if (args[0] instanceof Array) { // fromLatest([obs1$, obs2$])
-      return this._fromLatestArr(args[0]);
-    } else if (args.length > 1) { // fromLatest(obs1$, obs2$)
-      return this._fromLatestArr(args);
-    } else { // fromLatest({o1: obs1$, o2: obs2$})
-      return this._fromLatestObj(args[0]);
-    }
-  }
-
-  // implementation for first fromLatest override
-  private static _fromLatestArr<T extends any[]>(
-    sources: [...{[K in keyof T]: Observable<T[K]>}]
-  ): Observable<T> {
-    return new Observable(observer => {
-      let values: any[] = [];
-
-      const teardowns = sources.map((source, i) => source.subscribe(v => {
-        values[i] = v;
-        if (values.filter(v => v !== undefined).length === sources.length) {
-          observer.next(values as any);
-        }
-      }));
-
-      return () => { for (let t of teardowns) if (t) t(); };
-    });
-  }
-
-  // implementation for second fromLatest override
-  private static _fromLatestObj<T extends { [key: string]: Observable<any> }>(
-    sources: T
-  ): Observable<{ [K in keyof T]: T[K] extends Observable<infer I> ? I : never }> {
-    return new Observable(observer => {
-      const values: Partial<{
-        [K in keyof T]: T[K] extends Observable<infer I> ? I : never
-      }> = {};
-
-      const sourceKeys = Object.keys(sources);
-
-      const teardowns = sourceKeys.map(key => sources[key].subscribe(v => {
-        (values as any)[key] = v;
-        if (sourceKeys.filter(k => values[k] === undefined).length === 0) {
-          observer.next(values as any);
-        }
-      }));
-
-      return () => { for (let t of teardowns) if (t) t(); };
-    });
   }
 }
-
-// guaranteed unique value to identify initial values (currently only in the `select`
-// operator)
-const UNDEFINED = Symbol();

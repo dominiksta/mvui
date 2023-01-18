@@ -1,3 +1,4 @@
+import select from "./operators/select";
 import Subject from "./subject";
 
 interface ResultT<DataT> {
@@ -36,9 +37,9 @@ export default class PromisedSubject<DataT> extends Subject<ResultT<DataT>> {
     }
   }
   
-  public loading = this.select(v => v.loading);
-  public error = this.select(v => v.error);
-  public success = this.select(v => v.success);
-  public data = this.select(v => v.data);
+  public loading = this.pipe(select(v => v.loading));
+  public error = this.pipe(select(v => v.error));
+  public success = this.pipe(select(v => v.success));
+  public data = this.pipe(select(v => v.data));
 
 }

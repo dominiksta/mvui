@@ -1,6 +1,7 @@
 import { Observable, Subject } from "../observables";
 import Component from "../component";
 import Html from "../html";
+import { fromLatest } from "../observables/operators";
 
 export class ReactiveList extends Component {
   private list = new Subject(['item 1', 'item 2']);
@@ -71,7 +72,7 @@ ReactiveList.register();
 export class CounterComponent extends Component {
   private count = new Subject(0);
   private multiplier = new Subject(1);
-  private sum = Observable.fromLatest(this.count, this.multiplier);
+  private sum = fromLatest(this.count, this.multiplier);
 
   render = () => [
     Html.FieldSet([
