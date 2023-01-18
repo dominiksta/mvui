@@ -5,7 +5,7 @@ import { camelToDash } from "./util/strings";
 import { CONFIG } from "./const";
 import { throttle } from "./util/time";
 import TwoWayMap from "./util/two-way-map";
-import CSSUtils, { MvuiCSSSheet } from "./util/css";
+import Styling, { MvuiCSSSheet } from "./styling";
 
 export default abstract class Component<
   CustomEventsT extends { [key: string]: any } = {}
@@ -34,10 +34,7 @@ export default abstract class Component<
    * ```
    */
   protected static styles: MvuiCSSSheet;
-  protected static css(sheet: MvuiCSSSheet | MvuiCSSSheet[]): MvuiCSSSheet {
-    return sheet instanceof Array ? sheet.reduce(CSSUtils.mergeSheets) : sheet;
-  };
-  protected styles = new Subject<MvuiCSSSheet>({});
+  protected styles = new Subject<MvuiCSSSheet>([]);
 
   private setInstanceStyles(sheet: MvuiCSSSheet) {
     let el = (this.shadowRoot || this).querySelector<HTMLStyleElement>(
@@ -49,7 +46,7 @@ export default abstract class Component<
       el.nonce = CONFIG.STYLE_SHEET_NONCE;
       (this.shadowRoot || this).appendChild(el);
     }
-    el.innerHTML = CSSUtils.sheetToString(sheet);
+    el.innerHTML = Styling.sheetToString(sheet);
   }
 
   // ----------------------------------------------------------------------
@@ -124,10 +121,11 @@ export default abstract class Component<
 
     (this.shadowRoot || this).innerHTML = '';
 
-    if ((this.constructor as any).styles)
-      CSSUtils.applySheet(
-        CSSUtils.sheetToString((this.constructor as any).styles), this
+    if ((this.constructor as any).styles) {
+      Styling.applySheet(
+        Styling.sheetToString((this.constructor as any).styles), this
       );
+    }
 
     const toDisplay = this.render();
     for (let el of toDisplay) {
@@ -303,7 +301,7 @@ export default abstract class Component<
           }
         }
       }
-      if (el.props.style) CSSUtils.applySingleElement(thisEl, el.props.style);
+      if (el.props.style) Styling.applySingleElement(thisEl, el.props.style);
     }
 
     // --- recurse
