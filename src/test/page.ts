@@ -6,6 +6,7 @@ import { EventReceiver } from "./events";
 import { TemplateReferencesTest1, TemplateReferencesTest2 } from "./template-references";
 import { SlotsTest } from "./slots";
 import { StyledComponent } from "./styles";
+import SomeWebComponentLibraryWrapper from "./web-component-to-mvui";
 
 export class BasicChild extends Component {
   render = () => [
@@ -21,6 +22,13 @@ export default class TestPage extends Component {
       Html.H3({ style: { background: 'red' } }, 'Heading Level 3'),
       BasicChild.new(),
       StyledComponent.new(),
+      Html.FieldSet([
+        Html.Legend('Web Component Wrappers'),
+        SomeWebComponentLibraryWrapper.SomeWebComponent({
+          attrs: { attr1: 4 }, instance: { prop1: 5 },
+          events: { customEvt1: e => alert(`value: ${e.detail}`) },
+        }),
+      ]),
       SlotsTest.new(),
       CounterComponent.new(),
       ReactiveList.new(),

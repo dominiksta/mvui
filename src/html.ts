@@ -1,22 +1,22 @@
 import TemplateElement from "./template-element";
 
 const Html = {
-  Div: TemplateElement.getGeneratorFunction("div"),
-  H1: TemplateElement.getGeneratorFunction("h1"),
-  H2: TemplateElement.getGeneratorFunction("h2"),
-  H3: TemplateElement.getGeneratorFunction("h3"),
-  H4: TemplateElement.getGeneratorFunction("h4"),
-  H5: TemplateElement.getGeneratorFunction("h5"),
-  P: TemplateElement.getGeneratorFunction("p"),
-  Ul: TemplateElement.getGeneratorFunction("ul"),
-  Li: TemplateElement.getGeneratorFunction("li"),
-  Input: TemplateElement.getGeneratorFunction("input"),
-  Button: TemplateElement.getGeneratorFunction("button"),
-  Span: TemplateElement.getGeneratorFunction("span"),
-  FieldSet: TemplateElement.getGeneratorFunction("fieldset"),
-  Legend: TemplateElement.getGeneratorFunction("legend"),
-  Template: TemplateElement.getGeneratorFunction("template"),
-  Slot: TemplateElement.getGeneratorFunction("slot"),
+  Div: TemplateElement.fromBuiltin("div"),
+  H1: TemplateElement.fromBuiltin("h1"),
+  H2: TemplateElement.fromBuiltin("h2"),
+  H3: TemplateElement.fromBuiltin("h3"),
+  H4: TemplateElement.fromBuiltin("h4"),
+  H5: TemplateElement.fromBuiltin("h5"),
+  P: TemplateElement.fromBuiltin("p"),
+  Ul: TemplateElement.fromBuiltin("ul"),
+  Li: TemplateElement.fromBuiltin("li"),
+  Input: TemplateElement.fromBuiltin("input"),
+  Button: TemplateElement.fromBuiltin("button"),
+  Span: TemplateElement.fromBuiltin("span"),
+  FieldSet: TemplateElement.fromBuiltin("fieldset"),
+  Legend: TemplateElement.fromBuiltin("legend"),
+  Template: TemplateElement.fromBuiltin("template"),
+  Slot: TemplateElement.fromBuiltin("slot"),
 }
 
 export default Html;

@@ -270,6 +270,8 @@ export default abstract class Component<
       if (el.props.attrs) {
         for (let attr in el.props.attrs) {
           const attrVal = (el as any).props.attrs[attr]
+          // the camelToDash transformations here are actually not an mvui specific
+          // assumption: html attributes are forced to be all lowercase by the browser
           if (attrVal instanceof Observable) {
             this.subscribe(
               attrVal, v => {

@@ -13,18 +13,17 @@ type GlobalEventHandlersEventMapWithTarget<T extends HTMLElement> =
 export default class TemplateElement<
   T extends HTMLElement,
   CustomEventsMap extends { [key: string]: any } = {},
-  // in theory it would be slightly more robust if we would define all
-  // attributes and properties by hand, but this is a reasonable enough
-  // approximation
-  // TODO: custom attributes & maybe 'data-key' by default?
-  AttrT = Partial<{
-    [Property in keyof T]: MaybeObservable<T[Property]> | MaybeObservable<ToStringable>
-  } & { class: MaybeObservable<ToStringable> }>,
+  // by default, an elements custom attributes will mirror its properties. this is the
+  // default behaviour of both builtin htmlelements and mvui components
+  CustomAttributesMap extends { [key: string]: any } = T,
 > {
 
   public props: {
     style?: Partial<CSSStyleDeclaration>,
-    attrs?: AttrT,
+    attrs?: Partial<{
+      [Property in keyof CustomAttributesMap]:
+      MaybeObservable<CustomAttributesMap[Property]> | MaybeObservable<ToStringable>
+    } & { class: MaybeObservable<ToStringable> }>,
     events?: Partial<{
       [Property in keyof GlobalEventHandlersEventMapWithTarget<T>]:
       (event: GlobalEventHandlersEventMapWithTarget<T>[Property]) => any
@@ -59,7 +58,26 @@ export default class TemplateElement<
     }
   }
 
-  static getGeneratorFunction<T extends keyof HTMLElementTagNameMap>(
+  static fromCustom<
+    T extends HTMLElement,
+    CustomEventsMap extends { [key: string]: any } = {},
+    CustomAttributesMap extends { [key: string]: any } = T,
+  >(
+    creator: () => T,
+  ) {
+    type El = TemplateElement<T, CustomEventsMap, CustomAttributesMap>;
+    return function(
+      childrenOrProps?: El['children'] |
+        El['props'],
+      children?: El['children'],
+    ) {
+      return new TemplateElement<any, any, any>(
+        creator, childrenOrProps, children
+      ) as El;
+    }
+  }
+
+  static fromBuiltin<T extends keyof HTMLElementTagNameMap>(
     tagName: T
   ) {
     return function(
