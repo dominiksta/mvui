@@ -2,7 +2,7 @@
 
 Yes, this is a new frontend framework, and no, I am not joking.
 
-```{typescript}
+```typescript
 export class CounterComponent extends Component {
   private count = new Subject(0);
 
