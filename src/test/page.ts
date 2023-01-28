@@ -25,7 +25,7 @@ export default class TestPage extends Component {
       Html.FieldSet([
         Html.Legend('Web Component Wrappers'),
         SomeWebComponentLibraryWrapper.SomeWebComponent({
-          attrs: { attr1: 4 }, instance: { prop1: 5 },
+          attrs: { attr1: 4 }, fields: { prop1: 5 },
           events: { customEvt1: e => alert(`value: ${e.detail}`) },
         }),
       ]),
@@ -33,7 +33,7 @@ export default class TestPage extends Component {
       CounterComponent.new(),
       ReactiveList.new(),
       Html.P('Here is some text in a paragraph'),
-      Html.Input({ attrs: { type: "number", value: "4" }, instance: { alt: "hi" } }),
+      Html.Input({ attrs: { type: "number", value: "4" }, fields: { alt: "hi" } }),
       SmartComponent.new(),
       EventReceiver.new(),
       TemplateReferencesTest1.new({ events: {

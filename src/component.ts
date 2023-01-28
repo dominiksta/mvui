@@ -340,9 +340,9 @@ export default abstract class Component<
         }
       }
 
-      if (el.props.instance) {
-        for (let prop in el.props.instance) {
-          const val = el.props.instance[prop];
+      if (el.props.fields) {
+        for (let prop in el.props.fields) {
+          const val = el.props.fields[prop];
           if (val instanceof Observable) {
             this.subscribe(val, (v) => {(thisEl as any)[prop] = v});
           } else { (thisEl as any)[prop] = val; }
@@ -350,7 +350,7 @@ export default abstract class Component<
       }
 
       const props = Object.keys(el.props).filter(el =>
-        ['attrs', 'events', 'instance', 'style'].indexOf(el) === -1
+        ['attrs', 'events', 'fields', 'style'].indexOf(el) === -1
       );
 
       if (props.length !== 0) {

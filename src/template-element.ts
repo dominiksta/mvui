@@ -35,7 +35,7 @@ export default class TemplateElement<
       [Property in keyof CustomEventsMap]:
       (event: CustomEvent<CustomEventsMap[Property]>) => any
     }>,
-    instance?: Partial<{
+    fields?: Partial<{
       [Property in keyof T]: MaybeObservable<T[Property]>
     }>,
 
