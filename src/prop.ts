@@ -1,4 +1,4 @@
-import { Subject } from "./observables";
+import { Subject } from "./rx";
 
 function identity<T>(v: T) { return v; };
 

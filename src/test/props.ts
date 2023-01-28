@@ -1,4 +1,4 @@
-import { Subject } from "observables";
+import { Subject } from "rx";
 import Component from "component";
 import Html from "html";
 import Prop from "prop";

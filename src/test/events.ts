@@ -1,5 +1,5 @@
 import Html from "html";
-import { Subject } from "observables";
+import { Subject } from "rx";
 import Component from "component";
 
 

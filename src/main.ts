@@ -1,4 +1,4 @@
-import { Observable, Subject, PromisedSubject } from "./observables";
+import { Observable, Subject, PromisedSubject } from "./rx";
 import { sleep } from "./util/time";
 import TestPage from "./test/page";
 

@@ -1,4 +1,4 @@
-import { Observable } from "./observables";
+import { Observable } from "./rx";
 
 type ToStringable = { toString: () => string };
 type MaybeObservable<T> = Observable<T> | T;

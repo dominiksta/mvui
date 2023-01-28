@@ -1,6 +1,6 @@
 import TemplateElement from "./template-element";
 import { Constructor } from "./util/types";
-import { Observable, Subject } from "./observables";
+import { Observable, Subject } from "./rx";
 import { camelToDash } from "./util/strings";
 import { CONFIG } from "./const";
 import { throttle } from "./util/time";

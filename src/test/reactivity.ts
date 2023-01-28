@@ -1,7 +1,7 @@
-import { Observable, Subject } from "observables";
+import { Observable, Subject } from "rx";
 import Component from "component";
 import Html from "html";
-import { fromLatest } from "observables/operators";
+import { fromLatest } from "rx/operators";
 
 export class ReactiveList extends Component {
   private list = new Subject(['item 1', 'item 2']);
