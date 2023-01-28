@@ -349,17 +349,13 @@ export default abstract class Component<
         }
       }
 
-      const props = Object.keys(el.params).filter(el =>
-        ['attrs', 'events', 'fields', 'style'].indexOf(el) === -1
-      );
-
-      if (props.length !== 0) {
+      if (el.params.props) {
         if (!(thisEl instanceof Component)) throw new Error(
           'Attempted to set props on a template element that is not an mvui ' +
           'component'
         );
-        for (let prop of props) {
-          const val = (el.params as any)[prop];
+        for (let prop in el.params.props) {
+          const val = (el.params.props as any)[prop];
           if (val instanceof Observable) {
             this.subscribe(val, (v) => {
               Component._setPropAndMaybeReflect(thisEl, prop, v);

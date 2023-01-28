@@ -43,10 +43,11 @@ export default class TemplateElement<
     // instantiated from a call to document.createElement, which does not have the ability
     // to pass anything to the constructor. Therefore, any webcomponent must have some
     // valid initial state and props must always be optional.
-  } & Partial<{
-    [Property in keyof CustomPropsMap]:
-    MaybeObservable<CustomPropsMap[Property]>
-  }> = {}
+    props?: Partial<{
+      [Property in keyof CustomPropsMap]:
+      MaybeObservable<CustomPropsMap[Property]>
+    }>
+  } = {}
   public children: string | Observable<any> |
     TemplateElement<any> | TemplateElement<any>[] = []
 

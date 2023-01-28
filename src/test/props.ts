@@ -26,8 +26,8 @@ export class SmartComponent extends Component {
       Html.Button({ events: {
         click: () => this.state.next('second reactive value')
       }}, 'Change reactive value'),
-      DumbComponent.new({ value: 'test' }),
-      DumbComponent.new({ value: this.state }),
+      DumbComponent.new({ props: { value: 'test' }}),
+      DumbComponent.new({ props: { value: this.state }}),
       DumbComponent.new(
         { attrs: { value: this.state.map(v => v + ' from attribute') }}
       ),
