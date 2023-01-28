@@ -1,6 +1,6 @@
-import Html from "../html";
-import Component from "../component";
-import Styling from "../styling";
+import Html from "html";
+import Component from "component";
+import Styling from "styling";
 
 const SOME_SHARED_STYLES = Styling.SimpleSheet({
   'button': {

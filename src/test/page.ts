@@ -1,5 +1,5 @@
-import Html from "../html";
-import Component from "../component"
+import Html from "html";
+import Component from "component"
 import { SmartComponent } from "./props";
 import { CounterComponent, ReactiveList } from "./reactivity";
 import { EventReceiver } from "./events";

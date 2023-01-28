@@ -1,4 +1,4 @@
-import TemplateElement from "../template-element";
+import TemplateElement from "template-element";
 
 class SomeWebComponent extends HTMLElement {
 

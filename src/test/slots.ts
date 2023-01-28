@@ -1,5 +1,5 @@
-import Component from "../component";
-import Html from "../html";
+import Component from "component";
+import Html from "html";
 
 class MyLayout extends Component {
   render = () => [

@@ -1,6 +1,6 @@
-import Html from "../html";
-import { Subject } from "../observables";
-import Component from "../component";
+import Html from "html";
+import { Subject } from "observables";
+import Component from "component";
 
 
 interface Events {

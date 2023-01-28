@@ -1,7 +1,7 @@
-import { Subject } from "../observables";
-import Component from "../component";
-import Html from "../html";
-import Prop from "../prop";
+import { Subject } from "observables";
+import Component from "component";
+import Html from "html";
+import Prop from "prop";
 
 export class DumbComponent extends Component {
 
