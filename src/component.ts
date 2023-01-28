@@ -209,15 +209,15 @@ export default abstract class Component<
     // function instead of being infered from T. This is the only reason why
     // {@link ComponentTemplateElement} exists.
     this: Constructor<T>,
-    childrenOrProps?: ComponentTemplateElement<T>['children'] |
-      ComponentTemplateElement<T>['props'],
+    childrenOrParams?: ComponentTemplateElement<T>['children'] |
+      ComponentTemplateElement<T>['params'],
     children?: ComponentTemplateElement<T>['children'],
   ): ComponentTemplateElement<T> {
     const thisEl = (new (this as any)() as T);
 
     return new TemplateElement<T, E>(
       () => thisEl,
-      childrenOrProps, children
+      childrenOrParams, children
     ) as ComponentTemplateElement<T>;
   }
 
@@ -314,10 +314,10 @@ export default abstract class Component<
     const thisEl = el.creator();
 
     // --- setup attributes, events, props, class fields
-    if (el.props) {
-      if (el.props.attrs) {
-        for (let attr in el.props.attrs) {
-          const attrVal = (el as any).props.attrs[attr]
+    if (el.params) {
+      if (el.params.attrs) {
+        for (let attr in el.params.attrs) {
+          const attrVal = (el as any).params.attrs[attr]
           // the camelToDash transformations here are actually not an mvui specific
           // assumption: html attributes are forced to be all lowercase by the browser
           if (attrVal instanceof Observable) {
@@ -329,27 +329,27 @@ export default abstract class Component<
             );
           } else {
             thisEl.setAttribute(
-              camelToDash(attr), (el as any).props.attrs[attr] as string
+              camelToDash(attr), (el as any).params.attrs[attr] as string
             );
           }
         }
       }
-      if (el.props.events) {
-        for (let key in el.props.events) {
-          thisEl.addEventListener(key, (el.props.events as any)[key]);
+      if (el.params.events) {
+        for (let key in el.params.events) {
+          thisEl.addEventListener(key, (el.params.events as any)[key]);
         }
       }
 
-      if (el.props.fields) {
-        for (let prop in el.props.fields) {
-          const val = el.props.fields[prop];
+      if (el.params.fields) {
+        for (let prop in el.params.fields) {
+          const val = el.params.fields[prop];
           if (val instanceof Observable) {
             this.subscribe(val, (v) => {(thisEl as any)[prop] = v});
           } else { (thisEl as any)[prop] = val; }
         }
       }
 
-      const props = Object.keys(el.props).filter(el =>
+      const props = Object.keys(el.params).filter(el =>
         ['attrs', 'events', 'fields', 'style'].indexOf(el) === -1
       );
 
@@ -359,7 +359,7 @@ export default abstract class Component<
           'component'
         );
         for (let prop of props) {
-          const val = (el.props as any)[prop];
+          const val = (el.params as any)[prop];
           if (val instanceof Observable) {
             this.subscribe(val, (v) => {
               Component._setPropAndMaybeReflect(thisEl, prop, v);
@@ -370,7 +370,7 @@ export default abstract class Component<
         }
       }
 
-      if (el.props.style) Styling.applySingleElement(thisEl, el.props.style);
+      if (el.params.style) Styling.applySingleElement(thisEl, el.params.style);
     }
 
     // --- recurse

@@ -19,7 +19,7 @@ export default class TemplateElement<
   CustomPropsMap extends { [key: string]: any } = {},
 > {
 
-  public props: {
+  public params: {
     style?: Partial<CSSStyleDeclaration>,
 
     attrs?: Partial<{
@@ -53,19 +53,19 @@ export default class TemplateElement<
 
   constructor(
     public creator: () => T,
-    childrenOrProps?: TemplateElement<T>['children'] | TemplateElement<T>['props'],
+    childrenOrParams?: TemplateElement<T>['children'] | TemplateElement<T>['params'],
     children?: TemplateElement<T>['children'],
   ) {
     if (
-      typeof childrenOrProps === 'string'
-      || childrenOrProps instanceof Array
-      || childrenOrProps instanceof Observable
-      || childrenOrProps instanceof TemplateElement
+      typeof childrenOrParams === 'string'
+      || childrenOrParams instanceof Array
+      || childrenOrParams instanceof Observable
+      || childrenOrParams instanceof TemplateElement
     ) {
       if (children) throw new Error('Invalid arguments');
-      this.children = childrenOrProps as any;
+      this.children = childrenOrParams as any;
     } else {
-      this.props = childrenOrProps as any;
+      this.params = childrenOrParams as any;
       this.children = children || [];
     }
   }
@@ -79,12 +79,12 @@ export default class TemplateElement<
   ) {
     type El = TemplateElement<T, CustomEventsMap, CustomAttributesMap>;
     return function(
-      childrenOrProps?: El['children'] |
-        El['props'],
+      childrenOrParams?: El['children'] |
+        El['params'],
       children?: El['children'],
     ) {
       return new TemplateElement<any, any, any>(
-        creator, childrenOrProps, children
+        creator, childrenOrParams, children
       ) as El;
     }
   }
@@ -93,12 +93,12 @@ export default class TemplateElement<
     tagName: T
   ) {
     return function(
-      childrenOrProps?: TemplateElement<HTMLElementTagNameMap[T]>['children'] |
-        TemplateElement<HTMLElementTagNameMap[T]>['props'],
+      childrenOrParams?: TemplateElement<HTMLElementTagNameMap[T]>['children'] |
+        TemplateElement<HTMLElementTagNameMap[T]>['params'],
       children?: TemplateElement<HTMLElementTagNameMap[T]>['children'],
     ) {
       return new TemplateElement<HTMLElementTagNameMap[T]>(
-        () => document.createElement(tagName), childrenOrProps, children
+        () => document.createElement(tagName), childrenOrParams, children
       )
     }
   }
