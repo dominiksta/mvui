@@ -4,8 +4,8 @@ import { Observable, Subject } from "./observables";
 import { camelToDash } from "./util/strings";
 import { CONFIG } from "./const";
 import { throttle } from "./util/time";
-import TwoWayMap from "./util/two-way-map";
 import Styling, { MvuiCSSSheet } from "./styling";
+import Prop from "./prop";
 
 export default abstract class Component<
   CustomEventsT extends { [key: string]: any } = {}
@@ -50,8 +50,31 @@ export default abstract class Component<
   }
 
   // ----------------------------------------------------------------------
-  // attribute reflection
+  // (public) reactive properties & attribute reflection
   // ----------------------------------------------------------------------
+
+  props: { [name: string]: Prop<any> } = {};
+
+  private static _setPropAndMaybeReflect(
+    thisEl: Component, prop: string, value: any
+  ) {
+    if (!(prop in thisEl.props)) throw new Error(
+      'Attempted to set non-existant property'
+    );
+    const p: Prop<any> = (thisEl.props as any)[prop];
+    p.next(value);
+    if (typeof p.options.reflect === "string") {
+      thisEl.reflectAttribute(
+        p.options.reflect,
+        p.options.converter.toString(p.value)
+      )
+    } else if (p.options.reflect === true) {
+      thisEl.reflectAttribute(
+        camelToDash(prop),
+        p.options.converter.toString(p.value)
+      )
+    }
+  }
 
   private attrReflectionObserver = new MutationObserver((mutationList, _observer) => {
     for (const mutation of mutationList) {
@@ -61,21 +84,27 @@ export default abstract class Component<
           return;
         };
         if (mutation.attributeName === null) return;
-        const prop = this.reflectedAttributes.get(mutation.attributeName);
-        if (prop) {
-          (this as any)[prop] = this.getAttribute(mutation.attributeName);
-          // console.log(`The ${mutation.attributeName} attribute was modified.`);
+
+        for (let k of Object.keys(this.props)) {
+          const reflect = this.props[k].options.reflect;
+          if (reflect === false) continue;
+          const reflectedAttrName = reflect === true ? camelToDash(k) : reflect;
+          if (reflectedAttrName === mutation.attributeName) {
+            // console.debug(`The ${mutation.attributeName} attribute was modified.`);
+            this.props[k].next(this.props[k].options.converter.fromString(
+              this.getAttribute(mutation.attributeName)!
+            ));
+          }
         }
       }
     }
   });
 
-  // attr name -> prop name
-  private reflectedAttributes = new TwoWayMap<string, string>();
   private reflectIgnoreNextAttributeChange = false;
   private reflectAttribute(name: string, value: string) {
+    // console.debug(`reflecting attribute ${name} to ${value}`);
     this.reflectIgnoreNextAttributeChange = true;
-    super.setAttribute(name, value);
+    this.setAttribute(name, value);
   }
 
   // ----------------------------------------------------------------------
@@ -186,44 +215,63 @@ export default abstract class Component<
   ): ComponentTemplateElement<T> {
     const thisEl = (new (this as any)() as T);
 
-    for (let key in thisEl.props) {
-      // console.log(`defining ${key}`);
-      Object.defineProperty(thisEl, key, {
-        set(v: any) {
-          thisEl.props[key].next(v);
-          const attr = thisEl.reflectedAttributes.getReverse(key);
-          // console.log(attr, thisEl.reflectedAttributes);
-          if (attr) thisEl.reflectAttribute(attr, v);
-        },
-        get() { return thisEl.props[key].value }
-      });
-    }
-
     return new TemplateElement<T, E>(
       () => thisEl,
       childrenOrProps, children
     ) as ComponentTemplateElement<T>;
   }
 
-  // ----------------------------------------------------------------------
-  // (public) reactive properties
-  // ----------------------------------------------------------------------
+  /**
+   * Returns a new constructor that will create a more "normal" webcomponent from an mvui
+   * component. Specifically, this means mapping the `props` field to individual class
+   * fields. This enables better compatibility with other frameworks.
+   *
+   * Example:
+   * ```typescript
+   * class _MyComponent extends Component {
+   *   props = { value: new Subject(0) };
+   * }
+   * const MyComponent _MyComponent.export();
+   * export default MyComponent;
 
-  private props: { [key: string]: Subject<any> } = {};
+   * // --- usage ----
+   * const myComp = new MyComponent();
+   * myComp.value = 10; // will trigger an update
+   * ```
+   */
+  static export<T extends Component>(
+    this: Constructor<T>
+  ): Constructor<
+    T & { [key in keyof T['props']]:
+      T['props'][key] extends Subject<infer I> ? I : never }
+  > {
+    const original = this; // reference to original constructor
 
-  /** Define a reactive instance property based on a subject. */
-  protected publicProp<T>(
-    name: string, subj$: Subject<T>,
-    reflectToAttribute: boolean | string = true
-  ) {
-    this.props[name] = subj$;
-    if (typeof reflectToAttribute === 'string') {
-      this.reflectedAttributes.set(reflectToAttribute, name);
-    } else if (reflectToAttribute === true) {
-      this.reflectedAttributes.set(name, name);
+    // new constructor behaviour
+    const f: any = function(this: any, ...args: any[]) {
+      const instance: any = original.apply(this, args)
+
+      for (let p in instance.props) {
+        Object.defineProperty(instance, p, {
+          get() { return instance.props[p].value; },
+          set(v: any) {
+            Component._setPropAndMaybeReflect(instance, p, v);
+          }
+        });
+      }
+
+      return instance;
     }
-    return undefined as T;
+
+    // copy prototype so intanceof operator still works
+    f.prototype = original.prototype;
+
+    return f; // return new constructor
   }
+
+  // ----------------------------------------------------------------------
+  // automatic unsubscribing on unmount
+  // ----------------------------------------------------------------------
 
   protected unsubscribers: (() => void)[] = [];
   protected subscribe<T>(obs: Observable<any>, observer: ((value: T) => void)) {
@@ -265,7 +313,7 @@ export default abstract class Component<
   private _renderTemplate<T extends HTMLElement>(el: TemplateElement<T>) {
     const thisEl = el.creator();
 
-    // --- setup attributes, properties, events
+    // --- setup attributes, events, props, class fields
     if (el.props) {
       if (el.props.attrs) {
         for (let attr in el.props.attrs) {
@@ -291,18 +339,37 @@ export default abstract class Component<
           thisEl.addEventListener(key, (el.props.events as any)[key]);
         }
       }
+
       if (el.props.instance) {
         for (let prop in el.props.instance) {
-          const instanceVal = el.props.instance[prop];
-          if (instanceVal instanceof Observable) {
-            this.subscribe(instanceVal, (v) => {
-              (thisEl as any)[prop] = v
+          const val = el.props.instance[prop];
+          if (val instanceof Observable) {
+            this.subscribe(val, (v) => {(thisEl as any)[prop] = v});
+          } else { (thisEl as any)[prop] = val; }
+        }
+      }
+
+      const props = Object.keys(el.props).filter(el =>
+        ['attrs', 'events', 'instance', 'style'].indexOf(el) === -1
+      );
+
+      if (props.length !== 0) {
+        if (!(thisEl instanceof Component)) throw new Error(
+          'Attempted to set props on a template element that is not an mvui ' +
+          'component'
+        );
+        for (let prop of props) {
+          const val = (el.props as any)[prop];
+          if (val instanceof Observable) {
+            this.subscribe(val, (v) => {
+              Component._setPropAndMaybeReflect(thisEl, prop, v);
             });
           } else {
-            (thisEl as any)[prop] = el.props.instance[prop];
+            Component._setPropAndMaybeReflect(thisEl, prop, val);
           }
         }
       }
+
       if (el.props.style) Styling.applySingleElement(thisEl, el.props.style);
     }
 
@@ -394,4 +461,10 @@ export default abstract class Component<
 /** Helper type to infer the custom events of a Component */
 type ComponentTemplateElement<
   CompT extends Component<any>,
-> = TemplateElement<CompT, CompT extends Component<infer I> ? I : never>;
+> = TemplateElement<
+  CompT,
+  CompT extends Component<infer I> ? I : never,
+  CompT,
+  { [key in keyof CompT['props']]:
+    CompT['props'][key] extends Subject<infer I> ? I : never }
+>;

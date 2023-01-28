@@ -16,14 +16,18 @@ export default class TemplateElement<
   // by default, an elements custom attributes will mirror its properties. this is the
   // default behaviour of both builtin htmlelements and mvui components
   CustomAttributesMap extends { [key: string]: any } = T,
+  CustomPropsMap extends { [key: string]: any } = {},
 > {
 
   public props: {
     style?: Partial<CSSStyleDeclaration>,
+
     attrs?: Partial<{
       [Property in keyof CustomAttributesMap]:
       MaybeObservable<CustomAttributesMap[Property]> | MaybeObservable<ToStringable>
-    } & { class: MaybeObservable<ToStringable> }>,
+    } & { class: MaybeObservable<ToStringable> } &
+    { [key: string]: MaybeObservable<ToStringable> }>,
+
     events?: Partial<{
       [Property in keyof GlobalEventHandlersEventMapWithTarget<T>]:
       (event: GlobalEventHandlersEventMapWithTarget<T>[Property]) => any
@@ -34,7 +38,15 @@ export default class TemplateElement<
     instance?: Partial<{
       [Property in keyof T]: MaybeObservable<T[Property]>
     }>,
-  } = {}
+
+    // Props are always optional for a technical reason: A webcomponent may be
+    // instantiated from a call to document.createElement, which does not have the ability
+    // to pass anything to the constructor. Therefore, any webcomponent must have some
+    // valid initial state and props must always be optional.
+  } & Partial<{
+    [Property in keyof CustomPropsMap]:
+    MaybeObservable<CustomPropsMap[Property]>
+  }> = {}
   public children: string | Observable<any> |
     TemplateElement<any> | TemplateElement<any>[] = []
 
