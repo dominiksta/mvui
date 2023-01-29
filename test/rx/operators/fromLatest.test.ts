@@ -1,7 +1,6 @@
 import { test, expect } from '@jest/globals';
-import Subject from '../../subject';
-import Observable from '../../observable';
-import { fromLatest } from './fromLatest';
+import { Observable, Subject } from 'rx';
+import { fromLatest } from 'rx/operators';
 
 test('fromLatest', () => {
   const [counter, multiplier] = [new Subject(2), new Subject(5)];

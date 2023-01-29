@@ -1,6 +1,6 @@
 import { test, expect } from '@jest/globals';
-import { arrayCompare } from '../util/datastructure';
-import Subject from './subject';
+import { arrayCompare } from 'util/datastructure';
+import { Subject } from 'rx';
 
 test('subscribe & unsubscribe', () => {
   const subj$ = new Subject(1);

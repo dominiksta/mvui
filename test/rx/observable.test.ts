@@ -1,10 +1,9 @@
 import { test, expect } from '@jest/globals';
-import { arrayCompare } from '../util/datastructure';
-import Observable, { OperatorFunction } from './observable';
-import { filter, map } from './operators';
-import select from './operators/select';
-import Subject from './subject';
-import { pipe } from './util';
+import { arrayCompare } from 'util/datastructure';
+import { OperatorFunction } from 'rx/observable';
+import { pipe } from 'rx/util';
+import { filter, map, select } from 'rx/operators';
+import { Subject, Observable } from 'rx';
 
 
 test('subscribing to a synchronous definition returns the correct result', () => {
