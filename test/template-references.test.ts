@@ -1,7 +1,9 @@
+import { test, expect } from '@jest/globals';
 import Component from "component";
 import Html from "html";
+import { testDoc, waitFrame } from './util';
 
-export class TemplateReferencesTest1 extends Component {
+class TemplateReferencesTest1 extends Component {
 
   private paragraphEl = this.query<HTMLParagraphElement>('.myClass');
   private listEls = this.queryAll<HTMLParagraphElement>('.myListEl');
@@ -29,7 +31,7 @@ export class TemplateReferencesTest1 extends Component {
 TemplateReferencesTest1.register();
 
 
-export class TemplateReferencesTest2 extends Component {
+class TemplateReferencesTest2 extends Component {
 
   render = () => [
     Html.FieldSet([
@@ -49,3 +51,19 @@ export class TemplateReferencesTest2 extends Component {
   ]
 }
 TemplateReferencesTest2.register();
+
+test('template references', async () => {
+  const comp1 = testDoc(new TemplateReferencesTest1())[1];
+  const comp2 = testDoc(new TemplateReferencesTest2())[1];
+  await waitFrame();
+
+  for (let li of (await comp1.queryAll<HTMLLIElement>('.myListEl'))) {
+    expect(li.innerText).toBe('Multiple query');
+    expect(li.style.textDecoration).toBe('underline');
+  }
+
+  for (let li of (await comp2.queryAll<HTMLLIElement>('.myListEl'))) {
+    expect(li.innerText).toBe(undefined);
+    expect(li.style.textDecoration).toBe('');
+  }
+});

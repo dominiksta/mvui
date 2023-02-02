@@ -1,6 +1,8 @@
+import { test, expect } from '@jest/globals';
 import Html from "html";
 import { Subject } from "rx";
 import Component from "component";
+import { testDoc } from './util';
 
 
 interface Events {
@@ -14,11 +16,13 @@ export class EventEmitter extends Component<Events> {
     Html.FieldSet([
       Html.Legend('Event Emitter'),
       Html.Button({
+        attrs: { id: "evt-string" },
         events: {
           click: () => this.dispatch('customEvtString', 'event value')
         }
       }, 'Emit Event String'),
       Html.Button({
+        attrs: { id: "evt-object" },
         events: {
           click: () => this.dispatch('customEvtNumber', {
             hi: 'world', iAmAnObject: true
@@ -39,11 +43,13 @@ export class EventReceiver extends Component {
   render = () => [
     Html.FieldSet([
       Html.Legend('Event Receiver'),
-      Html.P(this.state),
+      Html.P({ attrs: { id: 'state' }}, this.state),
       EventEmitter.new({
         events: {
           // we put the click event in here additionally to test the types
-          click: (_e) => console.log('EventEmitter was clicked'),
+          click: (_e) => {
+            // console.log('EventEmitter was clicked')
+          },
           customEvtString: (e) => this.state.next(e.detail),
           customEvtNumber: (e) => this.state.next(JSON.stringify(e.detail)),
         }
@@ -53,3 +59,18 @@ export class EventReceiver extends Component {
   
 }
 EventReceiver.register();
+
+
+test('custom events', async () => {
+  const [_, comp] = testDoc(new EventReceiver());
+  const state = await comp.query('#state');
+  const emitter = await comp.query<EventEmitter>('mvui-event-emitter');
+  const emitterString = await emitter.query('button#evt-string');
+  const emitterObject = await emitter.query('button#evt-object');
+
+  expect(state.innerText).toBe('initial');
+  emitterString.click();
+  expect(state.innerText).toBe('event value');
+  emitterObject.click();
+  expect(state.innerText).toBe('{"hi":"world","iAmAnObject":true}');
+})

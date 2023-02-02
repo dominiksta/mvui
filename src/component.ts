@@ -111,6 +111,9 @@ export default abstract class Component<
   // initialization
   // ----------------------------------------------------------------------
 
+  private lifecycleState: "created" | "added" | "rendered" | "removed"
+    = "created";
+
   constructor() {
     super();
 
@@ -122,7 +125,7 @@ export default abstract class Component<
 
     this.styles.subscribe(this.setInstanceStyles.bind(this));
 
-    this.onCreated();
+    this.lifecycleState = "created"; this.onCreated();
   }
 
   static register(prefix?: string) {
@@ -145,7 +148,7 @@ export default abstract class Component<
   protected onRemoved() { }
 
   connectedCallback() {
-    this.onAdded();
+    this.lifecycleState = "added"; this.onAdded();
     CONFIG.APP_DEBUG && this.flash('green');
 
     (this.shadowRoot || this).innerHTML = '';
@@ -163,11 +166,11 @@ export default abstract class Component<
 
     for (let ref of this.templateRefs) ref.resolve(ref.query());
 
-    this.onRender();
+    this.lifecycleState = "rendered"; this.onRender();
   }
 
   disconnectedCallback() {
-    this.onRemoved();
+    this.lifecycleState = "removed"; this.onRemoved();
     CONFIG.APP_DEBUG && this.flash('red');
     for (let unsub of this.unsubscribers) unsub();
   }
@@ -407,47 +410,45 @@ export default abstract class Component<
     resolve: (value: any) => void, query: () => any
   }[] = [];
 
-  query<T extends HTMLElement>(query: string, force: false): Promise<T | null>;
-  query<T extends HTMLElement>(query: string, force?: true): Promise<T>;
-  query<T extends HTMLElement>(
+  async query<T extends HTMLElement>(query: string, force: false): Promise<T | null>;
+  async query<T extends HTMLElement>(query: string, force?: true): Promise<T>;
+  async query<T extends HTMLElement>(
     query: string, force: boolean = true
   ): Promise<T | null> {
+    const queryFun = () => {
+      const res = (this.shadowRoot || this).querySelector<T>(query);
+      if (force && res === null) throw new Error(
+        `Query '${query}' in component ${this.tagName.toLowerCase()}` +
+        ` did not return results but was set to force`
+      );
+      return res;
+    };
+    if (this.lifecycleState === "rendered") return queryFun();
     return new Promise<T>(resolve => {
-      this.templateRefs.push({
-        resolve,
-        query: () => {
-          const res = (this.shadowRoot || this).querySelector<T>(query);
-          if (force && res === null) throw new Error(
-            `Query '${query}' in component ${this.tagName.toLowerCase()}` +
-              ` did not return results but was set to force`
-          );
-          return res;
-        }
-      });
+      this.templateRefs.push({ resolve, query: queryFun });
     });
   }
 
-  queryAll<T extends HTMLElement>(
+  async queryAll<T extends HTMLElement>(
     query: string, force: false
   ): Promise<NodeListOf<T> | null>;
-  queryAll<T extends HTMLElement>(
+  async queryAll<T extends HTMLElement>(
     query: string, force?: true
   ): Promise<NodeListOf<T>>;
-  queryAll<T extends HTMLElement>(
+  async queryAll<T extends HTMLElement>(
     query: string, force: boolean = true
   ): Promise<NodeListOf<T> | null> {
+    const queryFun = () => {
+      const res = (this.shadowRoot || this).querySelectorAll<T>(query);
+      if (force && res.length === 0) throw new Error(
+        `Query '${query}' in component ${this.tagName.toLowerCase()}` +
+        ` did not return results but was set to force`
+      );
+      return res;
+    };
+    if (this.lifecycleState === "rendered") return queryFun();
     return new Promise(resolve => {
-      this.templateRefs.push({
-        resolve,
-        query: () => {
-          const res = (this.shadowRoot || this).querySelectorAll<T>(query);
-          if (force && res.length === 0) throw new Error(
-            `Query '${query}' in component ${this.tagName.toLowerCase()}` +
-              ` did not return results but was set to force`
-          );
-          return res;
-        }
-      });
+      this.templateRefs.push({ resolve, query: queryFun });
     });
   }
 

@@ -1,9 +1,11 @@
+import { test, expect } from '@jest/globals';
 import { Subject } from "rx";
 import Component from "component";
 import Html from "html";
 import Prop from "prop";
+import { testDoc } from './util';
 
-export class DumbComponent extends Component {
+class DumbComponent extends Component {
 
   props = { value: new Prop('', { reflect: true }) };
 
@@ -16,7 +18,7 @@ export class DumbComponent extends Component {
 }
 DumbComponent.register();
 
-export class SmartComponent extends Component {
+class SmartComponent extends Component {
 
   private state = new Subject('reactive value');
 
@@ -35,3 +37,19 @@ export class SmartComponent extends Component {
   ]
 }
 SmartComponent.register();
+
+test('basic props', async () => {
+  const [_, comp] = testDoc(new SmartComponent());
+  const children = await comp.queryAll<DumbComponent>('mvui-dumb-component');
+  expect(children.length).toBe(3);
+
+  expect(children[0].getAttribute("value")).toBe('test');
+  expect(children[1].getAttribute("value")).toBe('reactive value');
+  expect(children[2].getAttribute("value")).toBe('reactive value from attribute');
+
+  (await comp.query('button')).click();
+
+  expect(children[0].getAttribute("value")).toBe('test');
+  expect(children[1].getAttribute("value")).toBe('second reactive value');
+  expect(children[2].getAttribute("value")).toBe('second reactive value from attribute');
+})

@@ -1,4 +1,8 @@
+import { test, expect } from '@jest/globals';
+import Component from 'component';
+import Html from 'html';
 import TemplateElement from "template-element";
+import { testDoc, waitFrame } from './util';
 
 class SomeWebComponent extends HTMLElement {
 
@@ -43,4 +47,35 @@ const SomeWebComponentLibraryWrapper = {
   )
 }
 
-export default SomeWebComponentLibraryWrapper;
+
+test('template references', async () => {
+
+  let state = 'initial';
+
+  class ComponentUsingWrapper extends Component {
+    render = () => [
+      Html.FieldSet([
+        Html.Legend('Web Component Wrappers'),
+        SomeWebComponentLibraryWrapper.SomeWebComponent({
+          attrs: { id: 'wrapped-comp', attr1: 4 }, fields: { prop1: 5 },
+          events: {
+            customEvt1: e => { state = 'changed' }
+          },
+        }),
+      ]),
+    ]
+  }
+  ComponentUsingWrapper.register();
+
+  const comp = testDoc(new ComponentUsingWrapper())[1];
+  const wrapped = await comp.query<SomeWebComponent>('#wrapped-comp');
+
+  expect(wrapped.getAttribute('attr1')).toBe('4');
+  expect(wrapped.prop1).toBe(5);
+  expect(state).toBe('initial');
+  (wrapped.children[0] as any).click();
+  waitFrame();
+  expect(state).toBe('changed');
+  
+
+});

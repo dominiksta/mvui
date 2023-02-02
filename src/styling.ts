@@ -179,7 +179,7 @@ export default class Styling {
       const sheet = document.createElement('style');
       sheet.innerHTML = css;
       sheet.nonce = CONFIG.STYLE_SHEET_NONCE;
-      el.appendChild(sheet);
+      (el.shadowRoot || el).appendChild(sheet);
     }
   }
 
