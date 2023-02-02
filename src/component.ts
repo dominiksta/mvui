@@ -6,6 +6,25 @@ import { CONFIG } from "./const";
 import { throttle } from "./util/time";
 import Styling, { MvuiCSSSheet } from "./styling";
 
+/**
+ * The heart of mvui. Every mvui component is defined by inheriting from this class.
+ *
+ * Example:
+ * ```typescript
+ * export class CounterComponent extends Component {
+ *   private count = new Subject(0);
+ *
+ *   render = () => [
+ *     Html.P([
+ *       Html.Button({ events: {
+ *         click: _ => this.count.next(this.count.value + 1)
+ *       }}, 'Increment'),
+ *       Html.Span(this.count.map(v => `count: ${v}`))
+ *     ])
+ *   ];
+ * }
+ * ```
+ */
 export default abstract class Component<
   CustomEventsT extends { [key: string]: any } = {}
 > extends HTMLElement {
@@ -24,7 +43,7 @@ export default abstract class Component<
    * level styles property should only be used for actual instance scoped styles for
    * performance reasons. A typical use would look like this:
    *
-   * ```{typescript}
+   * ```typescript
    * static styles = Component.css({
    *   'button': {
    *     'background': 'red'
@@ -146,7 +165,7 @@ export default abstract class Component<
   protected onRender() { }
   protected onRemoved() { }
 
-  connectedCallback() {
+  private connectedCallback() {
     this.lifecycleState = "added"; this.onAdded();
     CONFIG.APP_DEBUG && this.flash('green');
 
@@ -168,7 +187,7 @@ export default abstract class Component<
     this.lifecycleState = "rendered"; this.onRender();
   }
 
-  disconnectedCallback() {
+  private disconnectedCallback() {
     this.lifecycleState = "removed"; this.onRemoved();
     CONFIG.APP_DEBUG && this.flash('red');
     for (let unsub of this.unsubscribers) unsub();
@@ -297,9 +316,8 @@ export default abstract class Component<
   // ----------------------------------------------------------------------
 
   /**
-   * Dispatch an event specified in the generic {@link CustomEventsT} parameter. All
-   * events will be dispatched as an instance of `CustomEvent` with `detail` set to
-   * `value`.
+   * Dispatch an event specified in the generic CustomEventsT parameter. All events will
+   * be dispatched as an instance of `CustomEvent` with `detail` set to `value`.
    */
   protected dispatch<T extends keyof CustomEventsT>(
     name: T, value: CustomEventsT[T]

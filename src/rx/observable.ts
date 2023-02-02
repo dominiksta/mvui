@@ -71,39 +71,53 @@ export default class Observable<T> {
   // ----------------------------------------------------------------------
 
   // this mess of types seems to sadly be necessary. this is copied straight from rxjs
+
+  /** @ignore */
   pipe(): Observable<T>;
+
+  /** @ignore */
   pipe<A>(op1: OperatorFunction<T, A>): Observable<A>;
+  /**
+   * TODO
+   */
   pipe<A, B>(op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>): Observable<B>;
+  /** @ignore */
   pipe<A, B, C>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>
   ): Observable<C>;
+  /** @ignore */
   pipe<A, B, C, D>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>
   ): Observable<D>;
+  /** @ignore */
   pipe<A, B, C, D, E>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
     op5: OperatorFunction<D, E>
   ): Observable<E>;
+  /** @ignore */
   pipe<A, B, C, D, E, F>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
     op5: OperatorFunction<D, E>, op6: OperatorFunction<E, F>
   ): Observable<F>;
+  /** @ignore */
   pipe<A, B, C, D, E, F, G>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
     op5: OperatorFunction<D, E>, op6: OperatorFunction<E, F>,
     op7: OperatorFunction<F, G>
   ): Observable<G>;
+  /** @ignore */
   pipe<A, B, C, D, E, F, G, H>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
     op5: OperatorFunction<D, E>, op6: OperatorFunction<E, F>,
     op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>
   ): Observable<H>;
+  /** @ignore */
   pipe<A, B, C, D, E, F, G, H, I>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
@@ -111,6 +125,7 @@ export default class Observable<T> {
     op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>,
     op9: OperatorFunction<H, I>
   ): Observable<I>;
+  /** @ignore */
   pipe<A, B, C, D, E, F, G, H, I>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,

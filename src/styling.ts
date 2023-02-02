@@ -99,6 +99,7 @@ export default class Styling {
    *
    * Example:
    *
+   * ```javascript
    * Styling.SimpleSheet({
    *   'body': {
    *     color: 'red',
@@ -109,9 +110,11 @@ export default class Styling {
    *     flexBasis: 'hi',
    *   }
    * })
+   * ```
    *
    * =>
    *
+   * ```css
    * body {
    *   color: red
    *   border-radius: 4px
@@ -120,6 +123,7 @@ export default class Styling {
    * body > div {
    *   flex-basis: hi
    * }
+   * ```
    */
   static sheetToString(sheet: MvuiCSSSheet, indent = ''): string {
     let out = '';
