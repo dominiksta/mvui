@@ -1,8 +1,7 @@
 import { test, expect } from '@jest/globals';
-import { Subject } from "rx";
+import { Subject, Prop } from "rx";
 import Component from "component";
 import Html from "html";
-import Prop from "prop";
 import { testDoc } from './util';
 
 class DumbComponent extends Component {

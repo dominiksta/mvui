@@ -1,11 +1,10 @@
 import TemplateElement from "./template-element";
 import { Constructor } from "./util/types";
-import { Observable, Subject } from "./rx";
+import { Observable, Subject, Prop } from "./rx";
 import { camelToDash } from "./util/strings";
 import { CONFIG } from "./const";
 import { throttle } from "./util/time";
 import Styling, { MvuiCSSSheet } from "./styling";
-import Prop from "./prop";
 
 export default abstract class Component<
   CustomEventsT extends { [key: string]: any } = {}

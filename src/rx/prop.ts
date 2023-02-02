@@ -1,4 +1,4 @@
-import { Subject } from "./rx";
+import Subject from "./subject";
 
 function identity<T>(v: T) { return v; };
 
