@@ -20,6 +20,7 @@ export default class Subject<T> extends Observable<T> {
     this._value = initialValue;
   }
 
+  /** @ignore */
   protected override _subscribe(observer: Observer<T>) {
     this.observers.push(observer);
 

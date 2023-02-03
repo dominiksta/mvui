@@ -52,6 +52,7 @@ export default class Observable<T> {
       ?? (() => null);
   }
 
+  /** @ignore */
   protected _subscribe(observer: Observer<T>): TeardownLogic {
     try {
       const subscriber: Observer<T> = {

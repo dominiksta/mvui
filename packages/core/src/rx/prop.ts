@@ -4,7 +4,8 @@ function identity<T>(v: T) { return v; };
 
 export default class Prop<T> extends Subject<T> {
 
-  options: {
+  /** @ignore */
+  _options: {
     reflect: boolean | string,
     converter: {
       toString: (v: T) => string, fromString: (v: string) => T
@@ -27,13 +28,13 @@ export default class Prop<T> extends Subject<T> {
     super(initial);
 
     if (options) {
-      if (options.reflect) this.options.reflect = options.reflect;
+      if (options.reflect) this._options.reflect = options.reflect;
 
       if (options.converter) {
         if ('fromString' in options.converter) {
-          this.options.converter = options.converter;
+          this._options.converter = options.converter;
         } else if (options.converter === Number) {
-          this.options.converter = {
+          this._options.converter = {
             fromString: v => {
               const ret = parseFloat(v);
               if (isNaN(ret)) throw new Error(
@@ -44,17 +45,17 @@ export default class Prop<T> extends Subject<T> {
             toString: JSON.stringify,
           }
         } else if (options.converter === String) {
-          this.options.converter = {
+          this._options.converter = {
             fromString: identity as any,
             toString: identity as any,
           }
         } else if (options.converter === Boolean) {
-          this.options.converter = {
+          this._options.converter = {
             fromString: v => (v === 'true') as any,
             toString: JSON.stringify,
           }
         } else if (options.converter === Object) {
-          this.options.converter = {
+          this._options.converter = {
             fromString: JSON.parse,
             toString: JSON.stringify,
           }

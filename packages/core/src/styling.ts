@@ -97,8 +97,7 @@ export default class Styling {
   /**
    * Convert a javascript representation of css into a full stylesheet as a string.
    *
-   * Example:
-   *
+   * @example
    * ```javascript
    * Styling.SimpleSheet({
    *   'body': {

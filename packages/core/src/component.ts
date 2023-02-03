@@ -9,7 +9,7 @@ import Styling, { MvuiCSSSheet } from "./styling";
 /**
  * The heart of mvui. Every mvui component is defined by inheriting from this class.
  *
- * Example:
+ * @example
  * ```typescript
  * export class CounterComponent extends Component {
  *   private count = new Subject(0);
@@ -81,15 +81,15 @@ export default abstract class Component<
     );
     const p: Prop<any> = (thisEl.props as any)[prop];
     p.next(value);
-    if (typeof p.options.reflect === "string") {
+    if (typeof p._options.reflect === "string") {
       thisEl.reflectAttribute(
-        p.options.reflect,
-        p.options.converter.toString(p.value)
+        p._options.reflect,
+        p._options.converter.toString(p.value)
       )
-    } else if (p.options.reflect === true) {
+    } else if (p._options.reflect === true) {
       thisEl.reflectAttribute(
         camelToDash(prop),
-        p.options.converter.toString(p.value)
+        p._options.converter.toString(p.value)
       )
     }
   }
@@ -104,12 +104,12 @@ export default abstract class Component<
         if (mutation.attributeName === null) return;
 
         for (let k of Object.keys(this.props)) {
-          const reflect = this.props[k].options.reflect;
+          const reflect = this.props[k]._options.reflect;
           if (reflect === false) continue;
           const reflectedAttrName = reflect === true ? camelToDash(k) : reflect;
           if (reflectedAttrName === mutation.attributeName) {
             // console.debug(`The ${mutation.attributeName} attribute was modified.`);
-            this.props[k].next(this.props[k].options.converter.fromString(
+            this.props[k].next(this.props[k]._options.converter.fromString(
               this.getAttribute(mutation.attributeName)!
             ));
           }
@@ -247,7 +247,7 @@ export default abstract class Component<
    * component. Specifically, this means mapping the `props` field to individual class
    * fields. This enables better compatibility with other frameworks.
    *
-   * Example:
+   * @example
    * ```typescript
    * class _MyComponent extends Component {
    *   props = { value: new Subject(0) };
