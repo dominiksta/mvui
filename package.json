@@ -2,7 +2,9 @@
   "name": "mvui",
   "private": true,
   "scripts": {
-    "clean": "rm -rf packages/**/dist"
+    "clean": "rm -rf packages/**/dist",
+    "gendoc": "typedoc",
+    "gendoc:watch": "typedoc --watch --preserveWatchOutput"
   },
   "devDependencies": {
     "typescript": "^4.8.4"

@@ -1,5 +1,9 @@
 {
-  "entryPoints": ["src/index.ts"],
+  "entryPointStrategy": "packages",
+  "entryPoints": [
+    "packages/core",
+    "packages/stdlib"
+  ],
   "out": "public/docs",
   "customCss": "public/typedoc-custom.css",
   "theme": "default",
@@ -10,7 +14,7 @@
   "visibilityFilters": {
     "protected": true,
     "private": false,
-    "inherited": true,
+    "inherited": false,
     "external": false
   },
   "name": "Mvui"

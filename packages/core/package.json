@@ -9,9 +9,12 @@
     "prepare": "npm run compile",
     "clean": "rm -rf dist",
     "test": "jest --watch",
-    "test:once": "jest",
-    "gendoc": "typedoc",
-    "gendoc:watch": "typedoc --watch --preserveWatchOutput"
+    "test:once": "jest"
+  },
+  "typedoc": {
+    "displayName": "Core",
+    "tsconfig": "./src/tsconfig.esm2015.json",
+    "entryPoint": "./src/index.ts"
   },
   "repository": {
     "type": "git",
