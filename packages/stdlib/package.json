@@ -8,7 +8,7 @@
     "dev": "webpack-dev-server"
   },
   "typedoc": {
-    "displayName": "Standard Library",
+    "displayName": "stdlib",
     "tsconfig": "./tsconfig.json",
     "entryPoint": "./src/index.ts"
   },

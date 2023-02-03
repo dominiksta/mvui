@@ -12,7 +12,7 @@
     "test:once": "jest"
   },
   "typedoc": {
-    "displayName": "Core",
+    "displayName": "core",
     "tsconfig": "./src/tsconfig.esm2015.json",
     "entryPoint": "./src/index.ts"
   },
