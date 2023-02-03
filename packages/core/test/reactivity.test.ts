@@ -1,7 +1,7 @@
 import { test, expect } from '@jest/globals';
 import { Subject } from "rx";
 import Component from "component";
-import Html from "html";
+import * as h from "html";
 import { fromLatest } from "rx/operators";
 import { testDoc } from './util';
 
@@ -11,22 +11,22 @@ class CounterComponent extends Component {
   private sum = fromLatest(this.count, this.multiplier);
 
   render = () => [
-    Html.fieldset([
-      Html.legend('Child Component: Reactivity'),
-      Html.p('This is a "reactive" Counter'),
-      Html.button({
+    h.fieldset([
+      h.legend('Child Component: Reactivity'),
+      h.p('This is a "reactive" Counter'),
+      h.button({
         attrs: { id: 'inc-count' },
         events: {
           click: () => this.count.next(this.count.value + 1)
         }
       }, 'Increase Count'),
-      Html.button({
+      h.button({
         attrs: { id: 'inc-mult' },
         events: {
           click: () => this.multiplier.next(this.multiplier.value + 1)
         }
       }, 'Increase Multiplier'),
-      Html.span(
+      h.span(
         { attrs: { id: 'state' }},
         this.sum.map(([c, m]) => `${c} * ${m} = ${c * m}`)
       ),
@@ -58,9 +58,9 @@ class ReactiveList extends Component {
   private counter = new Subject(0);
 
   render = () => [
-    Html.fieldset([
-      Html.legend('Child Component: Reactive List'),
-      Html.button({
+    h.fieldset([
+      h.legend('Child Component: Reactive List'),
+      h.button({
         attrs: { id: 'inc-counter' },
         events: {
           click: () => {
@@ -68,7 +68,7 @@ class ReactiveList extends Component {
           }
         }
       }, 'Increment Counter'),
-      Html.button({
+      h.button({
         attrs: { id: 'add-new-el' },
         events: {
           click: () => {
@@ -78,13 +78,13 @@ class ReactiveList extends Component {
           }
         }
       }, 'Add a new list element'),
-      Html.ul(
+      h.ul(
         { attrs: { id: 'static-els' }},
-        this.list.map(v => v.map(v => Html.li(v)))
+        this.list.map(v => v.map(v => h.li(v)))
       ),
-      Html.ul(
+      h.ul(
         { attrs: { id: 'reactive-els' }},
-        this.list.map(v => v.map(() => Html.li(this.counter)))
+        this.list.map(v => v.map(() => h.li(this.counter)))
       ),
     ])
   ];
@@ -124,7 +124,7 @@ class EditableList extends Component {
   ]);
 
   render = () => [
-    Html.button({
+    h.button({
       attrs: { id: 'btn-new-el' },
       events: { click: () => {
       this.editableList.next([
@@ -134,13 +134,13 @@ class EditableList extends Component {
         }
       ]);
     }}}, 'Add new element'),
-    Html.ul(
+    h.ul(
       { attrs: { id: 'list' }},
       this.editableList.map(s => s.length).map(() =>
         this.editableList.value.map((v, i) =>
-          Html.li([
-            Html.span(v.name + ' :'),
-            Html.input({
+          h.li([
+            h.span(v.name + ' :'),
+            h.input({
               attrs: { value: v.value },
               events: {
                 change: e => {
@@ -149,7 +149,7 @@ class EditableList extends Component {
                 }
               }
             }),
-            Html.button({
+            h.button({
               style: { color: 'red' },
               events: { click: () => {
                 this.editableList.value.splice(i, 1);

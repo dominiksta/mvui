@@ -1,7 +1,7 @@
 import { test, expect } from '@jest/globals';
 import Component from 'component';
-import Html from 'html';
-import TemplateElement from "template-element";
+import * as h from 'html';
+import TemplateElement from "../template-element";
 import { testDoc, waitFrame } from './util';
 
 class SomeWebComponent extends HTMLElement {
@@ -54,8 +54,8 @@ test('template references', async () => {
 
   class ComponentUsingWrapper extends Component {
     render = () => [
-      Html.fieldset([
-        Html.legend('Web Component Wrappers'),
+      h.fieldset([
+        h.legend('Web Component Wrappers'),
         SomeWebComponentLibraryWrapper.SomeWebComponent({
           attrs: { id: 'wrapped-comp', attr1: 4 }, fields: { prop1: 5 },
           events: {

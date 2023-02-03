@@ -7,11 +7,11 @@ export class CounterComponent extends Component {
   private count = new Subject(0);
 
   render = () => [
-    Html.P([
-      Html.Button({ events: {
+    h.P([
+      h.Button({ events: {
         click: _ => this.count.next(this.count.value + 1)
       }}, 'Increment'),
-      Html.Span(this.count.map(v => `count: ${v}`))
+      h.Span(this.count.map(v => `count: ${v}`))
     ])
   ];
 }

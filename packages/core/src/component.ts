@@ -15,11 +15,11 @@ import Styling, { MvuiCSSSheet } from "./styling";
  *   private count = new Subject(0);
  *
  *   render = () => [
- *     Html.p([
- *       Html.button({ events: {
+ *     h.p([
+ *       h.button({ events: {
  *         click: _ => this.count.next(this.count.value + 1)
  *       }}, 'Increment'),
- *       Html.span(this.count.map(v => `count: ${v}`))
+ *       h.span(this.count.map(v => `count: ${v}`))
  *     ])
  *   ];
  * }

@@ -1,5 +1,5 @@
 import { test, expect } from '@jest/globals';
-import Html from "html";
+import * as h from "html";
 import { Subject } from "rx";
 import Component from "component";
 import { testDoc } from './util';
@@ -13,15 +13,15 @@ interface Events {
 export class EventEmitter extends Component<Events> {
 
   render = () => [
-    Html.fieldset([
-      Html.legend('Event Emitter'),
-      Html.button({
+    h.fieldset([
+      h.legend('Event Emitter'),
+      h.button({
         attrs: { id: "evt-string" },
         events: {
           click: () => this.dispatch('customEvtString', 'event value')
         }
       }, 'Emit Event String'),
-      Html.button({
+      h.button({
         attrs: { id: "evt-object" },
         events: {
           click: () => this.dispatch('customEvtNumber', {
@@ -41,9 +41,9 @@ export class EventReceiver extends Component {
   private state = new Subject('initial');
 
   render = () => [
-    Html.fieldset([
-      Html.legend('Event Receiver'),
-      Html.p({ attrs: { id: 'state' }}, this.state),
+    h.fieldset([
+      h.legend('Event Receiver'),
+      h.p({ attrs: { id: 'state' }}, this.state),
       EventEmitter.new({
         events: {
           // we put the click event in here additionally to test the types

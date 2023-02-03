@@ -1,6 +1,6 @@
 import { test, expect } from '@jest/globals';
 import Component from "component";
-import Html from "html";
+import * as h from "html";
 import { testDoc, waitFrame } from './util';
 
 class TemplateReferencesTest1 extends Component {
@@ -17,13 +17,13 @@ class TemplateReferencesTest1 extends Component {
   }
 
   render = () => [
-    Html.fieldset([
-      Html.legend('Template References'),
-      Html.p({ attrs: { class: 'myClass' } }),
-      Html.ul([
-        Html.li({ attrs: { class: 'myListEl' }}),
-        Html.li({ attrs: { class: 'myListEl' }}),
-        Html.li({ attrs: { class: 'myListEl' }}),
+    h.fieldset([
+      h.legend('Template References'),
+      h.p({ attrs: { class: 'myClass' } }),
+      h.ul([
+        h.li({ attrs: { class: 'myListEl' }}),
+        h.li({ attrs: { class: 'myListEl' }}),
+        h.li({ attrs: { class: 'myListEl' }}),
       ])
     ])
   ]
@@ -34,18 +34,18 @@ TemplateReferencesTest1.register();
 class TemplateReferencesTest2 extends Component {
 
   render = () => [
-    Html.fieldset([
-      Html.legend('Template References'),
-      Html.p(
+    h.fieldset([
+      h.legend('Template References'),
+      h.p(
         'This component contains elements with same css classes as another ' +
         'component, so if the shadow were not working the elements here would ' +
         'be populated and styled'
       ),
-      Html.p({ attrs: { class: 'myClass' } }),
-      Html.ul([
-        Html.li({ attrs: { class: 'myListEl' }}),
-        Html.li({ attrs: { class: 'myListEl' }}),
-        Html.li({ attrs: { class: 'myListEl' }}),
+      h.p({ attrs: { class: 'myClass' } }),
+      h.ul([
+        h.li({ attrs: { class: 'myListEl' }}),
+        h.li({ attrs: { class: 'myListEl' }}),
+        h.li({ attrs: { class: 'myListEl' }}),
       ])
     ])
   ]

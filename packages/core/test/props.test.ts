@@ -1,7 +1,7 @@
 import { test, expect } from '@jest/globals';
 import { Subject, Prop } from "rx";
 import Component from "component";
-import Html from "html";
+import * as h from "html";
 import { testDoc } from './util';
 
 class DumbComponent extends Component {
@@ -9,9 +9,9 @@ class DumbComponent extends Component {
   props = { value: new Prop('', { reflect: true }) };
 
   render = () => [
-    Html.fieldset([
-      Html.legend('I am a dumb Component'),
-      Html.p(this.props.value.map(v => `I render this value: ${v}`))
+    h.fieldset([
+      h.legend('I am a dumb Component'),
+      h.p(this.props.value.map(v => `I render this value: ${v}`))
     ])
   ]
 }
@@ -22,9 +22,9 @@ class SmartComponent extends Component {
   private state = new Subject('reactive value');
 
   render = () => [
-    Html.fieldset([
-      Html.legend('I am a smart component'),
-      Html.button({ events: {
+    h.fieldset([
+      h.legend('I am a smart component'),
+      h.button({ events: {
         click: () => this.state.next('second reactive value')
       }}, 'Change reactive value'),
       DumbComponent.new({ props: { value: 'test' }}),

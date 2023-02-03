@@ -1,26 +1,26 @@
 import { test, expect } from '@jest/globals';
 import Component from "component";
-import Html from "html";
+import * as h from "html";
 import { testDoc } from './util';
 
 class MyLayout extends Component {
   render = () => [
-    Html.div('"Header"'),
-    Html.div(Html.slot({ attrs: { id: 'header' }})),
-    Html.div('"Footer"'),
-    Html.slot({ attrs: { id: 'footer', name: "after-footer" } }),
+    h.div('"Header"'),
+    h.div(h.slot({ attrs: { id: 'header' }})),
+    h.div('"Footer"'),
+    h.slot({ attrs: { id: 'footer', name: "after-footer" } }),
   ]
 }
 MyLayout.register();
 
 export class SlotsTest extends Component {
   render = () => [
-    Html.fieldset([
-      Html.legend('Slots'),
+    h.fieldset([
+      h.legend('Slots'),
       MyLayout.new([
-        Html.div('Content Children'),
-        Html.div('Content Children 2'),
-        Html.div({ attrs: { slot: "after-footer" } }, 'After Footer'),
+        h.div('Content Children'),
+        h.div('Content Children 2'),
+        h.div({ attrs: { slot: "after-footer" } }, 'After Footer'),
       ])
     ])
   ]

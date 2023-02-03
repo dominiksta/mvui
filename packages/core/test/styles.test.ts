@@ -1,5 +1,5 @@
 import { test, expect } from '@jest/globals';
-import Html from "html";
+import * as h from "html";
 import Component from "component";
 import Styling from "styling";
 
@@ -35,9 +35,9 @@ export class StyledComponent extends Component {
   ]
 
   render = () => [
-    Html.fieldset([
-      Html.legend('Styled Component'),
-      Html.button({
+    h.fieldset([
+      h.legend('Styled Component'),
+      h.button({
         events: { click: _ => {
           this.styles.next(Styling.SimpleSheet({
             'button': {
@@ -46,7 +46,7 @@ export class StyledComponent extends Component {
           }));
         }}
       }, 'Styled Button'),
-      Html.span(
+      h.span(
         'The button will be round on larger screens to demonstrate media queries'
       )
     ])
