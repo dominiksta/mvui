@@ -1,5 +1,6 @@
 import TemplateElement from "../template-element";
+import { genHtmlTemplateEl } from "./util";
 
-export const canvas     = TemplateElement.fromBuiltin('canvas');
-export const noscript   = TemplateElement.fromBuiltin('noscript');
-export const script     = TemplateElement.fromBuiltin('script');
+export const canvas     = genHtmlTemplateEl('canvas');
+export const noscript   = genHtmlTemplateEl('noscript');
+export const script     = genHtmlTemplateEl('script');

@@ -1,10 +1,11 @@
 import TemplateElement from "../template-element";
+import { genHtmlTemplateEl } from "./util";
 
-export const base       = TemplateElement.fromBuiltin('base');
-export const head       = TemplateElement.fromBuiltin('head');
-export const html       = TemplateElement.fromBuiltin('html');
-export const link       = TemplateElement.fromBuiltin('link');
-export const meta       = TemplateElement.fromBuiltin('meta');
-export const title      = TemplateElement.fromBuiltin('title');
+export const base       = genHtmlTemplateEl('base');
+export const head       = genHtmlTemplateEl('head');
+export const html       = genHtmlTemplateEl('html');
+export const link       = genHtmlTemplateEl('link');
+export const meta       = genHtmlTemplateEl('meta');
+export const title      = genHtmlTemplateEl('title');
 
-export const body       = TemplateElement.fromBuiltin('body');
+export const body       = genHtmlTemplateEl('body');

@@ -1,12 +1,13 @@
 import TemplateElement from "../template-element";
+import { genHtmlTemplateEl } from "./util";
 
 // caption
-export const col        = TemplateElement.fromBuiltin('col');
-export const colgroup   = TemplateElement.fromBuiltin('colgroup');
-export const table      = TemplateElement.fromBuiltin('table');
-export const tbody      = TemplateElement.fromBuiltin('tbody');
-export const td         = TemplateElement.fromBuiltin('td');
-export const tfoot      = TemplateElement.fromBuiltin('tfoot');
-export const th         = TemplateElement.fromBuiltin('th');
-export const thead      = TemplateElement.fromBuiltin('thead');
-export const tr         = TemplateElement.fromBuiltin('tr');
+export const col        = genHtmlTemplateEl('col');
+export const colgroup   = genHtmlTemplateEl('colgroup');
+export const table      = genHtmlTemplateEl('table');
+export const tbody      = genHtmlTemplateEl('tbody');
+export const td         = genHtmlTemplateEl('td');
+export const tfoot      = genHtmlTemplateEl('tfoot');
+export const th         = genHtmlTemplateEl('th');
+export const thead      = genHtmlTemplateEl('thead');
+export const tr         = genHtmlTemplateEl('tr');

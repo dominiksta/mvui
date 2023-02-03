@@ -25,3 +25,5 @@ export * from './scripting';
 export * from './table-content';
 export * from './text-content';
 export * from './web-components';
+
+export type { HtmlTemplateElChildrenOrParams } from './util';

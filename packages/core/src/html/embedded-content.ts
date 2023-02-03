@@ -1,7 +1,8 @@
 import TemplateElement from "../template-element";
+import { genHtmlTemplateEl } from "./util";
 
-export const embed      = TemplateElement.fromBuiltin('embed');
-export const iframe     = TemplateElement.fromBuiltin('iframe');
-export const object     = TemplateElement.fromBuiltin('object');
-export const picture    = TemplateElement.fromBuiltin('picture');
-export const source     = TemplateElement.fromBuiltin('source');
+export const embed      = genHtmlTemplateEl('embed');
+export const iframe     = genHtmlTemplateEl('iframe');
+export const object     = genHtmlTemplateEl('object');
+export const picture    = genHtmlTemplateEl('picture');
+export const source     = genHtmlTemplateEl('source');

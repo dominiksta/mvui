@@ -1,5 +1,6 @@
 import TemplateElement from "../template-element";
+import { genHtmlTemplateEl } from "./util";
 
-export const details    = TemplateElement.fromBuiltin('details');
-export const dialog     = TemplateElement.fromBuiltin('dialog');
-export const summary    = TemplateElement.fromBuiltin('summary');
+export const details    = genHtmlTemplateEl('details');
+export const dialog     = genHtmlTemplateEl('dialog');
+export const summary    = genHtmlTemplateEl('summary');

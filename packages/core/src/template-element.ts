@@ -10,12 +10,6 @@ export interface EventWithTarget<T extends HTMLElement> extends Event {
 type GlobalEventHandlersEventMapWithTarget<T extends HTMLElement> =
   Omit<GlobalEventHandlersEventMap, "change"> & { change: EventWithTarget<T> };
 
-export type HtmlTemplateElement<K extends keyof HTMLElementTagNameMap> = (
-      childrenOrParams?: TemplateElement<HTMLElementTagNameMap[K]>['children'] |
-        TemplateElement<HTMLElementTagNameMap[K]>['params'],
-      children?: TemplateElement<HTMLElementTagNameMap[K]>['children'],
-    ) => TemplateElement<HTMLElementTagNameMap[K]>;
-
 /**
  * TODO
  */
@@ -96,20 +90,6 @@ export default class TemplateElement<
       return new TemplateElement<any, any, any>(
         creator, childrenOrParams, children
       ) as El;
-    }
-  }
-
-  static fromBuiltin<T extends keyof HTMLElementTagNameMap>(
-    tagName: T
-  ): HtmlTemplateElement<T> {
-    return function(
-      childrenOrParams?: TemplateElement<HTMLElementTagNameMap[T]>['children'] |
-        TemplateElement<HTMLElementTagNameMap[T]>['params'],
-      children?: TemplateElement<HTMLElementTagNameMap[T]>['children'],
-    ) {
-      return new TemplateElement<HTMLElementTagNameMap[T]>(
-        () => document.createElement(tagName), childrenOrParams, children
-      )
     }
   }
 }
