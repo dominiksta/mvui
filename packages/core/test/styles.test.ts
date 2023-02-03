@@ -35,9 +35,9 @@ export class StyledComponent extends Component {
   ]
 
   render = () => [
-    Html.FieldSet([
-      Html.Legend('Styled Component'),
-      Html.Button({
+    Html.fieldset([
+      Html.legend('Styled Component'),
+      Html.button({
         events: { click: _ => {
           this.styles.next(Styling.SimpleSheet({
             'button': {
@@ -46,7 +46,7 @@ export class StyledComponent extends Component {
           }));
         }}
       }, 'Styled Button'),
-      Html.Span(
+      Html.span(
         'The button will be round on larger screens to demonstrate media queries'
       )
     ])

@@ -54,8 +54,8 @@ test('template references', async () => {
 
   class ComponentUsingWrapper extends Component {
     render = () => [
-      Html.FieldSet([
-        Html.Legend('Web Component Wrappers'),
+      Html.fieldset([
+        Html.legend('Web Component Wrappers'),
         SomeWebComponentLibraryWrapper.SomeWebComponent({
           attrs: { id: 'wrapped-comp', attr1: 4 }, fields: { prop1: 5 },
           events: {

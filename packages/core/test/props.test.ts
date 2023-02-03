@@ -9,9 +9,9 @@ class DumbComponent extends Component {
   props = { value: new Prop('', { reflect: true }) };
 
   render = () => [
-    Html.FieldSet([
-      Html.Legend('I am a dumb Component'),
-      Html.P(this.props.value.map(v => `I render this value: ${v}`))
+    Html.fieldset([
+      Html.legend('I am a dumb Component'),
+      Html.p(this.props.value.map(v => `I render this value: ${v}`))
     ])
   ]
 }
@@ -22,9 +22,9 @@ class SmartComponent extends Component {
   private state = new Subject('reactive value');
 
   render = () => [
-    Html.FieldSet([
-      Html.Legend('I am a smart component'),
-      Html.Button({ events: {
+    Html.fieldset([
+      Html.legend('I am a smart component'),
+      Html.button({ events: {
         click: () => this.state.next('second reactive value')
       }}, 'Change reactive value'),
       DumbComponent.new({ props: { value: 'test' }}),

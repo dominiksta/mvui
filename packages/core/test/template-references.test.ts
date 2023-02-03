@@ -17,13 +17,13 @@ class TemplateReferencesTest1 extends Component {
   }
 
   render = () => [
-    Html.FieldSet([
-      Html.Legend('Template References'),
-      Html.P({ attrs: { class: 'myClass' } }),
-      Html.Ul([
-        Html.Li({ attrs: { class: 'myListEl' }}),
-        Html.Li({ attrs: { class: 'myListEl' }}),
-        Html.Li({ attrs: { class: 'myListEl' }}),
+    Html.fieldset([
+      Html.legend('Template References'),
+      Html.p({ attrs: { class: 'myClass' } }),
+      Html.ul([
+        Html.li({ attrs: { class: 'myListEl' }}),
+        Html.li({ attrs: { class: 'myListEl' }}),
+        Html.li({ attrs: { class: 'myListEl' }}),
       ])
     ])
   ]
@@ -34,18 +34,18 @@ TemplateReferencesTest1.register();
 class TemplateReferencesTest2 extends Component {
 
   render = () => [
-    Html.FieldSet([
-      Html.Legend('Template References'),
-      Html.P(
+    Html.fieldset([
+      Html.legend('Template References'),
+      Html.p(
         'This component contains elements with same css classes as another ' +
         'component, so if the shadow were not working the elements here would ' +
         'be populated and styled'
       ),
-      Html.P({ attrs: { class: 'myClass' } }),
-      Html.Ul([
-        Html.Li({ attrs: { class: 'myListEl' }}),
-        Html.Li({ attrs: { class: 'myListEl' }}),
-        Html.Li({ attrs: { class: 'myListEl' }}),
+      Html.p({ attrs: { class: 'myClass' } }),
+      Html.ul([
+        Html.li({ attrs: { class: 'myListEl' }}),
+        Html.li({ attrs: { class: 'myListEl' }}),
+        Html.li({ attrs: { class: 'myListEl' }}),
       ])
     ])
   ]

@@ -3,14 +3,14 @@ import { Observable } from "./rx";
 type ToStringable = { toString: () => string };
 type MaybeObservable<T> = Observable<T> | T;
 
-interface EventWithTarget<T extends HTMLElement> extends Event {
+export interface EventWithTarget<T extends HTMLElement> extends Event {
   target: T;
 }
 
 type GlobalEventHandlersEventMapWithTarget<T extends HTMLElement> =
   Omit<GlobalEventHandlersEventMap, "change"> & { change: EventWithTarget<T> };
 
-type HtmlTemplateElement<K extends keyof HTMLElementTagNameMap> = (
+export type HtmlTemplateElement<K extends keyof HTMLElementTagNameMap> = (
       childrenOrParams?: TemplateElement<HTMLElementTagNameMap[K]>['children'] |
         TemplateElement<HTMLElementTagNameMap[K]>['params'],
       children?: TemplateElement<HTMLElementTagNameMap[K]>['children'],

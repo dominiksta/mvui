@@ -5,22 +5,22 @@ import { testDoc } from './util';
 
 class MyLayout extends Component {
   render = () => [
-    Html.Div('"Header"'),
-    Html.Div(Html.Slot({ attrs: { id: 'header' }})),
-    Html.Div('"Footer"'),
-    Html.Slot({ attrs: { id: 'footer', name: "after-footer" } }),
+    Html.div('"Header"'),
+    Html.div(Html.slot({ attrs: { id: 'header' }})),
+    Html.div('"Footer"'),
+    Html.slot({ attrs: { id: 'footer', name: "after-footer" } }),
   ]
 }
 MyLayout.register();
 
 export class SlotsTest extends Component {
   render = () => [
-    Html.FieldSet([
-      Html.Legend('Slots'),
+    Html.fieldset([
+      Html.legend('Slots'),
       MyLayout.new([
-        Html.Div('Content Children'),
-        Html.Div('Content Children 2'),
-        Html.Div({ attrs: { slot: "after-footer" } }, 'After Footer'),
+        Html.div('Content Children'),
+        Html.div('Content Children 2'),
+        Html.div({ attrs: { slot: "after-footer" } }, 'After Footer'),
       ])
     ])
   ]

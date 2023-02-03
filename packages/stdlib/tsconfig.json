@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "incremental": true,
+    "sourceMap": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "target": "es2015",
+    "baseUrl": "./src",
+    "outDir": "./dist/esm2015"
+  },
+  "include": [
+    "src",
+    "test"
+  ],
+  "references": [{ "path": "../core" }]
+}

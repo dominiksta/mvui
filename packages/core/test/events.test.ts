@@ -13,15 +13,15 @@ interface Events {
 export class EventEmitter extends Component<Events> {
 
   render = () => [
-    Html.FieldSet([
-      Html.Legend('Event Emitter'),
-      Html.Button({
+    Html.fieldset([
+      Html.legend('Event Emitter'),
+      Html.button({
         attrs: { id: "evt-string" },
         events: {
           click: () => this.dispatch('customEvtString', 'event value')
         }
       }, 'Emit Event String'),
-      Html.Button({
+      Html.button({
         attrs: { id: "evt-object" },
         events: {
           click: () => this.dispatch('customEvtNumber', {
@@ -41,9 +41,9 @@ export class EventReceiver extends Component {
   private state = new Subject('initial');
 
   render = () => [
-    Html.FieldSet([
-      Html.Legend('Event Receiver'),
-      Html.P({ attrs: { id: 'state' }}, this.state),
+    Html.fieldset([
+      Html.legend('Event Receiver'),
+      Html.p({ attrs: { id: 'state' }}, this.state),
       EventEmitter.new({
         events: {
           // we put the click event in here additionally to test the types

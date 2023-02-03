@@ -4,13 +4,14 @@
     "sourceMap": true,
     "strict": true,
     "moduleResolution": "node",
-    "noEmit": true,
+    "composite": true,
+    // "noEmit": true,
     "lib": [
       "esnext",
       "dom"
     ],
     "target": "esnext",
-    "baseUrl": ".",
+    "baseUrl": "./src",
     "outDir": "./lib"
   },
   "include": [

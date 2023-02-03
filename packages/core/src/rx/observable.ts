@@ -33,9 +33,9 @@ export default class Observable<T> {
     if (def instanceof Function) {
       obs = { next: def } as any;
     }
-    if (!('next' in obs)) obs.next = v => undefined;
-    if (!('error' in obs)) obs.error = e => { throw e; };
-    if (!('complete' in obs)) obs.complete = () => undefined;
+    if (!('next' in obs)) (obs as any).next = (v: T) => undefined;
+    if (!('error' in obs)) (obs as any).error = (e: any) => { throw e; };
+    if (!('complete' in obs)) (obs as any).complete = () => undefined;
     return obs;
   }
 
