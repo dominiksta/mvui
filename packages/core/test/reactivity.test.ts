@@ -1,7 +1,7 @@
 import { test, expect } from '@jest/globals';
 import { Subject } from "rx";
 import Component from "component";
-import * as h from "html";
+import h from "html";
 import { fromLatest } from "rx/operators";
 import { testDoc } from './util';
 

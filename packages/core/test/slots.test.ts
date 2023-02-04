@@ -1,6 +1,6 @@
 import { test, expect } from '@jest/globals';
 import Component from "component";
-import * as h from "html";
+import h from "html";
 import { testDoc } from './util';
 
 class MyLayout extends Component {

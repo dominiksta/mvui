@@ -1,5 +1,5 @@
 import { test, expect } from '@jest/globals';
-import * as h from "html";
+import h from "html";
 import Component from "component";
 import Styling from "styling";
 

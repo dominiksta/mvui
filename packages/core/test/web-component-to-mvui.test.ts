@@ -1,7 +1,7 @@
 import { test, expect } from '@jest/globals';
 import Component from 'component';
-import * as h from 'html';
-import TemplateElement from "../template-element";
+import h from 'html';
+import TemplateElement from "template-element";
 import { testDoc, waitFrame } from './util';
 
 class SomeWebComponent extends HTMLElement {
