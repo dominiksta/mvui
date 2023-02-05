@@ -29,7 +29,7 @@ export default abstract class Component<
   CustomEventsT extends { [key: string]: any } = {}
 > extends HTMLElement {
 
-  protected abstract render(): TemplateElement<any>[];
+  protected abstract render(): TemplateElement<any, any, any, any>[];
 
   protected static useShadow: boolean = true;
   protected static tagNameSuffix?: string;

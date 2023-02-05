@@ -15,44 +15,15 @@ type GlobalEventHandlersEventMapWithTarget<T extends HTMLElement> =
  */
 export default class TemplateElement<
   T extends HTMLElement,
-  CustomEventsMap extends { [key: string]: any } = {},
+  Events extends { [key: string]: any } = {},
   // by default, an elements custom attributes will mirror its properties. this is the
   // default behaviour of both builtin htmlelements and mvui components
-  CustomAttributesMap extends { [key: string]: any } = T,
-  CustomPropsMap extends { [key: string]: any } = {},
+  Attributes extends { [key: string]: any } = T,
+  Props extends { [key: string]: any } = {},
 > {
 
-  public params: {
-    style?: Partial<CSSStyleDeclaration>,
-
-    attrs?: Partial<{
-      [Property in keyof CustomAttributesMap]:
-      MaybeObservable<CustomAttributesMap[Property]> | MaybeObservable<ToStringable>
-    } & { class: MaybeObservable<ToStringable> } &
-    { [key: string]: MaybeObservable<ToStringable> }>,
-
-    events?: Partial<{
-      [Property in keyof GlobalEventHandlersEventMapWithTarget<T>]:
-      (event: GlobalEventHandlersEventMapWithTarget<T>[Property]) => any
-    } & {
-      [Property in keyof CustomEventsMap]:
-      (event: CustomEvent<CustomEventsMap[Property]>) => any
-    }>,
-    fields?: Partial<{
-      [Property in keyof T]: MaybeObservable<T[Property]>
-    }>,
-
-    // Props are always optional for a technical reason: A webcomponent may be
-    // instantiated from a call to document.createElement, which does not have the ability
-    // to pass anything to the constructor. Therefore, any webcomponent must have some
-    // valid initial state and props must always be optional.
-    props?: Partial<{
-      [Property in keyof CustomPropsMap]:
-      MaybeObservable<CustomPropsMap[Property]>
-    }>
-  } = {}
-  public children: string | Observable<any> |
-    TemplateElement<any> | TemplateElement<any>[] = []
+  public params: TemplateElementParams<T, Events, Attributes, Props> = {}
+  public children: TemplateElementChildren = []
 
 
   constructor(
@@ -76,20 +47,73 @@ export default class TemplateElement<
 
   static fromCustom<
     T extends HTMLElement,
-    CustomEventsMap extends { [key: string]: any } = {},
-    CustomAttributesMap extends { [key: string]: any } = T,
+    Events extends { [key: string]: any } = {},
+    Attributes extends { [key: string]: any } = T,
   >(
     creator: () => T,
   ) {
-    type El = TemplateElement<T, CustomEventsMap, CustomAttributesMap>;
+    type El = TemplateElement<T, Events, Attributes>;
     return function(
-      childrenOrParams?: El['children'] |
-        El['params'],
-      children?: El['children'],
+      childrenOrParams?: TemplateElementChildren |
+        TemplateElementParams<T, Events, Attributes>,
+      children?: TemplateElementChildren,
     ) {
       return new TemplateElement<any, any, any>(
         creator, childrenOrParams, children
       ) as El;
     }
   }
+
+  static fromBuiltin<T extends keyof HTMLElementTagNameMap>(tagName: T) {
+    return function(
+      childrenOrParams?: TemplateElementChildren |
+        TemplateElementParams<HTMLElementTagNameMap[T]>,
+      children?: TemplateElementChildren,
+    ) {
+      return new TemplateElement<HTMLElementTagNameMap[T]>(
+        () => document.createElement(tagName), childrenOrParams, children
+      )
+    }
+  }
 }
+
+export type TemplateElementChildren =
+  string | Observable<any> | TemplateElement<any, any, any, any> |
+  TemplateElement<any, any, any, any>[];
+
+export type TemplateElementParams<
+  T extends HTMLElement,
+  EventsT extends { [key: string]: any } = {},
+  Attributes extends { [key: string]: any } = T,
+  Props extends { [key: string]: any } = {}
+  > = {
+    style?: Partial<CSSStyleDeclaration>,
+
+    attrs?: Partial<{
+      [Property in keyof Attributes]:
+      MaybeObservable<Attributes[Property]> | MaybeObservable<ToStringable>
+    } & { class: MaybeObservable<ToStringable> } &
+    { [key: string]: MaybeObservable<ToStringable> }>,
+
+    events?: Partial<{
+      [Property in Exclude<
+        keyof GlobalEventHandlersEventMapWithTarget<T>, keyof EventsT
+      >]:
+      (event: GlobalEventHandlersEventMapWithTarget<T>[Property]) => any
+    } & {
+        [Property in keyof EventsT]:
+        (event: CustomEvent<EventsT[Property]>) => any
+      }>,
+    fields?: Partial<{
+      [Property in keyof T]: MaybeObservable<T[Property]>
+    }>,
+
+    // Props are always optional for a technical reason: A webcomponent may be
+    // instantiated from a call to document.createElement, which does not have the ability
+    // to pass anything to the constructor. Therefore, any webcomponent must have some
+    // valid initial state and props must always be optional.
+    props?: Partial<{
+      [Property in keyof Props]:
+      MaybeObservable<Props[Property]>
+    }>
+  };

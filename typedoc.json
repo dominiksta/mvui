@@ -2,7 +2,8 @@
   "entryPointStrategy": "packages",
   "entryPoints": [
     "packages/core",
-    "packages/stdlib"
+    "packages/stdlib",
+    "packages/ui5"
   ],
   "out": "public/docs",
   "customCss": "public/typedoc-custom.css",
