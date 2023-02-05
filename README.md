@@ -1,17 +1,19 @@
 # Mvui - A Minimalist Webcomponent Framework
 
+*"Minimum Viable UI"*
+
 Yes, this is a new frontend framework, and no, I am not joking.
 
 ```typescript
 export class CounterComponent extends Component {
-  private count = new Subject(0);
+  #count$ = new rx.Subject(0);
 
   render = () => [
     h.p([
       h.button({ events: {
-        click: _ => this.count.next(this.count.value + 1)
+        click: _ => this.#count$.next(this.#count$.value + 1)
       }}, 'Increment'),
-      h.span(this.count.map(v => `count: ${v}`))
+      h.span(this.#count$.map(v => `count: ${v}`))
     ])
   ];
 }
