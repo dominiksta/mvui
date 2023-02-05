@@ -1,9 +1,9 @@
 import { test, expect } from '@jest/globals';
 import h from "html";
 import Component from "component";
-import Styling from "styling";
+import * as style from "style";
 
-const SOME_SHARED_STYLES = Styling.SimpleSheet({
+const SOME_SHARED_STYLES = style.sheet({
   'button': {
     'background': 'yellow', // will be overwritten by the component style sheet
     'padding': '10px',
@@ -19,7 +19,7 @@ export class StyledComponent extends Component {
 
   static styles = [
     ...SOME_SHARED_STYLES,
-    ...Styling.SimpleSheet({
+    ...style.sheet({
       'button': {
         background: 'red',
       },
@@ -27,7 +27,7 @@ export class StyledComponent extends Component {
         background: 'green',
       },
     }),
-    Styling.At.Media('screen and (min-width: 900px)', Styling.SimpleSheet({
+    style.at.media('screen and (min-width: 900px)', style.sheet({
       'button': {
         borderRadius: '10px',
       }
@@ -39,7 +39,7 @@ export class StyledComponent extends Component {
       h.legend('Styled Component'),
       h.button({
         events: { click: _ => {
-          this.styles.next(Styling.SimpleSheet({
+          this.styles.next(style.sheet({
             'button': {
               background: 'brown !important',
             }

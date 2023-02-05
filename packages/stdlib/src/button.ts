@@ -1,4 +1,4 @@
-import { Component, h, rx } from "@mvui/core";
+import { Component, h, rx, style } from "@mvui/core";
 
 /**
  * This is a really cool button.
@@ -13,6 +13,18 @@ import { Component, h, rx } from "@mvui/core";
 ```
  */
 export default class Button extends Component {
+  static styles = [
+    ...style.sheet({
+      'button:active': {
+        background: 'green',
+      },
+    }),
+    style.at.media('screen and (min-width: 900px)', style.sheet({
+      'button': {
+        borderRadius: '10px',
+      }
+    })),
+  ]
 
   props = {
     /** where does this go? */

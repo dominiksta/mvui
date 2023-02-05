@@ -4,7 +4,7 @@ import { Observable, Subject, Prop } from "./rx";
 import { camelToDash } from "./util/strings";
 import { CONFIG } from "./const";
 import { throttle } from "./util/time";
-import Styling, { MvuiCSSSheet } from "./styling";
+import * as style from "./style";
 
 /**
  * The heart of mvui. Every mvui component is defined by inheriting from this class.
@@ -40,21 +40,89 @@ export default abstract class Component<
 
   /**
    * Settings this static property is the primary way of styling a component. The instance
-   * level styles property should only be used for actual instance scoped styles for
-   * performance reasons. A typical use would look like this:
+   * level {@link Component#styles} property should only be used for actual instance
+   * scoped styles for performance reasons
    *
+   * @example
+   * A simple sheet
    * ```typescript
-   * static styles = Component.css({
+   * static styles = style.sheet({
    *   'button': {
    *     'background': 'red'
    *   }
    * })
    * ```
+   *
+   * @example
+   * Sharing styles
+   * ```typescript
+   * const SOME_SHARED_STYLES = style.sheet({
+   *   'button': {
+   *     'background': 'yellow', // will be overwritten by the component style sheet
+   *     'padding': '10px',
+   *   }
+   * });
+   * class MyComponent extends Component {
+   *   static styles = [
+   *     ...SOME_SHARED_STYLES,
+   *     ...style.sheet({
+   *       'button': {
+   *         background: 'red',
+   *       },
+   *       'button:active': {
+   *         background: 'green',
+   *       },
+   *     }),
+   *   ]
+   *   // ...
+   * }
+   * ```
+   *
+   * @example
+   * Using \@rules (for example media queries)
+   * ```typescript
+   * static styles = [
+   *   ...style.sheet({
+   *     'button': {
+   *       background: 'red',
+   *     },
+   *     'button:active': {
+   *       background: 'green',
+   *     },
+   *   }),
+   *   style.at.media('screen and (min-width: 900px)', style.sheet({
+   *     'button': {
+   *       borderRadius: '10px',
+   *     }
+   *   })),
+   * ]
+   * ```
    */
-  protected static styles: MvuiCSSSheet;
-  protected styles = new Subject<MvuiCSSSheet>([]);
+  protected static styles: style.MvuiCSSSheet;
 
-  private setInstanceStyles(sheet: MvuiCSSSheet) {
+  /**
+   * Settings the static {@link Component.styles} property is the primary way of styling a
+   * component. This instance level styles property should only be used for actual
+   * instance scoped styles for performance reasons.
+   *
+   * @example
+   * ```typescript
+   * render = () => [
+   *   h.button({
+   *     events: { click: _ => {
+   *       this.styles.next(style.sheet({
+   *         'button': {
+   *           background: 'brown !important',
+   *         }
+   *       }));
+   *     }}
+   *   }, 'Styled Button'),
+   * ]
+   * ```
+   */
+  protected styles = new Subject<style.MvuiCSSSheet>([]);
+
+  private setInstanceStyles(sheet: style.MvuiCSSSheet) {
     let el = (this.shadowRoot || this).querySelector<HTMLStyleElement>(
       '.mvui-instance-styles'
     );
@@ -64,7 +132,7 @@ export default abstract class Component<
       el.nonce = CONFIG.STYLE_SHEET_NONCE;
       (this.shadowRoot || this).appendChild(el);
     }
-    el.innerHTML = Styling.sheetToString(sheet);
+    el.innerHTML = style.util.sheetToString(sheet);
   }
 
   // ----------------------------------------------------------------------
@@ -172,8 +240,8 @@ export default abstract class Component<
     (this.shadowRoot || this).innerHTML = '';
 
     if ((this.constructor as any).styles) {
-      Styling.applySheet(
-        Styling.sheetToString((this.constructor as any).styles), this
+      style.util.applySheet(
+        style.util.sheetToString((this.constructor as any).styles), this
       );
     }
 
@@ -386,7 +454,7 @@ export default abstract class Component<
         }
       }
 
-      if (el.params.style) Styling.applySingleElement(thisEl, el.params.style);
+      if (el.params.style) style.util.applySingleElement(thisEl, el.params.style);
     }
 
     // --- recurse
