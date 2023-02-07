@@ -1,6 +1,6 @@
 import TemplateElement from "./template-element";
 import { Constructor } from "./util/types";
-import { Observable, Subject, Prop } from "./rx";
+import { Observable, Subject, Prop, Binding } from "./rx";
 import { camelToDash } from "./util/strings";
 import { CONFIG } from "./const";
 import { throttle } from "./util/time";
@@ -445,9 +445,29 @@ export default abstract class Component<
         for (let prop in el.params.props) {
           const val = (el.params.props as any)[prop];
           if (val instanceof Observable) {
+            let ignoreNext = false;
+
             this.subscribe(val, (v) => {
+              // console.debug(`${ignoreNext}: considering prop ${v}`);
+              if (val instanceof Binding) {
+                if (ignoreNext) { ignoreNext = false; return; }
+                else { ignoreNext = true; }
+              }
+              // console.debug(`${ignoreNext}: setting prop ${v}`);
               Component._setPropAndMaybeReflect(thisEl, prop, v);
             });
+            if (val instanceof Binding) {
+              const p: Prop<any> = (thisEl.props as any)[prop];
+              this.subscribe(p, v => {
+                // console.debug(`${ignoreNext}: condiderung binding ${v}`);
+                if (val instanceof Binding) {
+                  if (ignoreNext) { ignoreNext = false; return; }
+                  else { ignoreNext = true; }
+                }
+                // console.debug(`${ignoreNext}: setting binding ${v}`);
+                val.next(v);
+              });
+            }
           } else {
             Component._setPropAndMaybeReflect(thisEl, prop, val);
           }
