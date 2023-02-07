@@ -388,10 +388,11 @@ export default abstract class Component<
    * be dispatched as an instance of `CustomEvent` with `detail` set to `value`.
    */
   protected dispatch<T extends keyof CustomEventsT>(
-    name: T, value: CustomEventsT[T]
+    name: T, value: CustomEventsT[T],
+    options: EventInit = { bubbles: false }
   ) {
     if (typeof name !== 'string') return;
-    this.dispatchEvent(new CustomEvent(name, { detail: value }));
+    this.dispatchEvent(new CustomEvent(name, { detail: value, ...options }));
   }
 
   // ----------------------------------------------------------------------
