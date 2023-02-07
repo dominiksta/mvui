@@ -6,6 +6,7 @@
   "types": "./dist/types/index.d.ts",
   "scripts": {
     "compile": "tsc -b ./src/tsconfig.esm2015.json ./src/tsconfig.types.json",
+    "dev": "tsc -b --watch ./src/tsconfig.esm2015.json ./src/tsconfig.types.json",
     "prepare": "npm run compile",
     "clean": "rm -rf dist",
     "test": "jest --watch",
