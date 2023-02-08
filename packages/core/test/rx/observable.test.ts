@@ -4,6 +4,7 @@ import { OperatorFunction } from 'rx/observable';
 import { pipe } from 'rx/util';
 import { filter, map, select } from 'rx/operators';
 import { Subject, Observable } from 'rx';
+import { sleep } from 'util/time';
 
 
 test('subscribing to a synchronous definition returns the correct result', () => {
@@ -167,4 +168,53 @@ test('custom operators', () => {
   expect(result.length).toBe(3);
   expect(arrayCompare(result, ['hi', 6, 8])).toBeTruthy();
 
+})
+
+test('async subscribe & cleanup', async () => {
+  const values: {
+    one: number[], two: number[]
+  } = {
+    one: [], two: []
+  }
+
+  let cleared = 0;
+
+  const obs = new Observable<number>(obs => {
+    let val = 0;
+    const interval = setInterval(() => obs.next(val++), 10);
+    // console.log(interval);
+    return () => {
+      clearInterval(interval);
+      cleared++;
+    }
+  })
+
+  const unsub1 = obs.subscribe(v => {
+    values.one.push(v);
+  })
+
+  const unsub2 = obs.subscribe(v => {
+    values.two.push(v);
+  })
+
+  setTimeout(() => {
+    unsub1(); // console.log('unsub 1');
+  }, 55);
+
+  setTimeout(() => {
+    unsub2(); // console.log('unsub 2');
+  }, 105);
+
+  expect(cleared).toBe(0);
+
+  await sleep(70);
+
+  expect(cleared).toBe(1);
+
+  await sleep(200);
+
+  expect(cleared).toBe(2);
+  
+  expect(arrayCompare(values.one, [0, 1, 2, 3, 4])).toBeTruthy();
+  expect(arrayCompare(values.two, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9])).toBeTruthy();
 })
