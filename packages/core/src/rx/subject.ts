@@ -1,34 +1,60 @@
 import Observable, { Observer } from "./observable";
 
 /**
- * An Observable that holds some modifiable state. Think of a "normal" Observable like a
- * dumb pipe, while a Subject is more like a 'source' to these pipes.
- * As a consequence, a Subject is instantiated with an initial value, you can inspect the
- * value with `.value` and you can change the value using `.next`, which will trigger all
- * subscriptions with the new value.
- */
-export default class Subject<T> extends Observable<T> {
+   An {@link Observable} that is *multicast*. A normal observable is *unicast* in the
+   sense that each time you call `.subscribe`, a new stream is created and torn down upon
+   completion or after calling `.unsubscribe`. Additionally, a Subject also allows you to
+   `.next` a new value into the stream from "outside".
 
-  private _value: T;
-  /** The current value/state */
-  get value() { return this._value }
+   @example
+   ```typescript
+   // multicast: simple
+   // ----------------------------------------------------------------------
+
+   const subject = new Subject<number>();
+
+   subject.subscribe(v => console.log(`Observer A: ${v}`));
+   subject.subscribe(v => console.log(`Observer B: ${v}`));
+
+   subject.next(1); subject.next(2);
+
+   // Logs:
+   // Observer A: 1
+   // Observer B: 1
+   // Observer A: 2
+   // Observer B: 2
+
+   // Each new value is seen by *both observers*, that is why it is
+   // called multicast.
+
+   // multicast: using a subject as an observer
+   // ----------------------------------------------------------------------
+
+   const obs = new Observable<number>(observer => {
+     observer.next(1); observer.next(2);
+   });
+
+   const subject = new Subject<number>();
+
+   subject.subscribe(v => console.log(`Observer A: ${v}`));
+   subject.subscribe(v => console.log(`Observer B: ${v}`));
+
+   obs.subscribe(subject);
+
+   // Same log output as above
+   ```
+ */
+export default class Subject<T> extends Observable<T> implements Observer<T> {
 
   private observers: Observer<T>[] = [];
 
-  constructor(initialValue: T) {
-    super((_next) => undefined);
-    this._value = initialValue;
+  constructor() {
+    super((_observer) => undefined);
   }
 
   /** @ignore */
   protected override _subscribe(observer: Observer<T>) {
     this.observers.push(observer);
-
-    try {
-      observer.next(this._value);
-    } catch(e) {
-      observer.error(e);
-    }
 
     return () => {
       const index = this.observers.indexOf(observer);
@@ -44,13 +70,15 @@ export default class Subject<T> extends Observable<T> {
     this.observers = [];
   }
 
-  /** Set a new value and trigger all subscriptions with that new value */
+  error(err: any) {
+    if (this.completed) return;
+    for (let observer of this.observers) observer.error(err);
+  }
+
+  /** Trigger all subscriptions with the given value */
   next(value: T) {
     if (this.completed) return;
-    this._value = value;
-    for (let observer of this.observers) {
-      observer.next(value);
-    }
+    for (let observer of this.observers) observer.next(value);
   }
-  
+
 }

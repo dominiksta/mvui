@@ -1,8 +1,8 @@
-import Subject from "./subject";
+import BehaviourSubject from "./behaviour-subject";
 
 function identity<T>(v: T) { return v; };
 
-export default class Prop<T> extends Subject<T> {
+export default class Prop<T> extends BehaviourSubject<T> {
 
   /** @ignore */
   _options: {

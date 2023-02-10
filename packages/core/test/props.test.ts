@@ -1,5 +1,5 @@
 import { test, expect } from '@jest/globals';
-import { Subject, Prop } from "rx";
+import { BehaviourSubject, Prop } from "rx";
 import Component from "component";
 import h from "html";
 import { testDoc } from './util';
@@ -19,7 +19,7 @@ DumbComponent.register();
 
 class SmartComponent extends Component {
 
-  private state = new Subject('reactive value');
+  private state = new BehaviourSubject('reactive value');
 
   render = () => [
     h.fieldset([

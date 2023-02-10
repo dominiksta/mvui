@@ -1,13 +1,13 @@
 import { test, expect } from '@jest/globals';
-import { Subject } from "rx";
+import { BehaviourSubject } from "rx";
 import Component from "component";
 import h from "html";
 import { fromLatest } from "rx/operators";
 import { testDoc } from './util';
 
 class CounterComponent extends Component {
-  private count = new Subject(0);
-  private multiplier = new Subject(1);
+  private count = new BehaviourSubject(0);
+  private multiplier = new BehaviourSubject(1);
   private sum = fromLatest(this.count, this.multiplier);
 
   render = () => [
@@ -54,8 +54,8 @@ test('basic reactivity (counter)', async () => {
 
 
 class ReactiveList extends Component {
-  private list = new Subject(['item 1', 'item 2']);
-  private counter = new Subject(0);
+  private list = new BehaviourSubject(['item 1', 'item 2']);
+  private counter = new BehaviourSubject(0);
 
   render = () => [
     h.fieldset([
@@ -118,7 +118,7 @@ test('reactive list', async () => {
 });
 
 class EditableList extends Component {
-  private editableList = new Subject([
+  private editableList = new BehaviourSubject([
     { name: 'name1', value: 'val1' },
     { name: 'name2', value: 'val2' },
   ]);

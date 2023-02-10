@@ -1,6 +1,6 @@
 import TemplateElement from "./template-element";
 import { Constructor } from "./util/types";
-import { Observable, Subject, Prop, Binding } from "./rx";
+import { Observable, BehaviourSubject, Prop, Binding } from "./rx";
 import { camelToDash } from "./util/strings";
 import { CONFIG } from "./const";
 import { throttle } from "./util/time";
@@ -12,7 +12,7 @@ import * as style from "./style";
  * @example
  * ```typescript
  * export class CounterComponent extends Component {
- *   private count = new Subject(0);
+ *   private count = new BehaviourSubject(0);
  *
  *   render = () => [
  *     h.p([
@@ -120,7 +120,7 @@ export default abstract class Component<
    * ]
    * ```
    */
-  protected styles = new Subject<style.MvuiCSSSheet>([]);
+  protected styles = new BehaviourSubject<style.MvuiCSSSheet>([]);
 
   private setInstanceStyles(sheet: style.MvuiCSSSheet) {
     let el = (this.shadowRoot || this).querySelector<HTMLStyleElement>(
@@ -318,7 +318,7 @@ export default abstract class Component<
    * @example
    * ```typescript
    * class _MyComponent extends Component {
-   *   props = { value: new Subject(0) };
+   *   props = { value: new BehaviourSubject(0) };
    * }
    * const MyComponent _MyComponent.export();
    * export default MyComponent;
@@ -332,7 +332,7 @@ export default abstract class Component<
     this: Constructor<T>
   ): Constructor<
     T & { [key in keyof T['props']]:
-      T['props'][key] extends Subject<infer I> ? I : never }
+      T['props'][key] extends BehaviourSubject<infer I> ? I : never }
   > {
     const original = this; // reference to original constructor
 
@@ -569,5 +569,5 @@ type ComponentTemplateElement<
   CompT extends Component<infer I> ? I : never,
   CompT,
   { [key in keyof CompT['props']]:
-    CompT['props'][key] extends Subject<infer I> ? I : never }
+    CompT['props'][key] extends BehaviourSubject<infer I> ? I : never }
 >;

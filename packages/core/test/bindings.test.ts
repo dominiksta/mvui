@@ -1,7 +1,7 @@
 import { test, expect } from '@jest/globals';
 import Component from "component";
 import h from 'html';
-import { Prop, Subject } from 'rx';
+import { Prop, BehaviourSubject } from 'rx';
 import Binding from 'rx/binding';
 import { testDoc } from './util';
 
@@ -21,7 +21,7 @@ MyBoundInput.register();
 
 test('one binding', async () => {
   class BindingTest extends Component {
-    // #state = new Subject('nothing');
+    // #state = new BehaviourSubject('nothing');
     state = new Binding('initial');
 
     render = () => [
@@ -68,7 +68,7 @@ test('one binding', async () => {
 
 test('two bindings', async () => {
   class BindingTestTwo extends Component {
-    // #state = new Subject('nothing');
+    // #state = new BehaviourSubject('nothing');
     state = new Binding('initial');
 
     render = () => [

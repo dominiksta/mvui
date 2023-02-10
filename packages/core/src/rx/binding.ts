@@ -1,10 +1,10 @@
-import Subject from "./subject";
+import BehaviourSubject from "./behaviour-subject";
 
 /**
- * This class is technically nothing but a {@link Subject}, but if you use it in a
- * template it signals to mvui that you want a two-way binding. Currently, this only works
- * for mvui internal props. It is intended to expand two-way bindings to public class
- * fields of html builtins and wrapped components soon.
+ * This class is technically nothing but a {@link BehaviourSubject}, but if you use it in
+ * a template it signals to mvui that you want a two-way binding. Currently, this only
+ * works for mvui internal props. It is intended to expand two-way bindings to public
+ * class fields of html builtins and wrapped components soon.
  *
  * @example
  * ```typescript
@@ -30,4 +30,4 @@ import Subject from "./subject";
  * }
  * ```
  */
-export default class Binding<T> extends Subject<T> { }
+export default class Binding<T> extends BehaviourSubject<T> { }

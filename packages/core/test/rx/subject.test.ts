@@ -1,78 +1,21 @@
 import { test, expect } from '@jest/globals';
-import { arrayCompare } from 'util/datastructure';
-import { Subject } from 'rx';
+import { Subject, Observable } from 'rx';
 
-test('subscribe & unsubscribe', () => {
-  const subj$ = new Subject(1);
-  const result: number[] = [];
+test('subjects are multicast', () => {
+  let resource = 0;
+  const obs$ = new Observable<number>(observer => {
+    resource++;
+    // console.log(observer.next);
+    observer.next(1); observer.next(2); observer.next(3);
+  })
 
-  expect((subj$ as any).observers.length).toBe(0);
+  const subj$ = new Subject<number>();
+  // console.log(subj$);
 
-  const unsubcribe = subj$.subscribe(v => result.push(v));
+  subj$.subscribe(_ => null);
+  subj$.subscribe(_ => null);
 
-  expect((subj$ as any).observers.length).toBe(1);
-  expect(arrayCompare(result, [1])).toBeTruthy();
-  subj$.next(2);
-  expect(arrayCompare(result, [1, 2])).toBeTruthy();
-  subj$.next(3);
-  expect(arrayCompare(result, [1, 2, 3])).toBeTruthy();
-  unsubcribe();
-  expect((subj$ as any).observers.length).toBe(0);
-  subj$.next(4);
-  expect(arrayCompare(result, [1, 2, 3])).toBeTruthy();
-  expect((subj$ as any).observers.length).toBe(0);
-})
+  obs$.subscribe(subj$);
 
-
-test('subscribe & unsubscribe with operator chain', () => {
-  const subj$ = new Subject(1);
-  const result: number[] = [];
-
-  expect((subj$ as any).observers.length).toBe(0);
-
-  const unsubcribe = subj$
-    .map(v => v + 1)
-    .map(v => v + 1)
-    .subscribe(v => result.push(v));
-
-  expect((subj$ as any).observers.length).toBe(1);
-
-  expect(arrayCompare(result, [3])).toBeTruthy();
-  subj$.next(2);
-  expect(arrayCompare(result, [3, 4])).toBeTruthy();
-  subj$.next(3);
-  expect(arrayCompare(result, [3, 4, 5])).toBeTruthy();
-  unsubcribe();
-  subj$.next(4);
-  expect(arrayCompare(result, [3, 4, 5])).toBeTruthy();
-
-  expect((subj$ as any).observers.length).toBe(0);
-})
-
-test('completing', () => {
-  const subj$ = new Subject(1);
-  const result: number[] = [];
-  let completed = false;
-
-  subj$
-  .map(v => v + 2)
-  .subscribe({
-    next(v) { result.push(v) },
-    complete() { completed = true; }
-  });
-
-  expect((subj$ as any).observers.length).toBe(1);
-
-  expect(arrayCompare(result, [3])).toBeTruthy();
-  subj$.next(2);
-  expect(arrayCompare(result, [3, 4])).toBeTruthy();
-  subj$.next(3);
-  expect(arrayCompare(result, [3, 4, 5])).toBeTruthy();
-  expect(completed).toBeFalsy();
-  subj$.complete();
-  expect(completed).toBeTruthy();
-  subj$.next(4);
-  expect(arrayCompare(result, [3, 4, 5])).toBeTruthy();
-
-  expect((subj$ as any).observers.length).toBe(0);
+  expect(resource).toBe(1);
 })

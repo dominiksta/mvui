@@ -1,9 +1,9 @@
 import { test, expect } from '@jest/globals';
-import { Observable, Subject } from 'rx';
+import { Observable, BehaviourSubject } from 'rx';
 import { fromLatest } from 'rx/operators';
 
 test('fromLatest', () => {
-  const [counter, multiplier] = [new Subject(2), new Subject(5)];
+  const [counter, multiplier] = [new BehaviourSubject(2), new BehaviourSubject(5)];
 
   function testSum(sum: Observable<number>) {
     sum.subscribe(v => {

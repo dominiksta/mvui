@@ -6,7 +6,7 @@ Yes, this is a new frontend framework, and no, I am not joking.
 
 ```typescript
 export class CounterComponent extends Component {
-  #count$ = new rx.Subject(0);
+  #count$ = new rx.BehaviourSubject(0);
 
   render = () => [
     h.p([

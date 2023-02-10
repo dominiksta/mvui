@@ -56,7 +56,8 @@ export default class Observable<T> {
   protected _subscribe(observer: Observer<T>): TeardownLogic {
     try {
       const subscriber: Observer<T> = {
-        ...observer,
+        next: observer.next.bind(observer),
+        error: observer.error.bind(observer),
         complete: () => {
           observer.complete();
           subscriber.next = _ => undefined;

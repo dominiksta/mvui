@@ -11,7 +11,7 @@ export function fromLatest<T extends any[]>(
  *
  * @example
  * ```ts
- * const [counter, multiplier] = [new Subject(2), new Subject(2)];
+ * const [counter, multiplier] = [new BehaviourSubject(2), new BehaviourSubject(2)];
  * const sum = fromLatest(counter, multiplier).map([c, m] => c * m);
  * sum.subscribe(console.log); // => 4
  * counter.next(3); // => 6
@@ -27,7 +27,7 @@ export function fromLatest<T extends any[]>(
  *
  * @example
  * ```ts
- * const [counter, multiplier] = [new Subject(2), new Subject(2)];
+ * const [counter, multiplier] = [new BehaviourSubject(2), new BehaviourSubject(2)];
  * const sum = fromLatest({c: counter, m: multiplier}).map(v => v.c * v.m);
  * sum.subscribe(console.log); // => 4
  * counter.next(3); // => 6

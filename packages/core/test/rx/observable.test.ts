@@ -3,7 +3,7 @@ import { arrayCompare } from 'util/datastructure';
 import { OperatorFunction } from 'rx/observable';
 import { pipe } from 'rx/util';
 import { filter, map, select } from 'rx/operators';
-import { Subject, Observable } from 'rx';
+import { BehaviourSubject, Observable } from 'rx';
 import { sleep } from 'util/time';
 
 
@@ -51,9 +51,12 @@ test('error handling', () => {
   })
 
   let result: number[] = [];
+  let calledError = false;
+
   obs$.map(v => v + 1).subscribe({
     next(v) { result.push(v) },
     error(e) {
+      calledError = true;
       expect(e instanceof Error).toBeTruthy();
       expect(e.message).toBe('hi');
     },
@@ -63,10 +66,23 @@ test('error handling', () => {
     }
   });
 
+  expect(calledError).toBe(true);
   expect(result.length).toBe(2);
   expect(arrayCompare(result, [2, 3])).toBeTruthy();
 })
 
+test('observables are unicast', () => {
+  let resource = 0;
+  const obs$ = new Observable<number>(observer => {
+    resource++;
+    observer.next(1); observer.next(2); observer.next(3);
+  })
+
+  obs$.subscribe(v => null);
+  obs$.subscribe(v => null);
+
+  expect(resource).toBe(2);
+})
 
 test('pipe', () => {
   const obs$ = new Observable<number>(observer => {
@@ -105,7 +121,7 @@ test('filter operator', () => {
 })
 
 test('select', () => {
-  const base = new Subject({a: 0, b: '0'});
+  const base = new BehaviourSubject({a: 0, b: '0'});
   const counters = {a: 0, b: 0};
   base.pipe(select(s => s.a)).subscribe(v => {
     counters.a++;
