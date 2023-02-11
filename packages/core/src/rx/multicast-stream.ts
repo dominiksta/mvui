@@ -1,9 +1,9 @@
-import Observable, { Observer } from "./observable";
+import Stream, { Observer } from "./stream";
 
 /**
-   An {@link Observable} that is *multicast*. A normal observable is *unicast* in the
-   sense that each time you call `.subscribe`, a new stream is created and torn down upon
-   completion or after calling `.unsubscribe`. Additionally, a Subject also allows you to
+   A {@link Stream} that is *multicast*. A normal Stream is *unicast* in the sense that
+   each time you call `.subscribe`, a new stream is created and torn down upon completion
+   or after calling `.unsubscribe`. Additionally, a MulticastStream also allows you to
    `.next` a new value into the stream from "outside".
 
    @example
@@ -11,12 +11,12 @@ import Observable, { Observer } from "./observable";
    // multicast: simple
    // ----------------------------------------------------------------------
 
-   const subject = new Subject<number>();
+   const mc = new MulticastStream<number>();
 
-   subject.subscribe(v => console.log(`Observer A: ${v}`));
-   subject.subscribe(v => console.log(`Observer B: ${v}`));
+   mc.subscribe(v => console.log(`Observer A: ${v}`));
+   mc.subscribe(v => console.log(`Observer B: ${v}`));
 
-   subject.next(1); subject.next(2);
+   mc.next(1); mc.next(2);
 
    // Logs:
    // Observer A: 1
@@ -27,24 +27,24 @@ import Observable, { Observer } from "./observable";
    // Each new value is seen by *both observers*, that is why it is
    // called multicast.
 
-   // multicast: using a subject as an observer
+   // multicast: using a MulticastStream as an Observer
    // ----------------------------------------------------------------------
 
-   const obs = new Observable<number>(observer => {
+   const obs = new Stream<number>(observer => {
      observer.next(1); observer.next(2);
    });
 
-   const subject = new Subject<number>();
+   const mc = new MulticastStream<number>();
 
-   subject.subscribe(v => console.log(`Observer A: ${v}`));
-   subject.subscribe(v => console.log(`Observer B: ${v}`));
+   mc.subscribe(v => console.log(`Observer A: ${v}`));
+   mc.subscribe(v => console.log(`Observer B: ${v}`));
 
-   obs.subscribe(subject);
+   obs.subscribe(mc);
 
    // Same log output as above
    ```
  */
-export default class Subject<T> extends Observable<T> implements Observer<T> {
+export default class MulticastStream<T> extends Stream<T> implements Observer<T> {
 
   private observers: Observer<T>[] = [];
 
@@ -62,9 +62,9 @@ export default class Subject<T> extends Observable<T> implements Observer<T> {
     }
   }
 
-  /** Completing a subject just means clearing all its subscriptions. */
+  /** Completing a MulticastStream just means clearing all its subscriptions. */
   complete() {
-    if (this.completed) throw new Error('Subject was already completed');
+    if (this.completed) throw new Error('MulticastStream was already completed');
     this.completed = true;
     for (let observer of this.observers) observer.complete();
     this.observers = [];

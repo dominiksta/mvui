@@ -11,13 +11,13 @@ export type Observer<T> = {
 export type ObserverDefinition<T> = Partial<Observer<T>> | ((value: T) => void);
 
 export type OperatorFunction<InputT, ResultT> =
-  (observable: Observable<InputT>) => Observable<ResultT>;
+  (stream: Stream<InputT>) => Stream<ResultT>;
 
 /**
  * A potentially asynchronous series of values which can be subscribed to for basic
  * reactive programming.
  */
-export default class Observable<T> {
+export default class Stream<T> {
 
   protected completed = false;
 
@@ -40,15 +40,15 @@ export default class Observable<T> {
   }
 
   /**
-   * 'Subscribe' to this observable with a function. Whenever a new value is emitted (that
+   * 'Subscribe' to this Stream with a function. Whenever a new value is emitted (that
    * is, the `next` function passed to the subscriber in the constructor is called),
    * `observer` will be called with the new value.
    * Returns a 'unsubscribe' function that you may want to store to later be able to
-   * unsubscribe. Note that if an observable does not complete, not unsubscribing is a
+   * unsubscribe. Note that if a Stream does not complete, not unsubscribing is a
    * memory leak.
    */
   subscribe(observer: ObserverDefinition<T>): () => void {
-    return this._subscribe(Observable.definitionToObserver(observer))
+    return this._subscribe(Stream.definitionToObserver(observer))
       ?? (() => null);
   }
 
@@ -75,50 +75,50 @@ export default class Observable<T> {
   // this mess of types seems to sadly be necessary. this is copied straight from rxjs
 
   /** @ignore */
-  pipe(): Observable<T>;
+  pipe(): Stream<T>;
 
   /** @ignore */
-  pipe<A>(op1: OperatorFunction<T, A>): Observable<A>;
+  pipe<A>(op1: OperatorFunction<T, A>): Stream<A>;
   /**
    * TODO
    */
-  pipe<A, B>(op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>): Observable<B>;
+  pipe<A, B>(op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>): Stream<B>;
   /** @ignore */
   pipe<A, B, C>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>
-  ): Observable<C>;
+  ): Stream<C>;
   /** @ignore */
   pipe<A, B, C, D>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>
-  ): Observable<D>;
+  ): Stream<D>;
   /** @ignore */
   pipe<A, B, C, D, E>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
     op5: OperatorFunction<D, E>
-  ): Observable<E>;
+  ): Stream<E>;
   /** @ignore */
   pipe<A, B, C, D, E, F>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
     op5: OperatorFunction<D, E>, op6: OperatorFunction<E, F>
-  ): Observable<F>;
+  ): Stream<F>;
   /** @ignore */
   pipe<A, B, C, D, E, F, G>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
     op5: OperatorFunction<D, E>, op6: OperatorFunction<E, F>,
     op7: OperatorFunction<F, G>
-  ): Observable<G>;
+  ): Stream<G>;
   /** @ignore */
   pipe<A, B, C, D, E, F, G, H>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
     op3: OperatorFunction<B, C>, op4: OperatorFunction<C, D>,
     op5: OperatorFunction<D, E>, op6: OperatorFunction<E, F>,
     op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>
-  ): Observable<H>;
+  ): Stream<H>;
   /** @ignore */
   pipe<A, B, C, D, E, F, G, H, I>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
@@ -126,7 +126,7 @@ export default class Observable<T> {
     op5: OperatorFunction<D, E>, op6: OperatorFunction<E, F>,
     op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>,
     op9: OperatorFunction<H, I>
-  ): Observable<I>;
+  ): Stream<I>;
   /** @ignore */
   pipe<A, B, C, D, E, F, G, H, I>(
     op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>,
@@ -135,19 +135,19 @@ export default class Observable<T> {
     op7: OperatorFunction<F, G>, op8: OperatorFunction<G, H>,
     op9: OperatorFunction<H, I>,
     ...operations: OperatorFunction<any, any>[]
-  ): Observable<unknown>;
+  ): Stream<unknown>;
 
-  pipe(...operations: OperatorFunction<any, any>[]): Observable<any> {
+  pipe(...operations: OperatorFunction<any, any>[]): Stream<any> {
     return pipe(...operations)(this);
   }
 
   /** Shorthand for `.pipe(map(...))` */
-  map<ReturnT>(mapper: (value: T) => ReturnT): Observable<ReturnT> {
+  map<ReturnT>(mapper: (value: T) => ReturnT): Stream<ReturnT> {
     return _BasicOperators.map(mapper)(this);
   }
 
   /** Shorthand for `.pipe(filter(...))` */
-  filter(filter: (value: T) => boolean): Observable<T> {
+  filter(filter: (value: T) => boolean): Stream<T> {
     return _BasicOperators.filter(filter)(this);
   }
 }
@@ -165,7 +165,7 @@ export const _BasicOperators = {
   map: function <T, ReturnT>(
     mapper: (value: T) => ReturnT
   ): OperatorFunction<T, ReturnT> {
-    return orig => new Observable(observer => {
+    return orig => new Stream(observer => {
       return orig.subscribe({
         ...observer,
         next: v => { observer.next(mapper(v)) },
@@ -174,7 +174,7 @@ export const _BasicOperators = {
   },
 
   filter: function <T>(filter: (value: T) => boolean): OperatorFunction<T, T> {
-    return orig => new Observable(observer => {
+    return orig => new Stream(observer => {
       return orig.subscribe(v => { if (filter(v)) observer.next(v); })
     })
   }

@@ -1,15 +1,15 @@
-import { Observer } from "./observable";
-import Subject from "./subject";
+import { Observer } from "./stream";
+import MulticastStream from "./multicast-stream";
 
 /**
- * A {@link Subject} that remembers the last emitted value. Useful to model state.
+ * A {@link MulticastStream} that remembers the last emitted value. Useful to model state.
  *
  * @example
  * ```typescript
- * const subj$ = new BehaviourSubject(1);
- * subj$.map(v => v + 1).subscribe(console.log);
+ * const state$ = new State(1);
+ * state$.map(v => v + 1).subscribe(console.log);
  *
- * subj$.next(4); subj.next(3);
+ * state$.next(4); state$.next(3);
  *
  * // Logs: 2 5 4
  *
@@ -17,7 +17,7 @@ import Subject from "./subject";
  * // and we could always access the current value with `.value`.
  * ```
  */
-export default class BehaviourSubject<T> extends Subject<T> {
+export default class State<T> extends MulticastStream<T> {
 
   private _value: T;
   /** The current value/state */

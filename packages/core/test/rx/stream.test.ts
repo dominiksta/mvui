@@ -1,14 +1,14 @@
 import { test, expect } from '@jest/globals';
 import { arrayCompare } from 'util/datastructure';
-import { OperatorFunction } from 'rx/observable';
+import { OperatorFunction } from 'rx/stream';
 import { pipe } from 'rx/util';
 import { filter, map, select } from 'rx/operators';
-import { BehaviourSubject, Observable } from 'rx';
+import { State, Stream } from 'rx';
 import { sleep } from 'util/time';
 
 
 test('subscribing to a synchronous definition returns the correct result', () => {
-  const obs$ = new Observable<number>(observer => {
+  const obs$ = new Stream<number>(observer => {
     observer.next(1); observer.next(2); observer.next(3);
   })
 
@@ -19,7 +19,7 @@ test('subscribing to a synchronous definition returns the correct result', () =>
 })
 
 test('completion', () => {
-  const obs$ = new Observable<number>(observer => {
+  const obs$ = new Stream<number>(observer => {
     observer.next(1);
     observer.next(2);
     observer.complete();
@@ -40,7 +40,7 @@ test('completion', () => {
 })
 
 test('error handling', () => {
-  const obs$ = new Observable<number>(observer => {
+  const obs$ = new Stream<number>(observer => {
     observer.next(1);
     observer.next(2);
     // note that if we threw in a setTimeout here, the error would not be caught. while
@@ -71,9 +71,9 @@ test('error handling', () => {
   expect(arrayCompare(result, [2, 3])).toBeTruthy();
 })
 
-test('observables are unicast', () => {
+test('streams are unicast', () => {
   let resource = 0;
-  const obs$ = new Observable<number>(observer => {
+  const obs$ = new Stream<number>(observer => {
     resource++;
     observer.next(1); observer.next(2); observer.next(3);
   })
@@ -85,7 +85,7 @@ test('observables are unicast', () => {
 })
 
 test('pipe', () => {
-  const obs$ = new Observable<number>(observer => {
+  const obs$ = new Stream<number>(observer => {
     observer.next(1); observer.next(2); observer.next(3);
   })
 
@@ -98,7 +98,7 @@ test('pipe', () => {
 })
 
 test('map operator', () => {
-  const obs$ = new Observable<number>(observer => {
+  const obs$ = new Stream<number>(observer => {
     observer.next(1); observer.next(2); observer.next(3);
   })
 
@@ -110,7 +110,7 @@ test('map operator', () => {
 
 
 test('filter operator', () => {
-  const obs$ = new Observable<number>(observer => {
+  const obs$ = new Stream<number>(observer => {
     observer.next(1); observer.next(2); observer.next(3);
   })
 
@@ -121,7 +121,7 @@ test('filter operator', () => {
 })
 
 test('select', () => {
-  const base = new BehaviourSubject({a: 0, b: '0'});
+  const base = new State({a: 0, b: '0'});
   const counters = {a: 0, b: 0};
   base.pipe(select(s => s.a)).subscribe(v => {
     counters.a++;
@@ -141,7 +141,7 @@ test('select', () => {
 })
 
 test('map & filter chain', () => {
-  const obs$ = new Observable<number>(observer => {
+  const obs$ = new Stream<number>(observer => {
     observer.next(1); observer.next(2); observer.next(3);
     observer.next(4); observer.next(5); observer.next(6);
   })
@@ -165,7 +165,7 @@ test('map & filter chain', () => {
 })
 
 test('custom operators', () => {
-  const obs$ = new Observable<number>(observer => {
+  const obs$ = new Stream<number>(observer => {
     observer.next(1); observer.next(2); observer.next(3);
     observer.next(4); observer.next(5); observer.next(6);
   })
@@ -195,7 +195,7 @@ test('async subscribe & cleanup', async () => {
 
   let cleared = 0;
 
-  const obs = new Observable<number>(obs => {
+  const obs = new Stream<number>(obs => {
     let val = 0;
     const interval = setInterval(() => obs.next(val++), 10);
     // console.log(interval);

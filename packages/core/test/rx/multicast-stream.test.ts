@@ -1,15 +1,15 @@
 import { test, expect } from '@jest/globals';
-import { Subject, Observable } from 'rx';
+import { MulticastStream, Stream } from 'rx';
 
-test('subjects are multicast', () => {
+test('MulticastStreams are... well they are multicast', () => {
   let resource = 0;
-  const obs$ = new Observable<number>(observer => {
+  const obs$ = new Stream<number>(observer => {
     resource++;
     // console.log(observer.next);
     observer.next(1); observer.next(2); observer.next(3);
   })
 
-  const subj$ = new Subject<number>();
+  const subj$ = new MulticastStream<number>();
   // console.log(subj$);
 
   subj$.subscribe(_ => null);

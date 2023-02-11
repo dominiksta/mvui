@@ -1,6 +1,6 @@
 import { test, expect } from '@jest/globals';
 import h from "html";
-import { BehaviourSubject } from "rx";
+import { State } from "rx";
 import Component from "component";
 import { testDoc } from './util';
 
@@ -38,7 +38,7 @@ EventEmitter.register();
 
 
 export class EventReceiver extends Component {
-  private state = new BehaviourSubject('initial');
+  private state = new State('initial');
 
   render = () => [
     h.fieldset([

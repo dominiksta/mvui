@@ -7,7 +7,7 @@ import * as ui5 from "./index";
 class Main extends Component {
   #toasty = this.query<ui5.types.Toast>('#toasty');
 
-  #busy = new rx.BehaviourSubject(false);
+  #busy = new rx.State(false);
 
   render = () => [
     h.fieldset([

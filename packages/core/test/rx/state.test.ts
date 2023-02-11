@@ -1,9 +1,9 @@
 import { test, expect } from '@jest/globals';
 import { arrayCompare } from 'util/datastructure';
-import { BehaviourSubject, Observable } from 'rx';
+import { State, Stream } from 'rx';
 
 test('subscribe & unsubscribe', () => {
-  const subj$ = new BehaviourSubject(1);
+  const subj$ = new State(1);
   const result: number[] = [];
 
   expect((subj$ as any).observers.length).toBe(0);
@@ -25,7 +25,7 @@ test('subscribe & unsubscribe', () => {
 
 
 test('subscribe & unsubscribe with operator chain', () => {
-  const subj$ = new BehaviourSubject(1);
+  const subj$ = new State(1);
   const result: number[] = [];
 
   expect((subj$ as any).observers.length).toBe(0);
@@ -50,7 +50,7 @@ test('subscribe & unsubscribe with operator chain', () => {
 })
 
 test('completing', () => {
-  const subj$ = new BehaviourSubject(1);
+  const subj$ = new State(1);
   const result: number[] = [];
   let completed = false;
 

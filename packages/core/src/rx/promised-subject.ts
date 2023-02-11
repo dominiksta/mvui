@@ -1,5 +1,5 @@
 import select from "./operators/select";
-import BehaviourSubject from "./behaviour-subject";
+import State from "./state";
 
 interface ResultT<DataT> {
   loading: boolean;
@@ -9,10 +9,10 @@ interface ResultT<DataT> {
 }
 
 /**
- * A helper based on {@link BehaviourSubject} that allows running simple asynchronous functions and
+ * A helper based on {@link State} that allows running simple asynchronous functions and
  * track their loading/error/success state.
  */
-export default class PromisedSubject<DataT> extends BehaviourSubject<ResultT<DataT>> {
+export default class PromisedSubject<DataT> extends State<ResultT<DataT>> {
   
   constructor(
     private asyncFunction: () => Promise<DataT>

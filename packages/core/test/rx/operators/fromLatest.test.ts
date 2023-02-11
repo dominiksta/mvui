@@ -1,11 +1,11 @@
 import { test, expect } from '@jest/globals';
-import { Observable, BehaviourSubject } from 'rx';
+import { Stream, State } from 'rx';
 import { fromLatest } from 'rx/operators';
 
 test('fromLatest', () => {
-  const [counter, multiplier] = [new BehaviourSubject(2), new BehaviourSubject(5)];
+  const [counter, multiplier] = [new State(2), new State(5)];
 
-  function testSum(sum: Observable<number>) {
+  function testSum(sum: Stream<number>) {
     sum.subscribe(v => {
       expect(v).toBe(counter.value * multiplier.value);
     });

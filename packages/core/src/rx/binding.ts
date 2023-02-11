@@ -1,7 +1,7 @@
-import BehaviourSubject from "./behaviour-subject";
+import State from "./state";
 
 /**
- * This class is technically nothing but a {@link BehaviourSubject}, but if you use it in
+ * This class is technically nothing but a {@link State}, but if you use it in
  * a template it signals to mvui that you want a two-way binding. Currently, this only
  * works for mvui internal props. It is intended to expand two-way bindings to public
  * class fields of html builtins and wrapped components soon.
@@ -30,4 +30,4 @@ import BehaviourSubject from "./behaviour-subject";
  * }
  * ```
  */
-export default class Binding<T> extends BehaviourSubject<T> { }
+export default class Binding<T> extends State<T> { }

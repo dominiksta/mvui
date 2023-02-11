@@ -31,7 +31,7 @@ export default class Button extends Component {
     text: new rx.Prop(''),
   }
 
-  #counter$ = new rx.BehaviourSubject(0);
+  #counter$ = new rx.State(0);
   #counterplusplus$ = this.#counter$.pipe(rx.map(el => el + 1));
 
   render = () => [

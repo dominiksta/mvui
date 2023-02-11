@@ -1,7 +1,7 @@
-import { Observable } from "./rx";
+import { Stream } from "./rx";
 
 type ToStringable = { toString: () => string };
-type MaybeObservable<T> = Observable<T> | T;
+type MaybeStream<T> = Stream<T> | T;
 
 export interface EventWithTarget<T extends HTMLElement> extends Event {
   target: T;
@@ -34,7 +34,7 @@ export default class TemplateElement<
     if (
       typeof childrenOrParams === 'string'
       || childrenOrParams instanceof Array
-      || childrenOrParams instanceof Observable
+      || childrenOrParams instanceof Stream
       || childrenOrParams instanceof TemplateElement
     ) {
       if (children) throw new Error('Invalid arguments');
@@ -78,7 +78,7 @@ export default class TemplateElement<
 }
 
 export type TemplateElementChildren =
-  string | Observable<any> | TemplateElement<any, any, any, any> |
+  string | Stream<any> | TemplateElement<any, any, any, any> |
   TemplateElement<any, any, any, any>[];
 
 export type TemplateElementParams<
@@ -91,9 +91,9 @@ export type TemplateElementParams<
 
     attrs?: Partial<{
       [Property in keyof Attributes]:
-      MaybeObservable<Attributes[Property]> | MaybeObservable<ToStringable>
-    } & { class: MaybeObservable<ToStringable> } &
-    { [key: string]: MaybeObservable<ToStringable> }>,
+      MaybeStream<Attributes[Property]> | MaybeStream<ToStringable>
+    } & { class: MaybeStream<ToStringable> } &
+    { [key: string]: MaybeStream<ToStringable> }>,
 
     events?: Partial<{
       [Property in Exclude<
@@ -105,7 +105,7 @@ export type TemplateElementParams<
         (event: CustomEvent<EventsT[Property]>) => any
       }>,
     fields?: Partial<{
-      [Property in keyof T]: MaybeObservable<T[Property]>
+      [Property in keyof T]: MaybeStream<T[Property]>
     }>,
 
     // Props are always optional for a technical reason: A webcomponent may be
@@ -114,6 +114,6 @@ export type TemplateElementParams<
     // valid initial state and props must always be optional.
     props?: Partial<{
       [Property in keyof Props]:
-      MaybeObservable<Props[Property]>
+      MaybeStream<Props[Property]>
     }>
   };

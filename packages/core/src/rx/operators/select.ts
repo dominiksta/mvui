@@ -1,7 +1,7 @@
-import Observable, { OperatorFunction } from "../observable";
+import Stream, { OperatorFunction } from "../stream";
 
 /**
- * 'Select' a subset of this Observable and only update when the selected subset has
+ * 'Select' a subset of this Stream and only update when the selected subset has
  * changed. Change is defined by `equalityCheck`, which by default is checking for
  * reference equality.
  */
@@ -11,7 +11,7 @@ export default function select<T, SelectedT>(
     current: SelectedT, previous: SelectedT | typeof UNDEFINED
   ) => boolean = (current, previous) => current === previous,
 ): OperatorFunction<T, SelectedT> {
-  return orig => new Observable(observer => {
+  return orig => new Stream(observer => {
     let previousValue: SelectedT | typeof UNDEFINED = UNDEFINED;
     return orig.subscribe(v => {
       const selected = selector(v);

@@ -1,8 +1,8 @@
-import BehaviourSubject from "./behaviour-subject";
+import State from "./state";
 
 function identity<T>(v: T) { return v; };
 
-export default class Prop<T> extends BehaviourSubject<T> {
+export default class Prop<T> extends State<T> {
 
   /** @ignore */
   _options: {

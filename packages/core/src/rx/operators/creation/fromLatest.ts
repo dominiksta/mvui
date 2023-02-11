@@ -1,41 +1,41 @@
-import Observable from "../../observable";
+import Stream from "../../stream";
 
 /** @ignore */
 export function fromLatest<T extends any[]>(
-  sources: [...{ [K in keyof T]: Observable<T[K]> }]
-): Observable<T>;
+  sources: [...{ [K in keyof T]: Stream<T[K]> }]
+): Stream<T>;
 
 /**
- * Combine the latest values of the given Observables. Emits every time one of the
+ * Combine the latest values of the given Streams. Emits every time one of the
  * sources emits, but only once all sources have emitted at least once.
  *
  * @example
  * ```ts
- * const [counter, multiplier] = [new BehaviourSubject(2), new BehaviourSubject(2)];
+ * const [counter, multiplier] = [new State(2), new State(2)];
  * const sum = fromLatest(counter, multiplier).map([c, m] => c * m);
  * sum.subscribe(console.log); // => 4
  * counter.next(3); // => 6
  * ```
  */
 export function fromLatest<T extends any[]>(
-  ...sources: [...{ [K in keyof T]: Observable<T[K]> }]
-): Observable<T>;
+  ...sources: [...{ [K in keyof T]: Stream<T[K]> }]
+): Stream<T>;
 
 /**
- * Combine the latest values of the given Observables. Emits every time one of the
+ * Combine the latest values of the given Streams. Emits every time one of the
  * sources emits, but only once all sources have emitted at least once.
  *
  * @example
  * ```ts
- * const [counter, multiplier] = [new BehaviourSubject(2), new BehaviourSubject(2)];
+ * const [counter, multiplier] = [new State(2), new State(2)];
  * const sum = fromLatest({c: counter, m: multiplier}).map(v => v.c * v.m);
  * sum.subscribe(console.log); // => 4
  * counter.next(3); // => 6
  * ```
  */
-export function fromLatest<T extends { [key: string]: Observable<any> }>(
+export function fromLatest<T extends { [key: string]: Stream<any> }>(
   sources: T
-): Observable<{ [K in keyof T]: T[K] extends Observable<infer I> ? I : never }>;
+): Stream<{ [K in keyof T]: T[K] extends Stream<infer I> ? I : never }>;
 
 export function fromLatest(
   ...args: any[]
@@ -51,9 +51,9 @@ export function fromLatest(
 
 // implementation for first fromLatest override
 function _fromLatestArr<T extends any[]>(
-  sources: [...{ [K in keyof T]: Observable<T[K]> }]
-): Observable<T> {
-  return new Observable(observer => {
+  sources: [...{ [K in keyof T]: Stream<T[K]> }]
+): Stream<T> {
+  return new Stream(observer => {
     let values: any[] = [];
 
     const teardowns = sources.map((source, i) => source.subscribe(v => {
@@ -68,12 +68,12 @@ function _fromLatestArr<T extends any[]>(
 }
 
 // implementation for second fromLatest override
-function _fromLatestObj<T extends { [key: string]: Observable<any> }>(
+function _fromLatestObj<T extends { [key: string]: Stream<any> }>(
   sources: T
-): Observable < { [K in keyof T]: T[K] extends Observable<infer I> ? I : never } > {
-  return new Observable(observer => {
+): Stream < { [K in keyof T]: T[K] extends Stream<infer I> ? I : never } > {
+  return new Stream(observer => {
     const values: Partial<{
-      [K in keyof T]: T[K] extends Observable<infer I> ? I : never
+      [K in keyof T]: T[K] extends Stream<infer I> ? I : never
     }> = {};
 
     const sourceKeys = Object.keys(sources);

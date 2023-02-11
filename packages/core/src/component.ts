@@ -1,6 +1,6 @@
 import TemplateElement from "./template-element";
 import { Constructor } from "./util/types";
-import { Observable, BehaviourSubject, Prop, Binding } from "./rx";
+import { Stream, State, Prop, Binding } from "./rx";
 import { camelToDash } from "./util/strings";
 import { CONFIG } from "./const";
 import { throttle } from "./util/time";
@@ -12,7 +12,7 @@ import * as style from "./style";
  * @example
  * ```typescript
  * export class CounterComponent extends Component {
- *   private count = new BehaviourSubject(0);
+ *   private count = new rx.State(0);
  *
  *   render = () => [
  *     h.p([
@@ -120,7 +120,7 @@ export default abstract class Component<
    * ]
    * ```
    */
-  protected styles = new BehaviourSubject<style.MvuiCSSSheet>([]);
+  protected styles = new State<style.MvuiCSSSheet>([]);
 
   private setInstanceStyles(sheet: style.MvuiCSSSheet) {
     let el = (this.shadowRoot || this).querySelector<HTMLStyleElement>(
@@ -318,7 +318,7 @@ export default abstract class Component<
    * @example
    * ```typescript
    * class _MyComponent extends Component {
-   *   props = { value: new BehaviourSubject(0) };
+   *   props = { value: new rx.Prop(0) };
    * }
    * const MyComponent _MyComponent.export();
    * export default MyComponent;
@@ -332,7 +332,7 @@ export default abstract class Component<
     this: Constructor<T>
   ): Constructor<
     T & { [key in keyof T['props']]:
-      T['props'][key] extends BehaviourSubject<infer I> ? I : never }
+      T['props'][key] extends State<infer I> ? I : never }
   > {
     const original = this; // reference to original constructor
 
@@ -363,7 +363,7 @@ export default abstract class Component<
   // ----------------------------------------------------------------------
 
   protected unsubscribers: (() => void)[] = [];
-  protected subscribe<T>(obs: Observable<any>, observer: ((value: T) => void)) {
+  protected subscribe<T>(obs: Stream<any>, observer: ((value: T) => void)) {
     this.unsubscribers.push(obs.subscribe(
       !CONFIG.APP_DEBUG ? observer : v => { this.flash(); return observer(v) }
     ));
@@ -409,7 +409,7 @@ export default abstract class Component<
           const attrVal = (el as any).params.attrs[attr]
           // the camelToDash transformations here are actually not an mvui specific
           // assumption: html attributes are forced to be all lowercase by the browser
-          if (attrVal instanceof Observable) {
+          if (attrVal instanceof Stream) {
             this.subscribe(
               attrVal, v => {
                 thisEl.setAttribute(camelToDash(attr), v as string)
@@ -432,7 +432,7 @@ export default abstract class Component<
       if (el.params.fields) {
         for (let prop in el.params.fields) {
           const val = el.params.fields[prop];
-          if (val instanceof Observable) {
+          if (val instanceof Stream) {
             this.subscribe(val, (v) => {(thisEl as any)[prop] = v});
           } else { (thisEl as any)[prop] = val; }
         }
@@ -445,7 +445,7 @@ export default abstract class Component<
         );
         for (let prop in el.params.props) {
           const val = (el.params.props as any)[prop];
-          if (val instanceof Observable) {
+          if (val instanceof Stream) {
             let ignoreNext = false;
 
             this.subscribe(val, (v) => {
@@ -482,7 +482,7 @@ export default abstract class Component<
     if (el.children) {
       if (typeof el.children === 'string') {
         thisEl.innerText = el.children;
-      } else if (el.children instanceof Observable) {
+      } else if (el.children instanceof Stream) {
         this.subscribe(
           el.children, v => {
             if (v instanceof Array && v[0] instanceof TemplateElement) {
@@ -569,5 +569,5 @@ type ComponentTemplateElement<
   CompT extends Component<infer I> ? I : never,
   CompT,
   { [key in keyof CompT['props']]:
-    CompT['props'][key] extends BehaviourSubject<infer I> ? I : never }
+    CompT['props'][key] extends State<infer I> ? I : never }
 >;
