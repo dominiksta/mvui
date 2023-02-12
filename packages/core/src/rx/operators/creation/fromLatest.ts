@@ -1,7 +1,7 @@
 import Stream from "../../stream";
 
 /** @ignore */
-export function fromLatest<T extends any[]>(
+export default function fromLatest<T extends any[]>(
   sources: [...{ [K in keyof T]: Stream<T[K]> }]
 ): Stream<T>;
 
@@ -17,7 +17,7 @@ export function fromLatest<T extends any[]>(
  * counter.next(3); // => 6
  * ```
  */
-export function fromLatest<T extends any[]>(
+export default function fromLatest<T extends any[]>(
   ...sources: [...{ [K in keyof T]: Stream<T[K]> }]
 ): Stream<T>;
 
@@ -33,11 +33,11 @@ export function fromLatest<T extends any[]>(
  * counter.next(3); // => 6
  * ```
  */
-export function fromLatest<T extends { [key: string]: Stream<any> }>(
+export default function fromLatest<T extends { [key: string]: Stream<any> }>(
   sources: T
 ): Stream<{ [K in keyof T]: T[K] extends Stream<infer I> ? I : never }>;
 
-export function fromLatest(
+export default function fromLatest(
   ...args: any[]
 ): any {
   if (args[0] instanceof Array) { // fromLatest([obs1$, obs2$])

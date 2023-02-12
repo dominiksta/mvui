@@ -7,4 +7,5 @@ export { badge } from './badge';
 export { busyIndicator } from './busy-indicator';
 export { breadcrumbs } from './breadcrumbs';
 export { toast } from './toast';
+export { input } from './input';
 

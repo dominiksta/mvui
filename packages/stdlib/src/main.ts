@@ -1,13 +1,13 @@
 import { Component, h, rx } from "@mvui/core";
-import Button from "button";
 import * as std from "./index";
 
 class Main extends Component {
-  #state = new rx.Binding('initial');
+  #state = new rx.State('initial');
 
   render = () => [
-    std.Input.new({ props: { value: this.#state }}),
-    std.Input.new({ props: { value: this.#state }}),
+    std.Input.new({ props: { value: rx.bind(this.#state) }}),
+    h.input({ fields: { value: rx.bind(this.#state) }}),
+    h.input({ fields: { value: rx.bind(this.#state) }}),
     h.div(this.#state),
     h.button({ events: { click: _ => this.#state.next('intial') }}, 'reset')
   ]

@@ -48,4 +48,4 @@ export { default as MulticastStream } from "./multicast-stream";
 export { default as State } from "./state";
 export { default as Prop } from "./prop";
 export { default as PromisedSubject } from "./promised-subject";
-export { default as Binding } from "./binding";
+export { default as bind } from "./bind";

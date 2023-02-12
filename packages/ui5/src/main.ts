@@ -9,7 +9,18 @@ class Main extends Component {
 
   #busy = new rx.State(false);
 
+  #bound = new rx.State('initial');
+
   render = () => [
+    h.fieldset([
+      h.legend('data binding'),
+      ui5.input({ fields: { value: rx.bind(this.#bound) }}),
+      h.input({ fields: { value: rx.bind(this.#bound) }}),
+      h.span(this.#bound.map(v => `bound: ${v}`)),
+      ui5.button({ events: {
+        click: _ => this.#bound.next('initial')}}, 'Reset'
+      ),
+    ]),
     h.fieldset([
       h.legend('avatars'),
       ui5.avatar({ fields: { icon: 'employee', colorScheme: AvatarColorScheme.Accent3 } }),

@@ -1,12 +1,11 @@
 import { test, expect } from '@jest/globals';
 import Component from "component";
 import h from 'html';
-import { Prop, State } from 'rx';
-import Binding from 'rx/binding';
+import * as rx from 'rx';
 import { testDoc } from './util';
 
 class MyBoundInput extends Component {
-  props = { value: new Prop('') };
+  props = { value: new rx.Prop('') };
 
   render = () => [
     h.input({ fields: { ...this.props }, events: {
@@ -21,11 +20,10 @@ MyBoundInput.register();
 
 test('one binding', async () => {
   class BindingTest extends Component {
-    // #state = new State('nothing');
-    state = new Binding('initial');
+    state = new rx.State('initial');
 
     render = () => [
-      MyBoundInput.new({ props: { value: this.state }}),
+      MyBoundInput.new({ props: { value: rx.bind(this.state) }}),
     ]
   }
   BindingTest.register();
@@ -69,11 +67,11 @@ test('one binding', async () => {
 test('two bindings', async () => {
   class BindingTestTwo extends Component {
     // #state = new State('nothing');
-    state = new Binding('initial');
+    state = new rx.State('initial');
 
     render = () => [
-      MyBoundInput.new({ props: { value: this.state }}),
-      MyBoundInput.new({ props: { value: this.state }}),
+      MyBoundInput.new({ props: { value: rx.bind(this.state) }}),
+      MyBoundInput.new({ props: { value: rx.bind(this.state) }}),
     ]
   }
   BindingTestTwo.register();

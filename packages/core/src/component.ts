@@ -1,10 +1,14 @@
 import TemplateElement from "./template-element";
 import { Constructor } from "./util/types";
-import { Stream, State, Prop, Binding } from "./rx";
+import {
+  Stream, State, Prop,
+  fromAllEvents, map, distinctUntilChanged, skip
+} from "./rx";
 import { camelToDash } from "./util/strings";
 import { CONFIG } from "./const";
 import { throttle } from "./util/time";
 import * as style from "./style";
+import { BIND_MARKER } from "./rx/bind";
 
 /**
  * The heart of mvui. Every mvui component is defined by inheriting from this class.
@@ -252,6 +256,14 @@ export default abstract class Component<
 
     for (let ref of this.templateRefs) ref.resolve(ref.query());
 
+    // for better compatibility with other frameworks, we emit a change event everytime we
+    // change a prop
+    for (let prop in this.props) {
+      this.subscribe(this.props[prop], _ => {
+        this.dispatchEvent(new CustomEvent('change'));
+      });
+    }
+
     this.lifecycleState = "rendered"; this.onRender();
   }
 
@@ -362,7 +374,7 @@ export default abstract class Component<
   // automatic unsubscribing on unmount
   // ----------------------------------------------------------------------
 
-  protected unsubscribers: (() => void)[] = [];
+  private unsubscribers: (() => void)[] = [];
   protected subscribe<T>(obs: Stream<any>, observer: ((value: T) => void)) {
     this.unsubscribers.push(obs.subscribe(
       !CONFIG.APP_DEBUG ? observer : v => { this.flash(); return observer(v) }
@@ -404,6 +416,8 @@ export default abstract class Component<
 
     // --- setup attributes, events, props, class fields
     if (el.params) {
+      const events$ = fromAllEvents(thisEl);
+
       if (el.params.attrs) {
         for (let attr in el.params.attrs) {
           const attrVal = (el as any).params.attrs[attr]
@@ -433,7 +447,31 @@ export default abstract class Component<
         for (let prop in el.params.fields) {
           const val = el.params.fields[prop];
           if (val instanceof Stream) {
-            this.subscribe(val, (v) => {(thisEl as any)[prop] = v});
+            let ignoreNextDown = false;
+
+            // dataflow: upwards
+            if (val instanceof State && BIND_MARKER in val) {
+              // console.debug('found bind marker');
+              this.subscribe(events$.pipe(
+                map(_ => thisEl[prop]),
+                distinctUntilChanged(),
+              ), v => {
+                // console.debug(`prop changed detected: ${v}`, thisEl);
+                ignoreNextDown = true;
+                val.next(v);
+              });
+            }
+
+            // dataflow: downwards
+            this.subscribe(val, (v) => {
+              if (val instanceof State && BIND_MARKER in val) {
+                // console.debug(`state change detected: ${v}`, thisEl);
+                if (ignoreNextDown) { ignoreNextDown = false; return; }
+                // console.debug(`state change acted on: ${v}`, thisEl);
+              }
+              (thisEl as any)[prop] = v
+            });
+
           } else { (thisEl as any)[prop] = val; }
         }
       }
@@ -446,29 +484,31 @@ export default abstract class Component<
         for (let prop in el.params.props) {
           const val = (el.params.props as any)[prop];
           if (val instanceof Stream) {
-            let ignoreNext = false;
+            let ignoreNextDown = false;
 
-            this.subscribe(val, (v) => {
-              // console.debug(`${ignoreNext}: considering prop ${v}`);
-              if (val instanceof Binding) {
-                if (ignoreNext) { ignoreNext = false; return; }
-                else { ignoreNext = true; }
-              }
-              // console.debug(`${ignoreNext}: setting prop ${v}`);
-              Component._setPropAndMaybeReflect(thisEl, prop, v);
-            });
-            if (val instanceof Binding) {
+            // dataflow: upwards
+            if (val instanceof State && BIND_MARKER in val) {
               const p: Prop<any> = (thisEl.props as any)[prop];
-              this.subscribe(p, v => {
-                // console.debug(`${ignoreNext}: condiderung binding ${v}`);
-                if (val instanceof Binding) {
-                  if (ignoreNext) { ignoreNext = false; return; }
-                  else { ignoreNext = true; }
-                }
+              this.subscribe(p.pipe(skip(1)), v => {
+                // console.debug(`setting binding ${v}`);
+                if (ignoreNextDown) { ignoreNextDown = false; return; }
+                else { ignoreNextDown = true; }
                 // console.debug(`${ignoreNext}: setting binding ${v}`);
                 val.next(v);
               });
             }
+
+            // dataflow: downwards
+            this.subscribe(val, (v) => {
+              // console.debug(`considering prop ${v}`);
+              if (val instanceof State && BIND_MARKER in val) {
+                if (ignoreNextDown) { ignoreNextDown = false; return; }
+                else { ignoreNextDown = true; }
+              }
+              // console.debug(`setting prop ${v}`);
+              Component._setPropAndMaybeReflect(thisEl, prop, v);
+            });
+
           } else {
             Component._setPropAndMaybeReflect(thisEl, prop, val);
           }
