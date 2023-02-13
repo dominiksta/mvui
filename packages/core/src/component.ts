@@ -416,8 +416,6 @@ export default abstract class Component<
 
     // --- setup attributes, events, props, class fields
     if (el.params) {
-      const events$ = fromAllEvents(thisEl);
-
       if (el.params.attrs) {
         for (let attr in el.params.attrs) {
           const attrVal = (el as any).params.attrs[attr]
@@ -444,6 +442,8 @@ export default abstract class Component<
       }
 
       if (el.params.fields) {
+        let events$: Stream<Event> | undefined;
+
         for (let prop in el.params.fields) {
           const val = el.params.fields[prop];
           if (val instanceof Stream) {
@@ -451,6 +451,7 @@ export default abstract class Component<
 
             // dataflow: upwards
             if (val instanceof State && BIND_MARKER in val) {
+              if (!events$) events$ = fromAllEvents(thisEl);
               // console.debug('found bind marker');
               this.subscribe(events$.pipe(
                 map(_ => thisEl[prop]),
