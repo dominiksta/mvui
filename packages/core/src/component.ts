@@ -249,8 +249,8 @@ export default abstract class Component<
       );
     }
 
-    const toDisplay = this.render();
-    for (let el of toDisplay) {
+    if (this._template === undefined) this._template = this.render();
+    for (let el of this._template) {
       (this.shadowRoot || this).appendChild(this._renderTemplate(el));
     }
 
@@ -411,6 +411,7 @@ export default abstract class Component<
   // rendering
   // ----------------------------------------------------------------------
 
+  private _template?: TemplateElement<any, any, any, any>[];;
   private _renderTemplate<T extends HTMLElement>(el: TemplateElement<T>) {
     const thisEl = el.creator();
 
