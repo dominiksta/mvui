@@ -46,6 +46,7 @@ export * from './operators';
 export { default as Stream } from "./stream";
 export { default as MulticastStream } from "./multicast-stream";
 export { default as State } from "./state";
+export { default as Selector } from "./selector";
 export { default as Prop } from "./prop";
 export { default as PromisedSubject } from "./promised-subject";
 export { default as bind } from "./bind";

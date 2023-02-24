@@ -1,5 +1,6 @@
 import { Observer } from "./stream";
 import MulticastStream from "./multicast-stream";
+import Selector from "./selector";
 
 /**
  * A {@link MulticastStream} that remembers the last emitted value. Useful to model state.
@@ -44,5 +45,10 @@ export default class State<T> extends MulticastStream<T> {
     if (this.completed) return;
     this._value = value;
     super.next(value);
+  }
+
+  /** Shorthand for `{@link Selector.create}(this, definition)` */
+  select<ReturnT>(definition: (value: T) => ReturnT): Selector<ReturnT> {
+    return Selector.create(this, definition);
   }
 }
