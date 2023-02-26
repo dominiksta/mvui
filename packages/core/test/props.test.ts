@@ -39,7 +39,7 @@ SmartComponent.register();
 
 test('basic props', async () => {
   const [_, comp] = testDoc(new SmartComponent());
-  const children = await comp.queryAll<DumbComponent>('mvui-dumb-component');
+  const children = await comp.queryAll<DumbComponent>('app-dumb-component');
   expect(children.length).toBe(3);
 
   expect(children[0].getAttribute("value")).toBe('test');

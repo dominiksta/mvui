@@ -29,7 +29,7 @@ SlotsTest.register();
 
 test('slots', async () => {
   const [_, comp] = testDoc(new SlotsTest());
-  const layout = await comp.query<MyLayout>('mvui-my-layout');
+  const layout = await comp.query<MyLayout>('app-my-layout');
 
   const header = layout.shadowRoot?.children[1].children[0] as HTMLSlotElement;
   const headerEls = (header.assignedElements() as HTMLDivElement[]);

@@ -64,7 +64,7 @@ EventReceiver.register();
 test('custom events', async () => {
   const [_, comp] = testDoc(new EventReceiver());
   const state = await comp.query('#state');
-  const emitter = await comp.query<EventEmitter>('mvui-event-emitter');
+  const emitter = await comp.query<EventEmitter>('app-event-emitter');
   const emitterString = await emitter.query('button#evt-string');
   const emitterObject = await emitter.query('button#evt-object');
 

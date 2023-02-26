@@ -29,7 +29,7 @@ test('one binding', async () => {
   BindingTest.register();
 
   const [_, comp] = testDoc(new BindingTest());
-  const myInput = await comp.query<MyBoundInput>('mvui-my-bound-input');
+  const myInput = await comp.query<MyBoundInput>('app-my-bound-input');
   const input = await myInput.query<HTMLInputElement>('input');
   
   expect(input.value).toBe('initial');
@@ -77,7 +77,7 @@ test('two bindings', async () => {
   BindingTestTwo.register();
 
   const [_, comp] = testDoc(new BindingTestTwo());
-  const myInputs = await comp.queryAll<MyBoundInput>('mvui-my-bound-input');
+  const myInputs = await comp.queryAll<MyBoundInput>('app-my-bound-input');
   let inputs: HTMLInputElement[] = [];
   for (let input of Array.from(myInputs)) {
     inputs.push(await input.query<HTMLInputElement>('input'));
