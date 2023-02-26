@@ -5,7 +5,7 @@ import {
   fromAllEvents, map, distinctUntilChanged, skip
 } from "./rx";
 import { camelToDash } from "./util/strings";
-import { CONFIG } from "./const";
+import { MVUI_GLOBALS } from "./globals";
 import { throttle } from "./util/time";
 import * as style from "./style";
 import { BIND_MARKER } from "./rx/bind";
@@ -37,6 +37,7 @@ export default abstract class Component<
 
   protected static useShadow: boolean = true;
   protected static tagNameSuffix?: string;
+  protected static tagNameLibrary?: string;
 
   // ----------------------------------------------------------------------
   // styling
@@ -102,7 +103,7 @@ export default abstract class Component<
    * ]
    * ```
    */
-  protected static styles: style.MvuiCSSSheet;
+  protected static styles?: style.MvuiCSSSheet;
 
   /**
    * Settings the static {@link Component.styles} property is the primary way of styling a
@@ -133,7 +134,7 @@ export default abstract class Component<
     if (!el) {
       el = document.createElement('style');
       el.className = 'mvui-instance-styles';
-      el.nonce = CONFIG.STYLE_SHEET_NONCE;
+      el.nonce = MVUI_GLOBALS.STYLE_SHEET_NONCE;
       (this.shadowRoot || this).appendChild(el);
     }
     el.innerHTML = style.util.sheetToString(sheet);
@@ -218,12 +219,20 @@ export default abstract class Component<
     this.lifecycleState = "created"; this.onCreated();
   }
 
-  static register(prefix?: string) {
+  static register() {
     if (!this.tagNameSuffix)
       this.tagNameSuffix = camelToDash(this.name).substring(1);
+
+    let prefix;
+    if (this.tagNameLibrary) {
+      prefix = MVUI_GLOBALS.PREFIXES.get(this.tagNameLibrary) ??
+               this.tagNameLibrary;
+    } else {
+      prefix = MVUI_GLOBALS.PREFIXES.get('default');
+    }
+
     customElements.define(
-      (prefix && prefix.length !== 0) ?
-      `${prefix}-${this.tagNameSuffix}` : `mvui-${this.tagNameSuffix}`,
+      `${prefix}-${this.tagNameSuffix}`,
       this as any
     );
   }
@@ -239,7 +248,7 @@ export default abstract class Component<
 
   private connectedCallback() {
     this.lifecycleState = "added"; this.onAdded();
-    CONFIG.APP_DEBUG && this.flash('green');
+    MVUI_GLOBALS.APP_DEBUG && this.flash('green');
 
     (this.shadowRoot || this).innerHTML = '';
 
@@ -269,7 +278,7 @@ export default abstract class Component<
 
   private disconnectedCallback() {
     this.lifecycleState = "removed"; this.onRemoved();
-    CONFIG.APP_DEBUG && this.flash('red');
+    MVUI_GLOBALS.APP_DEBUG && this.flash('red');
     for (let unsub of this.unsubscribers) unsub();
   }
 
@@ -377,7 +386,7 @@ export default abstract class Component<
   private unsubscribers: (() => void)[] = [];
   protected subscribe<T>(obs: Stream<any>, observer: ((value: T) => void)) {
     this.unsubscribers.push(obs.subscribe(
-      !CONFIG.APP_DEBUG ? observer : v => { this.flash(); return observer(v) }
+      !MVUI_GLOBALS.APP_DEBUG ? observer : v => { this.flash(); return observer(v) }
     ));
   }
 

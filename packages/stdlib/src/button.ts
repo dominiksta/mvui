@@ -13,6 +13,8 @@ import { Component, h, rx, style } from "@mvui/core";
 ```
  */
 export default class Button extends Component {
+  static tagNameLibrary = 'std';
+
   static styles = [
     ...style.sheet({
       'button:active': {

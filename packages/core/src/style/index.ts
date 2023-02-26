@@ -4,7 +4,7 @@
  *
  * @module
  */
-import { CONFIG } from "../const";
+import { MVUI_GLOBALS } from "../globals";
 import { camelToDash } from "../util/strings";
 
 const AT_RULE = '__MVUI_AT_RULE__';
@@ -264,7 +264,7 @@ function applySheet(css: string, el: HTMLElement) {
   } else {
     const sheet = document.createElement('style');
     sheet.innerHTML = css;
-    sheet.nonce = CONFIG.STYLE_SHEET_NONCE;
+    sheet.nonce = MVUI_GLOBALS.STYLE_SHEET_NONCE;
     (el.shadowRoot || el).appendChild(sheet);
   }
 }

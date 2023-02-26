@@ -1,6 +1,8 @@
 import { Component, rx, h, style } from "@mvui/core";
 
 export default class Input extends Component {
+  static tagNameLibrary = 'std';
+
   props = {
     value: new rx.Prop(''),
     // TODO: maybe make this an option for rx.bind ?
