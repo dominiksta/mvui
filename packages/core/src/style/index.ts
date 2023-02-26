@@ -249,6 +249,24 @@ function applySingleElement(
   for (let key in styles) el.style[key] = styles[key] as any;
 }
 
+/**
+   Put the given `sheet` into a `<style>` tag with the given `cssClass`
+   as a child of `el`.
+ */
+function applySheetAsStyleTag(
+  el: HTMLElement, sheet: MvuiCSSSheet, cssClass: string
+) {
+  let styleEl = (el.shadowRoot || el).querySelector<HTMLStyleElement>(
+    '.' + cssClass
+  );
+  if (!styleEl) {
+    styleEl = document.createElement('style');
+    styleEl.className = cssClass;
+    styleEl.nonce = MVUI_GLOBALS.STYLE_SHEET_NONCE;
+    (el.shadowRoot || el).appendChild(styleEl);
+  }
+  styleEl.innerHTML = sheetToString(sheet);
+}
 
 /**
  * Apply a given stylesheet to a given element. If the element has a shadowRoot and
@@ -256,18 +274,24 @@ function applySingleElement(
  * be added to adoptedStyleSheets. If not, it will be added as a \<style\> tag with the
  * nonce set to window.MVUI_CONFIG.STYLE_SHEET_NONCE.
  */
-function applySheet(css: string, el: HTMLElement) {
+function applyStaticSheet(sheet: MvuiCSSSheet, el: HTMLElement) {
   if (BROWSER_SUPPORTS_ADOPTED_STYLESHEETS && el.shadowRoot) {
-    const sheet = new CSSStyleSheet();
-    sheet.replaceSync(css);
-    el.shadowRoot.adoptedStyleSheets.push(sheet);
+    const found = el.shadowRoot.adoptedStyleSheets.find(
+      sheet => (sheet as any)['MVUI_STATIC_SHEET']
+    );
+    if (!found) {
+      const domSheet = new CSSStyleSheet();
+      domSheet.replaceSync(sheetToString(sheet));
+      (domSheet as any)['MVUI_STATIC_SHEET'] = true;
+      el.shadowRoot.adoptedStyleSheets.push(domSheet);
+    }
   } else {
-    const sheet = document.createElement('style');
-    sheet.innerHTML = css;
-    sheet.nonce = MVUI_GLOBALS.STYLE_SHEET_NONCE;
-    (el.shadowRoot || el).appendChild(sheet);
+    applySheetAsStyleTag(el, sheet, 'mvui-static-styles');
   }
 }
 
 
-export const util = { sheetToString, applySingleElement, applySheet };
+export const util = {
+  sheetToString, applySingleElement,
+  applyStaticSheet, applySheetAsStyleTag
+};

@@ -10,7 +10,7 @@ const SOME_SHARED_STYLES = style.sheet({
   }
 });
 
-export class StyledComponent extends Component {
+class StyledComponent extends Component {
 
   // while the styling in mvui works with or without using a shadow dom, it does
   // not seem to work when using a shadow dom in jests jsdom environment. there
@@ -54,7 +54,7 @@ export class StyledComponent extends Component {
 }
 StyledComponent.register();
 
-test('slots', async () => {
+test('basic styling', async () => {
   const comp = new StyledComponent(); document.body.appendChild(comp);
 
   const btn = await comp.query<HTMLButtonElement>('button');
@@ -64,6 +64,33 @@ test('slots', async () => {
   expect(getComputedStyle(btn).background).toBe('red');
   btn.click();
   expect(getComputedStyle(btn).background).toBe('brown');
-  
+
   document.body.removeChild(comp);
 });
+
+// We sadly cannot test style overrides because it would require jests jsdom to work with
+// shadow dom.
+
+// test('style overrides', async () => {
+//   class StyleOverridingComponent extends Component {
+//     render() {
+//       return [
+//         StyledComponent.new({
+//           styleOverrides: style.sheet({
+//             'button': {
+//               background: 'blue'
+//             }
+//           })
+//         })
+//       ]
+//     }
+//   }
+//   StyleOverridingComponent.register();
+// 
+//   const comp = new StyleOverridingComponent(); document.body.appendChild(comp);
+// 
+//   const childComp = await comp.query<StyledComponent>('styled-component');
+//   const btn = await childComp.query<HTMLButtonElement>('button');
+// 
+//   expect(getComputedStyle(btn).padding).toBe('blue');
+// });

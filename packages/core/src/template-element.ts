@@ -1,3 +1,4 @@
+import { MvuiCSSSheet } from "style";
 import { Stream } from "./rx";
 
 type ToStringable = { toString: () => string };
@@ -28,8 +29,8 @@ export default class TemplateElement<
 
   constructor(
     public creator: () => T,
-    childrenOrParams?: TemplateElement<T>['children'] | TemplateElement<T>['params'],
-    children?: TemplateElement<T>['children'],
+    childrenOrParams?: TemplateElementChildren | TemplateElement<T>['params'],
+    children?: TemplateElementChildren,
   ) {
     if (
       typeof childrenOrParams === 'string'
@@ -88,6 +89,7 @@ export type TemplateElementParams<
   Props extends { [key: string]: any } = {}
   > = {
     style?: Partial<CSSStyleDeclaration>,
+    styleOverrides?: MvuiCSSSheet,
 
     attrs?: Partial<{
       [Property in keyof Attributes]:

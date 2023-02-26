@@ -10,6 +10,10 @@ import { throttle } from "./util/time";
 import * as style from "./style";
 import { BIND_MARKER } from "./rx/bind";
 
+// these symbols are used for properties that should be accessible from anywhere in mvui
+// but should not be part of api surface
+const STYLE_OVERRIDES = Symbol();
+
 /**
  * The heart of mvui. Every mvui component is defined by inheriting from this class.
  *
@@ -127,18 +131,7 @@ export default abstract class Component<
    */
   protected styles = new State<style.MvuiCSSSheet>([]);
 
-  private setInstanceStyles(sheet: style.MvuiCSSSheet) {
-    let el = (this.shadowRoot || this).querySelector<HTMLStyleElement>(
-      '.mvui-instance-styles'
-    );
-    if (!el) {
-      el = document.createElement('style');
-      el.className = 'mvui-instance-styles';
-      el.nonce = MVUI_GLOBALS.STYLE_SHEET_NONCE;
-      (this.shadowRoot || this).appendChild(el);
-    }
-    el.innerHTML = style.util.sheetToString(sheet);
-  }
+  [STYLE_OVERRIDES]: style.MvuiCSSSheet = [];
 
   // ----------------------------------------------------------------------
   // (public) reactive properties & attribute reflection
@@ -250,16 +243,18 @@ export default abstract class Component<
 
     (this.shadowRoot || this).innerHTML = '';
 
-    if ((this.constructor as any).styles) {
-      style.util.applySheet(
-        style.util.sheetToString((this.constructor as any).styles), this
-      );
-    }
-
     if (this._template === undefined) this._template = this.render();
     for (let el of this._template) {
       (this.shadowRoot || this).appendChild(this._renderTemplate(el));
     }
+
+    if ((this.constructor as any).styles)
+      style.util.applyStaticSheet((this.constructor as any).styles, this);
+
+    if (this[STYLE_OVERRIDES])
+      style.util.applySheetAsStyleTag(
+        this, this[STYLE_OVERRIDES], 'mvui-instance-styles-overrides'
+      );
 
     for (let ref of this.templateRefs) ref.resolve(ref.query());
 
@@ -267,11 +262,13 @@ export default abstract class Component<
     // change a prop
     for (let prop in this.props) {
       this.subscribe(this.props[prop], _ => {
-        this.dispatchEvent(new CustomEvent('change'));
+        this.dispatchEvent(new CustomEvent('change')); // TODO: use normal Event
       });
     }
 
-    this.subscribe(this.styles, this.setInstanceStyles.bind(this));
+    this.subscribe(this.styles, styles =>
+      style.util.applySheetAsStyleTag(this, styles, 'mvui-instance-styles')
+    );
 
     this.lifecycleState = "rendered"; this.onRender();
   }
@@ -384,7 +381,7 @@ export default abstract class Component<
   // ----------------------------------------------------------------------
 
   private unsubscribers: (() => void)[] = [];
-  protected subscribe<T>(obs: Stream<any>, observer: ((value: T) => void)) {
+  protected subscribe<T>(obs: Stream<T>, observer: ((value: T) => void)) {
     this.unsubscribers.push(obs.subscribe(
       !MVUI_GLOBALS.APP_DEBUG ? observer : v => { this.flash(); return observer(v) }
     ));
@@ -527,6 +524,16 @@ export default abstract class Component<
       }
 
       if (el.params.style) style.util.applySingleElement(thisEl, el.params.style);
+      if (el.params.styleOverrides) {
+        console.log('style overrides')
+        if (!(thisEl instanceof Component)) throw new Error(
+          'Style overrides may only be used for mvui components'
+        );
+        if (thisEl.shadowRoot === null) throw new Error(
+          'Style overrides may only be used for components with a shadow dom'
+        );
+        thisEl[STYLE_OVERRIDES] = el.params.styleOverrides;
+      }
     }
 
     // --- recurse
