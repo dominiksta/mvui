@@ -214,8 +214,6 @@ export default abstract class Component<
 
     this.attrReflectionObserver.observe(this, {attributes: true});
 
-    this.styles.subscribe(this.setInstanceStyles.bind(this));
-
     this.lifecycleState = "created"; this.onCreated();
   }
 
@@ -272,6 +270,8 @@ export default abstract class Component<
         this.dispatchEvent(new CustomEvent('change'));
       });
     }
+
+    this.subscribe(this.styles, this.setInstanceStyles.bind(this));
 
     this.lifecycleState = "rendered"; this.onRender();
   }

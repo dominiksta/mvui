@@ -34,13 +34,13 @@ export default function fromAllEvents<T extends HTMLElement>(
     console.log(el.tagName.includes('-'))
     if (isCustomElement(el.tagName)) {
       // is web component
-      console.debug(`${el.tagName} is web component`);
+      // console.debug(`${el.tagName} is web component`);
       el.dispatchEvent = (e: Event) => {
         observer.next(e);
         return originalDispatch(e);
       };
     } else {
-      console.debug(`${el.tagName} is builtin`);
+      // console.debug(`${el.tagName} is builtin`);
       // is built in element
       for (let evtName of RELEVANT_EVENTS)
         el.addEventListener(evtName, listener);
