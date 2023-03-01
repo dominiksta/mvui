@@ -395,7 +395,13 @@ export default abstract class Component<
   private flash = throttle((color = "blue") => {
     const prevOutline = this.style.outline;
     this.style.outline = `1px solid ${color}`;
-    setTimeout(() => this.style.outline = prevOutline, 400);
+    setTimeout(
+      () => {
+        this.style.outline = prevOutline;
+        if (this.getAttribute('style') === '') this.removeAttribute('style');
+      },
+      400
+    );
   }, 500);
 
   // ----------------------------------------------------------------------
