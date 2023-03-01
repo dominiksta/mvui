@@ -29,6 +29,12 @@ class Main extends Component {
     ]),
     h.fieldset([
       h.legend('bindings test'),
+      h.p([
+        'Cras placerat accumsan nulla.  Nullam tempus.',
+        'Nullam tristique diam non turpis.  Phasellus lacus.  ',
+        'Nam vestibulum accumsan nisl.  Nullam tristique diam non turpis.  ',
+        'Nullam tristique diam non turpis.  ',
+      ]),
       std.input({ props: { value: rx.bind(this.#state) } }),
       std.input({
         styleOverrides: style.sheet({

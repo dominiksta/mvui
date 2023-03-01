@@ -80,7 +80,7 @@ export default class TemplateElement<
 
 export type TemplateElementChildren =
   string | Stream<any> | TemplateElement<any, any, any, any> |
-  TemplateElement<any, any, any, any>[];
+  (TemplateElement<any, any, any, any> | string)[];
 
 export type TemplateElementParams<
   T extends HTMLElement,

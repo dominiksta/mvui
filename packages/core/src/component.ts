@@ -565,7 +565,9 @@ export default abstract class Component<
         thisEl.appendChild(this._renderTemplate(el.children));
       } else if (el.children instanceof Array) {
         for (let child of el.children) {
-          thisEl.appendChild(this._renderTemplate(child));
+          thisEl.append(
+            child instanceof TemplateElement ? this._renderTemplate(child) : child
+          );
         }
       }
     }
