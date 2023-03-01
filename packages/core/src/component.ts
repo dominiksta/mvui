@@ -305,6 +305,7 @@ export default abstract class Component<
    */
   private __t?: CustomEventsT;
 
+  // TODO: maybe remove now that `define` is a thing?
   /** Get a new {@link TemplateElement} for use in a {@link render} method. */
   static new<
     T extends Component<E>,

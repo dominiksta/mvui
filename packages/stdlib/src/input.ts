@@ -1,10 +1,32 @@
-import { Component, rx, h, style } from "@mvui/core";
+import { Component, rx, h, style, define } from "@mvui/core";
+import theme from "theme";
 
-export default class Input extends Component {
+/**
+ * Some general doc
+ */
+export const [input, Input] = define(class Input extends Component {
   static tagNameLibrary = 'std';
 
+  static styles = style.sheet({
+    'input': {
+      fontFamily: theme.font,
+      background: theme.bgContrast10,
+      color: theme.fg,
+      border: 'none',
+      borderBottom: `1px solid ${theme.fg}`,
+      padding: '5px',
+      margin: '1px',
+    },
+  });
+
   props = {
+    /**
+     * @prop {string} The value entered
+     */
     value: new rx.Prop(''),
+    /**
+     * @prop {boolean} The value entered
+     */
     // TODO: maybe make this an option for rx.bind ?
     onlyEmitOnBlur: new rx.Prop(false),
   };
@@ -21,12 +43,4 @@ export default class Input extends Component {
       }
     }})
   ]
-
-  static styles = style.sheet({
-    'input': {
-      padding: '5px',
-      borderRadius: '3'
-    }
-  })
-}
-Input.register();
+})
