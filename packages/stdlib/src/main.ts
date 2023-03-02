@@ -1,7 +1,6 @@
 import { Component, h, MVUI_GLOBALS, rx, style } from "@mvui/core";
 import theme, { darkTheme, lightTheme, MVUI_STDLIB_THEME_NAME } from "theme";
 import * as std from "./index";
-import { openSnackbar } from "./index";
 
 style.currentTheme$.subscribe(theme => {
   style.setTheme(
@@ -41,15 +40,15 @@ class Main extends Component {
     std.collapsible([
       h.span({attrs: { slot: 'header' }}, 'Snackbar'),
       std.button(
-        { events: { click: _ => openSnackbar('Text 1') }},
+        { events: { click: _ => std.openSnackbar('Text 1') }},
         'Trigger with Text 1'
       ),
       std.button(
-        { events: { click: _ => openSnackbar('Text 2') }},
+        { events: { click: _ => std.openSnackbar('Text 2') }},
         'Trigger with Text 2'
       ),
       std.button(
-        { events: { click: _ => openSnackbar(std.collapsible([
+        { events: { click: _ => std.openSnackbar(std.collapsible([
           h.span({attrs: { slot: 'header'}}, 'header'),
           h.div('content')
         ]), 5000) }},

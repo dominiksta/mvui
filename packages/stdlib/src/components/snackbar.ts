@@ -6,6 +6,9 @@ const CONTENT = new rx.State<TemplateElementChild | undefined>(undefined);
 
 let currentTimeout: any;
 
+/**
+ * Open the snackbar with a given string or template for `timeoutMs` ms.
+ */
 export function openSnackbar(
   content: TemplateElementChild,
   timeoutMs: number = 2000,
@@ -15,6 +18,25 @@ export function openSnackbar(
   CONTENT.next(content);
 }
 
+/**
+   A snackbar for simple "toast" notifications.
+
+   ### Example
+   ```typescript
+   import * as std from '@mvui/stdlib';
+
+   class Main extends Component {
+     render = () => [
+       // put this anywhere, position really does not matter
+       std.snackbar(),
+     ]
+   }
+
+   // you can display
+   std.openSnackbar('Some Text');
+   std.openSnackbar(h.div('Or a template'));
+   ```
+ */
 export class Snackbar extends Component {
 
   render() {
