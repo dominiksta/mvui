@@ -17,9 +17,12 @@ export const [input, Input] = define(class Input extends Component {
   static tagNameLibrary = 'std';
 
   static styles = style.sheet({
+    ':host': {
+      display: 'inline-block',
+    },
     'input': {
       fontFamily: theme.font,
-      background: theme.bgContrast10,
+      background: theme.bgContrastMiddle,
       color: theme.fg,
       border: 'none',
       borderBottom: `1px solid ${theme.fg}`,

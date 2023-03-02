@@ -1,31 +1,32 @@
 import { Component, define, h, rx, style } from "@mvui/core";
-import { Newable } from "@mvui/core/dist/types/util/types";
 import theme from "theme";
 
 /**
- * This is a really cool button.
- *
- * ### Example
- * ```typescript
- * import * as std from '@mvui/stdlib';
- *
- * class Example extends Component {
- *   render = () => [
- *     std.button('Click Me!'),
- *   ]
- * }
- * ```
- *
- * @class Button
- *
- * @fires {CustomEvent<MouseEvent>} click -
- * Dispatched after use clicked the button
- *
- * @attr kind
- * @prop {'primary' | 'accent' | 'default'} [kind='default'] -
- * The basic design of this button
- *
- * @slot {HTMLElement} default
+   This is a really cool button.
+
+   ### Example
+   ```typescript
+   import * as std from '@mvui/stdlib';
+
+   class Example extends Component {
+     render = () => [
+       std.button('Click Me!'),
+     ]
+   }
+   ```
+
+   @class Button
+
+   @fires {CustomEvent<MouseEvent>} click -
+   Dispatched after use clicked the button
+
+   @attr kind
+   @prop {'primary' | 'accent' | 'default'} [kind='default'] -
+   The basic design of this button
+
+   @csspart button - The native button element
+
+   @slot {any} default
  */
 export class Button extends Component<{
   click: MouseEvent
@@ -33,13 +34,17 @@ export class Button extends Component<{
   static tagNameLibrary = 'std';
 
   protected static styles = style.sheet({
+    ':host': {
+      display: 'inline-block',
+      marginRight: '5px',
+    },
     'button': {
       fontFamily: theme.font,
       background: theme.bg,
       color: theme.fg,
+      width: '100%',
       border: `2px solid ${theme.fg}`,
       padding: '3px 5px',
-      margin: '1px',
       fontWeight: '500',
     },
     'button:active': {
@@ -64,21 +69,10 @@ export class Button extends Component<{
     },
   })
 
-  /** @ignore */
   props = {
     kind: new rx.Prop<
       'default' | 'primary' | 'accent'
     >('default', { reflect: true }),
-  }
-
-  /**
-   * Description
-   * @function docTest
-   * @param {string} str - ye
-   * @returns {void}
-   */
-  public docTest(str: string) {
-    
   }
 
   render() {
@@ -86,9 +80,15 @@ export class Button extends Component<{
       h.button(
         {
           events: {
-            click: e => this.dispatch('click', e)
+            click: e => {
+              e.stopPropagation();
+              this.dispatch('click', e)
+            }
           },
-          attrs: { class: this.props.kind }
+          attrs: {
+            class: this.props.kind,
+            part: 'button',
+          }
         },
         h.slot()
       )

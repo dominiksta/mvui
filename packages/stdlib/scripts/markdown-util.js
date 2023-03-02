@@ -63,6 +63,17 @@ function markdownReferenceForComponentDescription(desc) {
     }
   }
 
+  if (desc.cssParts.length !== 0) {
+    ret += '\n### CSS Parts\n\n';
+    ret += '| Name  | Description |\n';
+    ret += '|-------|-------------|\n';
+    for (let part of desc.cssParts) {
+      ret += '| '  + escape(part.name)         + ' ';
+      ret += '| '  + escape(part.comment)      + ' ';
+      ret += `|\n`;
+    }
+  }
+
   if (desc.methods.length !== 0) {
     ret += '\n### Methods\n\n';
     for (let method of desc.methods) {

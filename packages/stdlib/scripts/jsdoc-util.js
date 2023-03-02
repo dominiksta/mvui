@@ -14,7 +14,7 @@ function getCommentBlocks(plainJs) {
     let endLine = -1;
     for (let i = startLine; i < splitJs.length; i++) {
       if (splitJs[i].trim().endsWith('*/')) {
-        endLine = i; 
+        endLine = i;
         break;
       }
     }
@@ -34,7 +34,7 @@ function getCommentBlocks(plainJs) {
       if (starIdx !== -1) {
         res.push(splitJs[i].substring(starIdx + 3));
       } else {
-        res.push(splitJs[i]);   
+        res.push(splitJs[i].substring(3));
       }
     }
     return res;
@@ -188,6 +188,14 @@ function parseJsdoc(docBlock) {
       return ret;
     });
 
+    ret.cssParts = parsed.filter(p => p.docletType === 'csspart').map(p => {
+      const ret = { ...p };
+      delete ret.docletType;
+      delete ret.defaultValue;
+      delete ret.type;
+      return ret;
+    });
+
     ret.slots = parsed.filter(p => p.docletType === 'slot').map(p => {
       const ret = { ...p };
       delete ret.docletType;
@@ -199,7 +207,7 @@ function parseJsdoc(docBlock) {
     ret.kind = 'method';
 
     ret.name = parsed.find(p => p.docletType === 'function').name;
-    
+
     ret.params = parsed.filter(p => p.docletType === 'param').map(p => {
       const ret = { ...p };
       delete ret.docletType;

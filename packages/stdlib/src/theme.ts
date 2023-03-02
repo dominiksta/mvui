@@ -2,8 +2,9 @@ import { style } from "@mvui/core";
 
 const stdLibThemeKeys = [
   'bg',
-  'bgContrast10',
+  'bgContrastMiddle',
   'fg',
+  'fgContrastMiddle',
   'primary', 'accent',
   'font'
 ] as const;
@@ -16,7 +17,8 @@ export const baseTheme = {
 export const lightTheme: StdLibTheme = {
   ...baseTheme,
   bg: 'white',
-  bgContrast10: '#f0f0f0',
+  bgContrastMiddle: '#f0f0f0',
+  fgContrastMiddle: '#555555',
   fg: 'black',
   primary: 'blue',
   accent: '#ff4081',
@@ -25,7 +27,8 @@ export const lightTheme: StdLibTheme = {
 export const darkTheme: StdLibTheme = {
   ...baseTheme,
   bg: '#222222',
-  bgContrast10: '#555555',
+  bgContrastMiddle: '#555555',
+  fgContrastMiddle: '#aaaaaa',
   fg: 'white',
   primary: 'blue',
   accent: '#ff4081',

@@ -13,22 +13,29 @@ class Main extends Component {
 
   static useShadow = false;
   static styles = style.sheet({
+    'app-main': {
+      display: 'block',
+    },
     'html': {
       background: theme.bg,
       color: theme.fg,
       fontFamily: theme.font,
-    }
+    },
+    'std-collapsible': {
+      marginBottom: '10px',
+    },
   });
 
   render = () => [
-    h.fieldset([
-      h.legend('buttons'),
+    h.h1('Test Page'),
+    std.collapsible([
+      h.span({attrs: { slot: 'header' }}, 'Buttons'),
       std.button('Default'),
       std.button({ props: { kind: 'primary' } }, 'Primary'),
       std.button({ props: { kind: 'accent' } }, 'Accent'),
     ]),
-    h.fieldset([
-      h.legend('bindings test'),
+    std.collapsible([
+      h.span({attrs: { slot: 'header' }}, 'Bindings Test'),
       h.p([
         'Cras placerat accumsan nulla.  Nullam tempus.',
         'Nullam tristique diam non turpis.  Phasellus lacus.  ',
