@@ -8,7 +8,7 @@ style.currentTheme$.subscribe(theme => {
   );
 });
 
-// MVUI_GLOBALS.APP_DEBUG = false;
+MVUI_GLOBALS.APP_DEBUG = false;
 
 class Main extends Component {
   #state = new rx.State('initial');

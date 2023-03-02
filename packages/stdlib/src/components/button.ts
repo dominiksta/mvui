@@ -47,6 +47,9 @@ export class Button extends Component<{
       padding: '3px 5px',
       fontWeight: '500',
     },
+    'button:hover': {
+      outline: `1px solid ${theme.fg}`,
+    },
     'button:active': {
       background: theme.fg,
       color: theme.bg,

@@ -84,10 +84,19 @@ export const [collapsible, Collapsible] = define(class Collapsible extends Compo
     '#header': {
       width: '100%',
     },
+
     '#header::part(button)': {
       border: 'none',
       textAlign: 'left',
     },
+    '#header::part(button):hover': {
+      outline: 'none',
+      background: theme.bgContrastMiddle,
+    },
+    '#header::part(button):active': {
+      background: theme.fg,
+    },
+
     '#header > #header': {
       display: 'inline-block',
       fontSize: '120%',
