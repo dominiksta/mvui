@@ -3,8 +3,9 @@
   "private": true,
   "scripts": {
     "clean": "rm -rf packages/**/dist",
-    "gendoc": "typedoc",
-    "gendoc:watch": "typedoc --watch --preserveWatchOutput"
+    "gendoc:stdlib": "cd packages/stdlib && npm run gendoc",
+    "gendoc:api": "typedoc",
+    "gendoc": "npm run gendoc:stdlib && npm run gendoc:api"
   },
   "devDependencies": {
     "typescript": "^4.8.4"

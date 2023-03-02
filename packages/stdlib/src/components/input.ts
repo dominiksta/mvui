@@ -3,6 +3,15 @@ import theme from "theme";
 
 /**
  * Some general doc
+ * @class Input
+ *
+ * @prop {string} value -
+ * The user provided value
+ *
+ * @prop {boolean} [onlyEmitonBlur=false] -
+ * Wether to only emit new values when focus is lost
+ *
+ * TODO: maybe make onlyEmitOnBlur an option for rx.bind ?
  */
 export const [input, Input] = define(class Input extends Component {
   static tagNameLibrary = 'std';
@@ -20,14 +29,7 @@ export const [input, Input] = define(class Input extends Component {
   });
 
   props = {
-    /**
-     * @prop {string} The value entered
-     */
     value: new rx.Prop(''),
-    /**
-     * @prop {boolean} The value entered
-     */
-    // TODO: maybe make this an option for rx.bind ?
     onlyEmitOnBlur: new rx.Prop(false),
   };
 

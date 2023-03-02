@@ -5,23 +5,34 @@ import theme from "theme";
 /**
  * This is a really cool button.
  *
- * @example
+ * ### Example
  * ```typescript
  * import * as std from '@mvui/stdlib';
  *
  * class Example extends Component {
  *   render = () => [
- *     std.button.new('Click Me!'),
+ *     std.button('Click Me!'),
  *   ]
  * }
  * ```
+ *
+ * @class Button
+ *
+ * @fires {CustomEvent<MouseEvent>} click -
+ * Dispatched after use clicked the button
+ *
+ * @attr kind
+ * @prop {'primary' | 'accent' | 'default'} [kind='default'] -
+ * The basic design of this button
+ *
+ * @slot {HTMLElement} default
  */
-export const [button, Button] = define(class Button extends Component<{
+export class Button extends Component<{
   click: MouseEvent
 }> {
   static tagNameLibrary = 'std';
 
-  static styles = style.sheet({
+  protected static styles = style.sheet({
     'button': {
       fontFamily: theme.font,
       background: theme.bg,
@@ -29,7 +40,7 @@ export const [button, Button] = define(class Button extends Component<{
       border: `2px solid ${theme.fg}`,
       padding: '3px 5px',
       margin: '1px',
-      fontWeight: 'bold',
+      fontWeight: '500',
     },
     'button:active': {
       background: theme.fg,
@@ -53,10 +64,21 @@ export const [button, Button] = define(class Button extends Component<{
     },
   })
 
+  /** @ignore */
   props = {
     kind: new rx.Prop<
       'default' | 'primary' | 'accent'
     >('default', { reflect: true }),
+  }
+
+  /**
+   * Description
+   * @function docTest
+   * @param {string} str - ye
+   * @returns {void}
+   */
+  public docTest(str: string) {
+    
   }
 
   render() {
@@ -72,4 +94,6 @@ export const [button, Button] = define(class Button extends Component<{
       )
     ]
   }
-})
+}
+
+export const [button] = define(Button);
