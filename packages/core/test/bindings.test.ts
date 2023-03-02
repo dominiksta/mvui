@@ -72,6 +72,7 @@ test('two bindings', async () => {
     render = () => [
       MyBoundInput.new({ props: { value: rx.bind(this.state) }}),
       MyBoundInput.new({ props: { value: rx.bind(this.state) }}),
+      h.input({ fields: { value: rx.bind(this.state) }}),
     ]
   }
   BindingTestTwo.register();
@@ -82,10 +83,12 @@ test('two bindings', async () => {
   for (let input of Array.from(myInputs)) {
     inputs.push(await input.query<HTMLInputElement>('input'));
   }
+  inputs.push(await comp.query<HTMLInputElement>('input'));
 
   const check = (text: string) => {
     expect(inputs[0].value).toBe(text);
     expect(inputs[1].value).toBe(text);
+    expect(inputs[2].value).toBe(text);
   }
   
   check('initial');

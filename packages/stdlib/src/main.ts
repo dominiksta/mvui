@@ -46,8 +46,6 @@ class Main extends Component {
           value: rx.bind(this.#state),
         }
       }),
-      h.input({ fields: { value: rx.bind(this.#state) } }),
-      h.div(this.#state),
       std.button({ events: { click: _ => this.#state.next('intial') } }, 'reset'),
     ])
   ]

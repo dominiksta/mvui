@@ -31,7 +31,7 @@ export default function fromAllEvents<T extends HTMLElement>(
 
     let originalDispatch = el.dispatchEvent.bind(el);
 
-    console.log(el.tagName.includes('-'))
+    // console.log(el.tagName.includes('-'))
     if (isCustomElement(el.tagName)) {
       // is web component
       // console.debug(`${el.tagName} is web component`);
