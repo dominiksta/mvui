@@ -78,6 +78,9 @@ export default class TemplateElement<
   }
 }
 
+export type TemplateElementChild =
+  string | TemplateElement<any, any, any, any>;
+
 export type TemplateElementChildren =
   string | Stream<any> | TemplateElement<any, any, any, any> |
   (TemplateElement<any, any, any, any> | string)[];

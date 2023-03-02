@@ -1,6 +1,7 @@
 import { Component, h, MVUI_GLOBALS, rx, style } from "@mvui/core";
 import theme, { darkTheme, lightTheme, MVUI_STDLIB_THEME_NAME } from "theme";
 import * as std from "./index";
+import { openSnackbar } from "./index";
 
 style.currentTheme$.subscribe(theme => {
   style.setTheme(
@@ -30,11 +31,30 @@ class Main extends Component {
 
   render = () => [
     h.h1('Test Page'),
+    std.snackbar(),
     std.collapsible([
       h.span({attrs: { slot: 'header' }}, 'Buttons'),
       std.button('Default'),
       std.button({ props: { kind: 'primary' } }, 'Primary'),
       std.button({ props: { kind: 'accent' } }, 'Accent'),
+    ]),
+    std.collapsible([
+      h.span({attrs: { slot: 'header' }}, 'Snackbar'),
+      std.button(
+        { events: { click: _ => openSnackbar('Text 1') }},
+        'Trigger with Text 1'
+      ),
+      std.button(
+        { events: { click: _ => openSnackbar('Text 2') }},
+        'Trigger with Text 2'
+      ),
+      std.button(
+        { events: { click: _ => openSnackbar(std.collapsible([
+          h.span({attrs: { slot: 'header'}}, 'header'),
+          h.div('content')
+        ]), 5000) }},
+        'Trigger with Custom Elements'
+      ),
     ]),
     std.collapsible([
       h.span({attrs: { slot: 'header' }}, 'Bindings Test'),
