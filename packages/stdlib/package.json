@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/dominiksta/mvui#readme",
   "dependencies": {
+    "@fontsource/ubuntu": "^4.5.11",
     "@mvui/core": "^0.0.1"
   },
   "devDependencies": {

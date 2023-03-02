@@ -1,13 +1,12 @@
 import { Component, h, rx, style } from "@mvui/core";
-import theme, { darkTheme, lightTheme } from "theme";
+import theme, { darkTheme, lightTheme, MVUI_STDLIB_THEME_NAME } from "theme";
 import * as std from "./index";
 
 style.currentTheme$.subscribe(theme => {
-  if (theme === 'dark')
-    style.setTheme('mvui-stdlib', darkTheme);
-  if (theme === 'light')
-    style.setTheme('mvui-stdlib', lightTheme);
-})
+  style.setTheme(
+    MVUI_STDLIB_THEME_NAME, theme === 'dark' ? darkTheme : lightTheme
+  );
+});
 
 class Main extends Component {
   #state = new rx.State('initial');
@@ -17,6 +16,7 @@ class Main extends Component {
     'html': {
       background: theme.bg,
       color: theme.fg,
+      fontFamily: theme.font,
     }
   });
 

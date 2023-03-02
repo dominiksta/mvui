@@ -7,10 +7,10 @@ const stdLibThemeKeys = [
   'primary', 'accent',
   'font'
 ] as const;
-type StdLibTheme = { [key in typeof stdLibThemeKeys[number]]: string };
+export type StdLibTheme = { [key in typeof stdLibThemeKeys[number]]: string };
 
-const baseTheme = {
-  font: 'monospace',
+export const baseTheme = {
+  font: 'Ubuntu, sans-serif',
 }
 
 export const lightTheme: StdLibTheme = {
@@ -31,15 +31,7 @@ export const darkTheme: StdLibTheme = {
   accent: '#ff4081',
 }
 
-style.setTheme('mvui-stdlib', lightTheme);
+export const MVUI_STDLIB_THEME_NAME = 'mvui-stdlib';
 
-
-style.currentTheme$.subscribe(theme => {
-  if (theme === 'dark')
-    style.setTheme('mvui-stdlib', darkTheme);
-  if (theme === 'light')
-    style.setTheme('mvui-stdlib', lightTheme);
-})
-
-const theme = style.themeVariables('mvui-stdlib', lightTheme);
+const theme = style.themeVariables(MVUI_STDLIB_THEME_NAME, lightTheme);
 export default theme;
