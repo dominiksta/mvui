@@ -1,4 +1,4 @@
-import { MvuiCSSSheet } from "style";
+import { MvuiCSSSheet } from "./style";
 import { Stream } from "./rx";
 
 type ToStringable = { toString: () => string };
@@ -88,7 +88,7 @@ export type TemplateElementParams<
   Attributes extends { [key: string]: any } = T,
   Props extends { [key: string]: any } = {}
   > = {
-    style?: Partial<CSSStyleDeclaration>,
+    style?: Partial<{[key in keyof CSSStyleDeclaration]: MaybeStream<ToStringable>}>,
     styleOverrides?: MvuiCSSSheet,
 
     attrs?: Partial<{

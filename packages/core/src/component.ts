@@ -530,7 +530,18 @@ export default abstract class Component<
         }
       }
 
-      if (el.params.style) style.util.applySingleElement(thisEl, el.params.style);
+      if (el.params.style) {
+        for (let key in el.params.style) {
+          const val = el.params.style[key]!;
+          if (val instanceof Stream) {
+            this.subscribe(val, v => {
+              thisEl.style[key] = v.toString();
+            });
+          } else {
+            thisEl.style[key] = val.toString();
+          }
+        }
+      }
       if (el.params.styleOverrides) {
         console.log('style overrides')
         if (!(thisEl instanceof Component)) throw new Error(
