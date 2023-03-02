@@ -139,47 +139,52 @@ export default abstract class Component<
 
   props: { [name: string]: Prop<any> } = {};
 
-  private static _setPropAndMaybeReflect(
-    thisEl: Component, prop: string, value: any
+  private _maybeReflectToAttribute(
+    prop: string, value: any
   ) {
-    if (!(prop in thisEl.props)) throw new Error(
+    if (!(prop in this.props)) throw new Error(
       'Attempted to set non-existant property'
     );
-    const p: Prop<any> = (thisEl.props as any)[prop];
-    p.next(value);
+    // console.debug(`maybe reflect ${prop} to attribute with ${value}`)
+    const p: Prop<any> = (this.props as any)[prop];
     if (typeof p._options.reflect === "string") {
-      thisEl.reflectAttribute(
+      this.reflectAttribute(
         p._options.reflect,
         p._options.converter.toString(p.value)
       )
     } else if (p._options.reflect === true) {
-      thisEl.reflectAttribute(
+      this.reflectAttribute(
         camelToDash(prop),
         p._options.converter.toString(p.value)
       )
     }
   }
 
+  private _maybeReflectToProp(attrName: string) {
+    // console.debug(`The ${attrName} attribute was modified.`);
+    for (let k of Object.keys(this.props)) {
+      const reflect = this.props[k]._options.reflect;
+      if (reflect === false) continue;
+      const reflectedAttrName = reflect === true ? camelToDash(k) : reflect;
+      if (reflectedAttrName === attrName) {
+        this.props[k].next(this.props[k]._options.converter.fromString(
+          this.getAttribute(attrName)!
+        ));
+      }
+    }
+  }
+
   private attrReflectionObserver = new MutationObserver((mutationList, _observer) => {
     for (const mutation of mutationList) {
+      // console.debug(new Date(), `mutation ${mutation.attributeName}, ignore =`,
+      // this.reflectIgnoreNextAttributeChange);
       if (mutation.type === 'attributes') {
         if (this.reflectIgnoreNextAttributeChange) {
           this.reflectIgnoreNextAttributeChange = false;
           return;
         };
         if (mutation.attributeName === null) return;
-
-        for (let k of Object.keys(this.props)) {
-          const reflect = this.props[k]._options.reflect;
-          if (reflect === false) continue;
-          const reflectedAttrName = reflect === true ? camelToDash(k) : reflect;
-          if (reflectedAttrName === mutation.attributeName) {
-            // console.debug(`The ${mutation.attributeName} attribute was modified.`);
-            this.props[k].next(this.props[k]._options.converter.fromString(
-              this.getAttribute(mutation.attributeName)!
-            ));
-          }
-        }
+        this._maybeReflectToProp(mutation.attributeName);
       }
     }
   });
@@ -204,8 +209,6 @@ export default abstract class Component<
     if ((this.constructor as any).useShadow && !this.shadowRoot) {
       this.attachShadow({mode: 'open'});
     }
-
-    this.attrReflectionObserver.observe(this, {attributes: true});
 
     this.lifecycleState = "created"; this.onCreated();
   }
@@ -258,11 +261,18 @@ export default abstract class Component<
 
     for (let ref of this.templateRefs) ref.resolve(ref.query());
 
-    // for better compatibility with other frameworks, we emit a change event everytime we
-    // change a prop
+    this.attrReflectionObserver.observe(this, { attributes: true });
+
+    for (let attrName of this.getAttributeNames())
+      this._maybeReflectToProp(attrName);
+
     for (let prop in this.props) {
-      this.subscribe(this.props[prop], _ => {
+      this.subscribe(this.props[prop], value => {
+        // for better compatibility with other frameworks, we emit a change event
+        // everytime we change a prop
         this.dispatchEvent(new CustomEvent('change')); // TODO: use normal Event
+
+        this._maybeReflectToAttribute(prop, value);
       });
     }
 
@@ -275,6 +285,7 @@ export default abstract class Component<
 
   private disconnectedCallback() {
     this.lifecycleState = "removed"; this.onRemoved();
+    this.attrReflectionObserver.disconnect();
     MVUI_GLOBALS.APP_DEBUG && this.flash('red');
     for (let unsub of this.unsubscribers) unsub();
   }
@@ -363,7 +374,7 @@ export default abstract class Component<
         Object.defineProperty(instance, p, {
           get() { return instance.props[p].value; },
           set(v: any) {
-            Component._setPropAndMaybeReflect(instance, p, v);
+            instance.props[p].next(v);
           }
         });
       }
@@ -521,11 +532,11 @@ export default abstract class Component<
                 else { ignoreNextDown = true; }
               }
               // console.debug(`setting prop ${v}`);
-              Component._setPropAndMaybeReflect(thisEl, prop, v);
+              thisEl.props[prop].next(v);
             });
 
           } else {
-            Component._setPropAndMaybeReflect(thisEl, prop, val);
+            thisEl.props[prop].next(val);
           }
         }
       }
@@ -543,7 +554,7 @@ export default abstract class Component<
         }
       }
       if (el.params.styleOverrides) {
-        console.log('style overrides')
+        // console.log('style overrides')
         if (!(thisEl instanceof Component)) throw new Error(
           'Style overrides may only be used for mvui components'
         );

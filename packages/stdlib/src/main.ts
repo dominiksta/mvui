@@ -1,4 +1,4 @@
-import { Component, h, rx, style } from "@mvui/core";
+import { Component, h, MVUI_GLOBALS, rx, style } from "@mvui/core";
 import theme, { darkTheme, lightTheme, MVUI_STDLIB_THEME_NAME } from "theme";
 import * as std from "./index";
 
@@ -7,6 +7,8 @@ style.currentTheme$.subscribe(theme => {
     MVUI_STDLIB_THEME_NAME, theme === 'dark' ? darkTheme : lightTheme
   );
 });
+
+// MVUI_GLOBALS.APP_DEBUG = false;
 
 class Main extends Component {
   #state = new rx.State('initial');

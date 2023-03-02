@@ -26,14 +26,18 @@ export const [collapsible, Collapsible] = define(class Collapsible extends Compo
   static tagNameLibrary = 'std';
 
   props = {
-    initialCollapsed: new rx.Prop<boolean>(false, { reflect: true }),
-    collapsed: new rx.Prop<boolean>(false, { reflect: true }),
+    initialCollapsed: new rx.Prop<boolean>(
+      false, { reflect: true, converter: Boolean }
+    ),
+    collapsed: new rx.Prop<boolean>(
+      false, { reflect: true, converter: Boolean }
+    ),
   }
 
   render() {
     const { collapsed, initialCollapsed } = this.props;
     if (initialCollapsed.value) collapsed.next(true);
-    this.subscribe(collapsed, console.log);
+    // this.subscribe(collapsed, console.log);
 
     return [
       h.div(

@@ -32,8 +32,8 @@ export const [input, Input] = define(class Input extends Component {
   });
 
   props = {
-    value: new rx.Prop(''),
-    onlyEmitOnBlur: new rx.Prop(false),
+    value: new rx.Prop('', { reflect: true }),
+    onlyEmitOnBlur: new rx.Prop(false, { reflect: true, converter: Boolean }),
   };
 
   render = () => [
