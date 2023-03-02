@@ -37,6 +37,7 @@ export class Button extends Component<{
     ':host': {
       display: 'inline-block',
       marginRight: '5px',
+      marginBottom: '5px',
     },
     'button': {
       fontFamily: theme.font,

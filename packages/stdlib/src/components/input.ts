@@ -27,7 +27,8 @@ export const [input, Input] = define(class Input extends Component {
       border: 'none',
       borderBottom: `1px solid ${theme.fg}`,
       padding: '5px',
-      margin: '1px',
+      marginRight: '5px',
+      marginBottom: '5px',
     },
   });
 
