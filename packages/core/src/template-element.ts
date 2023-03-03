@@ -107,7 +107,7 @@ export type TemplateElementParams<
       (event: GlobalEventHandlersEventMapWithTarget<T>[Property]) => any
     } & {
         [Property in keyof EventsT]:
-        (event: CustomEvent<EventsT[Property]>) => any
+        (event: EventsT[Property]) => any
       }>,
     fields?: Partial<{
       [Property in keyof T]: MaybeStream<T[Property]>

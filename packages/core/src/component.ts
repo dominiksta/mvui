@@ -422,14 +422,50 @@ export default abstract class Component<
   /**
    * Dispatch an event specified in the generic CustomEventsT parameter. All events will
    * be dispatched as an instance of `CustomEvent` with `detail` set to `value`.
+   *
+   * All events will by default stop not bubble any further then the parent of this
+   * component.
    */
-  protected dispatch<T extends keyof CustomEventsT>(
-    name: T, value: CustomEventsT[T],
+  protected dispatch<
+    T extends keyof CustomEventsT,
+    V extends (CustomEventsT[T] extends CustomEvent<infer I> ? I : never)
+  >(
+    name: T, value: V,
     options: EventInit = { bubbles: false }
   ) {
     if (typeof name !== 'string') return;
     this.dispatchEvent(new CustomEvent(name, { detail: value, ...options }));
   }
+
+  /**
+   * Dispatch an event specified in the generic CustomEventsT parameter. In contrast to
+   * {@link dispatch}, this method takes an existing event and redispatches it in with
+   * only the type set to `name`. Use this if you want to redispatch existing events like
+   * a MouseEvent.
+   *
+   * All events will by default stop not bubble any further then the parent of this
+   * component.
+   */
+  protected reDispatch<
+    T extends keyof CustomEventsT,
+    V extends (CustomEventsT[T] extends Event ? CustomEventsT[T] : never)
+  >(
+    name: T, value: V,
+    noBubble = true,
+  ) {
+    if (typeof name !== 'string') return;
+    const _value: any = value;
+    if (_value instanceof Event) {
+      this.dispatchEvent(new (_value as any).constructor(name, {
+        ...value,
+        bubbles: !noBubble
+      }));
+      if (noBubble) value.stopPropagation();
+    } else {
+      throw new Error('Only Event objects may be reDispatched');
+    }
+  }
+
 
   // ----------------------------------------------------------------------
   // rendering
