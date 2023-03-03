@@ -10,7 +10,7 @@ class TemplateReferencesTest1 extends Component {
 
   async onRender() {
     (await this.paragraphEl).innerText = 'Programatically added content';
-    for (let el of (await this.listEls)) {
+    for (let el of Array.from(await this.listEls)) {
       el.innerText = 'Multiple query';
       el.style.textDecoration = 'underline';
     }
@@ -57,12 +57,12 @@ test('template references', async () => {
   const comp2 = testDoc(new TemplateReferencesTest2())[1];
   await waitFrame();
 
-  for (let li of (await comp1.queryAll<HTMLLIElement>('.myListEl'))) {
+  for (let li of Array.from(await comp1.queryAll<HTMLLIElement>('.myListEl'))) {
     expect(li.innerText).toBe('Multiple query');
     expect(li.style.textDecoration).toBe('underline');
   }
 
-  for (let li of (await comp2.queryAll<HTMLLIElement>('.myListEl'))) {
+  for (let li of Array.from(await comp2.queryAll<HTMLLIElement>('.myListEl'))) {
     expect(li.innerText).toBe(undefined);
     expect(li.style.textDecoration).toBe('');
   }

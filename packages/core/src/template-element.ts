@@ -94,6 +94,8 @@ export type TemplateElementParams<
     style?: Partial<{[key in keyof CSSStyleDeclaration]: MaybeStream<ToStringable>}>,
     styleOverrides?: MvuiCSSSheet,
 
+    classes?: {[key: string]: MaybeStream<boolean>},
+
     attrs?: Partial<{
       [Property in keyof Attributes]:
       MaybeStream<Attributes[Property]> | MaybeStream<ToStringable>

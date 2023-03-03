@@ -458,6 +458,7 @@ export default abstract class Component<
     if (_value instanceof Event) {
       this.dispatchEvent(new (_value as any).constructor(name, {
         ...value,
+        target: this,
         bubbles: !noBubble
       }));
       if (noBubble) value.stopPropagation();
@@ -598,6 +599,20 @@ export default abstract class Component<
           'Style overrides may only be used for components with a shadow dom'
         );
         thisEl[STYLE_OVERRIDES] = el.params.styleOverrides;
+      }
+
+      const classes = el.params.classes;
+      if (classes) {
+        for (let key in classes) {
+          const val = classes[key]!;
+          if (val instanceof Stream) {
+            this.subscribe(val, v => {
+              thisEl.classList.toggle(key, v);
+            });
+          } else {
+            thisEl.classList.toggle(key, val);
+          }
+        }
       }
     }
 
