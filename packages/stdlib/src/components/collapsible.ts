@@ -37,7 +37,7 @@ export const [collapsible, Collapsible] = define(class Collapsible extends Compo
   render() {
     const { collapsed, initialCollapsed } = this.props;
     if (initialCollapsed.value) collapsed.next(true);
-    // this.subscribe(collapsed, console.log);
+    // this.onRemoved(collapsed.subscribe(console.log));
 
     return [
       h.div(

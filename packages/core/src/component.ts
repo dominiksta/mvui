@@ -297,7 +297,7 @@ export default abstract class Component<
       this._maybeReflectToProp(attrName);
 
     for (let prop in this.props) {
-      this.subscribe(this.props[prop], value => {
+      this._subscribe(this.props[prop], value => {
         // for better compatibility with other frameworks, we emit a change event
         // everytime we change a prop
         this.dispatchEvent(new CustomEvent('change')); // TODO: use normal Event
@@ -306,7 +306,7 @@ export default abstract class Component<
       });
     }
 
-    this.subscribe(this.styles, styles =>
+    this._subscribe(this.styles, styles =>
       style.util.applySheetAsStyleTag(this, styles, 'mvui-instance-styles')
     );
 
@@ -317,7 +317,6 @@ export default abstract class Component<
     this.lifecycleState = "removed"; this._lifecycleHooks.removed.forEach(f => f());
     this.attrReflectionObserver.disconnect();
     MVUI_GLOBALS.APP_DEBUG && this.flash('red');
-    for (let unsub of this.unsubscribers) unsub();
   }
 
   /**
@@ -422,9 +421,8 @@ export default abstract class Component<
   // automatic unsubscribing on unmount
   // ----------------------------------------------------------------------
 
-  private unsubscribers: (() => void)[] = [];
-  protected subscribe<T>(obs: Stream<T>, observer: ((value: T) => void)) {
-    this.unsubscribers.push(obs.subscribe(
+  private _subscribe<T>(obs: Stream<T>, observer: ((value: T) => void)) {
+    this.onRemoved(obs.subscribe(
       !MVUI_GLOBALS.APP_DEBUG ? observer : v => { this.flash(); return observer(v) }
     ));
   }
@@ -554,7 +552,7 @@ export default abstract class Component<
           // the camelToDash transformations here are actually not an mvui specific
           // assumption: html attributes are forced to be all lowercase by the browser
           if (attrVal instanceof Stream) {
-            this.subscribe(
+            this._subscribe(
               attrVal, v => {
                 thisEl.setAttribute(camelToDash(attr), v as string)
                 // console.debug("next");
@@ -585,7 +583,7 @@ export default abstract class Component<
             if (val instanceof State && BIND_MARKER in val) {
               if (!events$) events$ = fromAllEvents(thisEl);
               // console.debug('found bind marker');
-              this.subscribe(events$.pipe(
+              this._subscribe(events$.pipe(
                 map(_ => thisEl[prop]),
                 distinctUntilChanged(),
               ), v => {
@@ -596,7 +594,7 @@ export default abstract class Component<
             }
 
             // dataflow: downwards
-            this.subscribe(val, (v) => {
+            this._subscribe(val, (v) => {
               if (val instanceof State && BIND_MARKER in val) {
                 // console.debug(`state change detected: ${v}`, thisEl);
                 if (ignoreNextDown) { ignoreNextDown = false; return; }
@@ -622,7 +620,7 @@ export default abstract class Component<
             // dataflow: upwards
             if (val instanceof State && BIND_MARKER in val) {
               const p: Prop<any> = (thisEl.props as any)[prop];
-              this.subscribe(p.pipe(skip(1)), v => {
+              this._subscribe(p.pipe(skip(1)), v => {
                 // console.debug(`setting binding ${v}`);
                 if (ignoreNextDown) { ignoreNextDown = false; return; }
                 else { ignoreNextDown = true; }
@@ -632,7 +630,7 @@ export default abstract class Component<
             }
 
             // dataflow: downwards
-            this.subscribe(val, (v) => {
+            this._subscribe(val, (v) => {
               // console.debug(`considering prop ${v}`);
               if (val instanceof State && BIND_MARKER in val) {
                 if (ignoreNextDown) { ignoreNextDown = false; return; }
@@ -652,7 +650,7 @@ export default abstract class Component<
         for (let key in el.params.style) {
           const val = el.params.style[key]!;
           if (val instanceof Stream) {
-            this.subscribe(val, v => {
+            this._subscribe(val, v => {
               thisEl.style[key] = v.toString();
             });
           } else {
@@ -676,7 +674,7 @@ export default abstract class Component<
         for (let key in classes) {
           const val = classes[key]!;
           if (val instanceof Stream) {
-            this.subscribe(val, v => {
+            this._subscribe(val, v => {
               thisEl.classList.toggle(key, v);
             });
           } else {
@@ -691,7 +689,7 @@ export default abstract class Component<
       if (typeof el.children === 'string') {
         thisEl.innerText = el.children;
       } else if (el.children instanceof Stream) {
-        this.subscribe(
+        this._subscribe(
           el.children, v => {
             if (v instanceof Array && v[0] instanceof TemplateElement) {
               thisEl.innerHTML = '';
