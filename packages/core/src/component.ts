@@ -1,15 +1,14 @@
 import TemplateElement from "./template-element";
 import { Constructor } from "./util/types";
 import {
-  Stream, State, Prop,
-  fromAllEvents, map, distinctUntilChanged, skip
+  Stream, State, Prop, Context,
+  fromAllEvents, fromEvent, map, distinctUntilChanged, skip
 } from "./rx";
 import { camelToDash } from "./util/strings";
 import { MVUI_GLOBALS } from "./globals";
 import { throttle } from "./util/time";
 import * as style from "./style";
 import { BIND_MARKER } from "./rx/bind";
-import Context from "rx/context";
 
 // these symbols are used for properties that should be accessible from anywhere in mvui
 // but should not be part of api surface
@@ -567,7 +566,9 @@ export default abstract class Component<
       }
       if (el.params.events) {
         for (let key in el.params.events) {
-          thisEl.addEventListener(key, (el.params.events as any)[key]);
+          this.onRemoved(fromEvent(thisEl, key as any).subscribe(
+            (el.params.events as any)[key])
+          );
         }
       }
 
