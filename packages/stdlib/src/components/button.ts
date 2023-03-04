@@ -85,8 +85,7 @@ export class Button extends Component<{
         {
           events: {
             click: e => {
-              e.stopPropagation();
-              this.dispatch('click', e)
+              this.reDispatch('click', e);
             }
           },
           attrs: {

@@ -14,7 +14,7 @@ class MySelect extends Component {
     return [
       h.div(
         { attrs: { id: 'curr-value'}},
-        ctx.select(v => `Current Value: ${v}`)
+        ctx.derive(v => `Current Value: ${v}`)
       ),
       h.div(h.slot()),
     ]

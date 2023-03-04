@@ -16,7 +16,7 @@
      render() {
        const ctx = this.provideContext(myCtx);
        return [
-         h.div(ctx.select(v => 'Value in Provider: ')),
+         h.div(ctx.derive(v => 'Value in Provider: ')),
          h.slot(),
        ]
      }

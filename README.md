@@ -13,7 +13,7 @@ export class CounterComponent extends Component {
         h.button({ events: {
           click: _ => count.next(c => c + 1)
         }}, 'Increment'),
-        h.span(count.select(v => `count: ${v}`))
+        h.span(count.derive(v => `count: ${v}`))
       ])
     ];
   }

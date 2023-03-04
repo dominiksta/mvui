@@ -53,13 +53,13 @@ export const [collapsible, Collapsible] = define(class Collapsible extends Compo
             ),
             h.div(
               { attrs: { id: 'indicator' } },
-              collapsed.select(c => c ? '-' : '+'),
+              collapsed.derive(c => c ? '-' : '+'),
             ),
           ]),
           h.div({
             attrs: { id: 'content' },
             style: {
-              display: collapsed.map(c => c ? 'none' : 'block'),
+              display: collapsed.derive(c => c ? 'none' : 'block'),
             },
           },
             h.slot()
@@ -83,6 +83,7 @@ export const [collapsible, Collapsible] = define(class Collapsible extends Compo
     },
     '#header': {
       width: '100%',
+      margin: '0px',
     },
 
     '#header::part(button)': {

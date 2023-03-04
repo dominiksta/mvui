@@ -1,16 +1,16 @@
 import memoizeOne from "./memoize-one";
-import { Selectable } from "./selectable";
+import { Derivable } from "./derivable";
 import Stream, { Observer } from "./stream";
 
 /**
-   A `Selector` *selects* aka *derives* state from an existing Selector or {@link State}
+   A `DerivedState` object derives state from an existing DerivedState or {@link State}
    object using a *pure* function.
 
    @example
    ```typescript
    const state = new State({a: 1, b: 4});
-   const selector = Selector.create(state, value => value.a + 1);
-   selector.subscribe(console.log); // => logs 2
+   const derived = DerivedState.create(state, value => value.a + 1);
+   derived.subscribe(console.log); // => logs 2
    state.next(3); // => logs 4
    ```
 
@@ -22,32 +22,32 @@ import Stream, { Observer } from "./stream";
    state.next(3); // => logs 4
    ```
 
-   However, selectors can offer some additional features by being deliberately *less*
+   However, DerivedState can offer some additional features by being deliberately *less*
    powerful then operators:
 
    - They must always be free of side effects
    - They must always derive from some known state with an initial value
    - They cannot filter or delay emissions, they can only map values
 
-   As a general rule of thumb, **always use selectors instead of operators when
+   As a general rule of thumb, **always use DerivedState instead of operators when
    possible** since they are more efficient and easy to use. There are of course many
    cases where operators are simply necessary.
 
-   ### The value of a selector can be accessed "imperatively"
+   ### The value of DerivedState can be accessed "imperatively"
 
    ```typescript
-   const selector = Selector.create(
+   const derived = DerivedState.create(
      new State({a: 1, b: 4}), value => value.a + 1
    );
-   console.log(selector.value === 2) // => logs true
+   console.log(derived.value === 2) // => logs true
    ```
 
-   ### Selectors are memoized
+   ### DerivedState is memoized
 
-   When the arguments to a selector do not change, it does not have to run its defining
+   When the arguments to DerivedState do not change, it does not have to run its defining
    function again and can instead return the previous value.
  */
-export default class Selector<T> extends Stream<T> {
+export default class DerivedState<T> extends Stream<T> {
 
   private parentUnsubscribers: (() => void)[] = [];
   private parentValues: any[] = [];
@@ -57,12 +57,12 @@ export default class Selector<T> extends Stream<T> {
   private lastValue: T | undefined;
 
   /**
-     Get the current value of this selector.
+     Get the current value of this DerivedState.
 
-     Be aware that if this selector is not currently subscribed to anywhere, it must
+     Be aware that if this DerivedState is not currently subscribed to anywhere, it must
      internally subscribe and unsubscribe and therefore execute the entire "chain" of its
-     parent selectors. If there is an active subscription, the current value is returned
-     immediatly without any computation.
+     parent DerivedState objects. If there is an active subscription, the current value is
+     returned immediatly without any computation.
    */
   get value(): T {
     if (this.lastValue && this.observers.length !== 0) {
@@ -75,11 +75,11 @@ export default class Selector<T> extends Stream<T> {
   }
 
   /**
-   * Do not use this constructor directly. Instead, always use {@link Selector.create}.
+   * Do not use this constructor directly. Instead, always use {@link DerivedState.create}.
    */
   private constructor(
-    private parents: Selectable<any>[],
-    private selectorFunction: (...args: any[]) => T
+    private parents: Derivable<any>[],
+    private derivationFunction: (...args: any[]) => T
   ) {
     super(_observer => undefined);
   }
@@ -90,7 +90,7 @@ export default class Selector<T> extends Stream<T> {
 
     if (this.observers.length === 1) {
       let complete = false;
-      const memoized = memoizeOne(this.selectorFunction.bind(this));
+      const memoized = memoizeOne(this.derivationFunction.bind(this));
       for (let i = 0; i < this.parents.length; i++) {
         if (i === this.parents.length - 1) complete = true;
         this.parentUnsubscribers.push(this.parents[i].subscribe(value => {
@@ -115,81 +115,81 @@ export default class Selector<T> extends Stream<T> {
     }
   }
 
-  /** Shorthand for `{@link Selector.create}(this, definition)` */
-  select<ReturnT>(definition: (value: T) => ReturnT): Selector<ReturnT> {
-    return Selector.create(this, definition);
+  /** Shorthand for `{@link DerivedState.create}(this, definition)` */
+  derive<ReturnT>(definition: (value: T) => ReturnT): DerivedState<ReturnT> {
+    return DerivedState.create(this, definition);
   }
 
   // nasty type definition incoming:
 
   /** @ignore */
   static create<R, A>(
-    sa: Selectable<A>,
+    sa: Derivable<A>,
     def: (a: A) => R
-  ): Selector<R>;
+  ): DerivedState<R>;
 
   /**
-     Create a Selector from a set of {@link State} or existing Selector objects. The last
-     argument is a function that will taking the values of the State/Selector objects
+     Create a DerivedState from a set of {@link State} or existing DerivedState objects. The last
+     argument is a function that will taking the values of the State/DerivedState objects
      defined in all prior arguments. There are overloads for providing up to eight parent
-     State/Selector objects.
+     State/DerivedState objects.
 
      @example
      ```typescript
      const s1 = new State(1);
      const s2 = new State(2);
-     Selector.create(s1, s2, (v1, v2) => v1 + v2)
+     DerivedState.create(s1, s2, (v1, v2) => v1 + v2)
        .subscribe(console.log); // => logs 3
      s2.next(3); // => logs 5
      ```
    */
   static create<R, A, B>(
-    sa: Selectable<A>, sb: Selectable<B>,
+    sa: Derivable<A>, sb: Derivable<B>,
     def: (a: A, b: B) => R
-  ): Selector<R>;
+  ): DerivedState<R>;
 
   /** @ignore */
   static create<R, A, B, C>(
-    sa: Selectable<A>, sb: Selectable<B>, sc: Selectable<C>,
+    sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>,
     def: (a: A, b: B, c: C) => R
-  ): Selector<R>;
+  ): DerivedState<R>;
 
   /** @ignore */
   static create<R, A, B, C, D>(
-    sa: Selectable<A>, sb: Selectable<B>, sc: Selectable<C>, sd: Selectable<D>,
+    sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
     def: (a: A, b: B, c: C, d: D) => R
-  ): Selector<R>;
+  ): DerivedState<R>;
 
   /** @ignore */
   static create<R, A, B, C, D, E>(
-    sa: Selectable<A>, sb: Selectable<B>, sc: Selectable<C>, sd: Selectable<D>,
-    se: Selectable<E>,
+    sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
+    se: Derivable<E>,
     def: (a: A, b: B, c: C, d: D, e: E) => R
-  ): Selector<R>;
+  ): DerivedState<R>;
 
   /** @ignore */
   static create<R, A, B, C, D, E, F>(
-    sa: Selectable<A>, sb: Selectable<B>, sc: Selectable<C>, sd: Selectable<D>,
-    se: Selectable<E>, sf: Selectable<F>,
+    sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
+    se: Derivable<E>, sf: Derivable<F>,
     def: (a: A, b: B, c: C, d: D, e: E, f: F) => R
-  ): Selector<R>;
+  ): DerivedState<R>;
 
   /** @ignore */
   static create<R, A, B, C, D, E, F, G>(
-    sa: Selectable<A>, sb: Selectable<B>, sc: Selectable<C>, sd: Selectable<D>,
-    se: Selectable<E>, sf: Selectable<F>, sg: Selectable<G>,
+    sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
+    se: Derivable<E>, sf: Derivable<F>, sg: Derivable<G>,
     def: (a: A, b: B, c: C, d: D, e: E, f: F, g: G) => R
-  ): Selector<R>;
+  ): DerivedState<R>;
 
   /** @ignore */
   static create<R, A, B, C, D, E, F, G, H>(
-    sa: Selectable<A>, sb: Selectable<B>, sc: Selectable<C>, sd: Selectable<D>,
-    se: Selectable<E>, sf: Selectable<F>, sg: Selectable<G>, sh: Selectable<H>, 
+    sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
+    se: Derivable<E>, sf: Derivable<F>, sg: Derivable<G>, sh: Derivable<H>, 
     def: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H) => R
-  ): Selector<R>;
+  ): DerivedState<R>;
 
   /** @ignore */
   static create(...args: any[]): any {
-    return new Selector(args.slice(0, -1), args[args.length - 1]);
+    return new DerivedState(args.slice(0, -1), args[args.length - 1]);
   }
 }

@@ -36,6 +36,8 @@ export function openSnackbar(
    std.openSnackbar('Some Text');
    std.openSnackbar(h.div('Or a template'));
    ```
+
+   @class Snackbar
  */
 export class Snackbar extends Component {
 
@@ -45,7 +47,7 @@ export class Snackbar extends Component {
         {
           attrs: { id: 'snackbar' },
           style: {
-            display: CONTENT.select(c => c === undefined ? 'none' : 'flex')
+            display: CONTENT.derive(c => c === undefined ? 'none' : 'flex')
           }
         },[
           h.div({ attrs: { id: 'text' }}, CONTENT),
