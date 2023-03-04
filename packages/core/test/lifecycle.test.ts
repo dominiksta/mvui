@@ -16,7 +16,7 @@ class LifecycleTestComponent extends Component {
     const counter = new rx.State(0);
 
     return [
-      h.button({ events: { click: _ => counter.next(counter.value + 1)} }),
+      h.button({ events: { click: _ => counter.next(c => c + 1)} }),
       h.div(counter),
     ];
   }

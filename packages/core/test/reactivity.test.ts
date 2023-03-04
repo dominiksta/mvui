@@ -17,13 +17,13 @@ class CounterComponent extends Component {
       h.button({
         attrs: { id: 'inc-count' },
         events: {
-          click: () => this.count.next(this.count.value + 1)
+          click: () => this.count.next(c => c + 1)
         }
       }, 'Increase Count'),
       h.button({
         attrs: { id: 'inc-mult' },
         events: {
-          click: () => this.multiplier.next(this.multiplier.value + 1)
+          click: () => this.multiplier.next(m => m + 1)
         }
       }, 'Increase Multiplier'),
       h.span(
@@ -64,7 +64,7 @@ class ReactiveList extends Component {
         attrs: { id: 'inc-counter' },
         events: {
           click: () => {
-            this.counter.next(this.counter.value + 1)
+            this.counter.next(c => c + 1)
           }
         }
       }, 'Increment Counter'),

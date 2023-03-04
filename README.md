@@ -7,13 +7,13 @@ Yes, this is a new frontend framework, and no, I am not joking.
 ```typescript
 export class CounterComponent extends Component {
   render() {
-    const count$ = new rx.State(0);
     return [
+      const count = new rx.State(0);
       h.p([
         h.button({ events: {
-          click: _ => count$.next(count$.value + 1)
+          click: _ => count.next(c => c + 1)
         }}, 'Increment'),
-        h.span(count$.map(v => `count: ${v}`))
+        h.span(count.select(v => `count: ${v}`))
       ])
     ];
   }

@@ -41,10 +41,12 @@ export default class State<T> extends MulticastStream<T> {
   }
 
   /** Set a new value and trigger all subscriptions with that new value */
-  override next(value: T) {
+  override next(valueOrSetter: T | ((currentValue: T) => T)) {
     if (this.completed) return;
-    this._value = value;
-    super.next(value);
+    const newValue = valueOrSetter instanceof Function ?
+      valueOrSetter(this._value) : valueOrSetter;
+    this._value = newValue;
+    super.next(newValue);
   }
 
   /** Shorthand for `{@link Selector.create}(this, definition)` */
