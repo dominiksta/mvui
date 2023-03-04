@@ -1,6 +1,6 @@
 import { test, expect } from '@jest/globals';
+import { rx } from 'index';
 import { State } from 'rx';
-import DerivedState from 'rx/derived-state';
 
 test('basic derivation', () => {
 
@@ -8,7 +8,7 @@ test('basic derivation', () => {
 
   let value = 0;
   let count = 0;
-  const derived = DerivedState.create(
+  const derived = rx.derive(
     state1, s1 => {
       count++;
       return s1.hi + 1;
@@ -45,7 +45,7 @@ test('derivateion with multiple parents', () => {
   
   let value = 0;
   let count = 0;
-  const derived = DerivedState.create(
+  const derived = rx.derive(
     state1, state2, (s1, s2) => {
       count++;
       return s1.hi + s2.yes;
@@ -92,14 +92,14 @@ test('chained derivations', () => {
   let count1 = 0;
   let count2 = 0;
 
-  const derived1 = DerivedState.create(
+  const derived1 = rx.derive(
     state1, state2, (s1, s2) => {
       count1++;
       return s1.hi + s2.yes;
     }
   );
 
-  const derived2 = DerivedState.create(
+  const derived2 = rx.derive(
     state1, derived1, (st1, se2) => {
       count2++;
       return st1.hi + se2
@@ -150,7 +150,7 @@ test('derivations are multicast', () => {
   const state1 = new State({ hi: 0 });
 
   let count = 0;
-  const derived = DerivedState.create(
+  const derived = rx.derive(
     state1, s1 => {
       count++;
       return s1.hi + 1;

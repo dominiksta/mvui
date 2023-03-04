@@ -1,6 +1,6 @@
 import { Observer } from "./stream";
 import MulticastStream from "./multicast-stream";
-import DerivedState from "./derived-state";
+import { derive, DerivedState } from "./derived-state";
 
 /**
  * A {@link MulticastStream} that remembers the last emitted value. Useful to model state.
@@ -49,8 +49,8 @@ export default class State<T> extends MulticastStream<T> {
     super.next(newValue);
   }
 
-  /** Shorthand for `{@link DerivedState.create}(this, definition)` */
+  /** Shorthand for rx.{@link derive}(this, definition) */
   derive<ReturnT>(definition: (value: T) => ReturnT): DerivedState<ReturnT> {
-    return DerivedState.create(this, definition);
+    return derive(this, definition);
   }
 }

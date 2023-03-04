@@ -8,8 +8,8 @@ import Stream, { Observer } from "./stream";
 
    @example
    ```typescript
-   const state = new State({a: 1, b: 4});
-   const derived = DerivedState.create(state, value => value.a + 1);
+   const state = new rx.State({a: 1, b: 4});
+   const derived = rx.derive(state, value => value.a + 1);
    derived.subscribe(console.log); // => logs 2
    state.next(3); // => logs 4
    ```
@@ -17,7 +17,7 @@ import Stream, { Observer } from "./stream";
    In the most simple case, this is similar to the `map` operator:
 
    ```typescript
-   const state = new State({a: 1, b: 4});
+   const state = new rx.State({a: 1, b: 4});
    state.pipe(rx.map(v => v + 1)).subscribe(console.log); // => logs 2
    state.next(3); // => logs 4
    ```
@@ -36,8 +36,8 @@ import Stream, { Observer } from "./stream";
    ### The value of DerivedState can be accessed "imperatively"
 
    ```typescript
-   const derived = DerivedState.create(
-     new State({a: 1, b: 4}), value => value.a + 1
+   const derived = rx.derive(
+     new rx.State({a: 1, b: 4}), value => value.a + 1
    );
    console.log(derived.value === 2) // => logs true
    ```
@@ -47,7 +47,7 @@ import Stream, { Observer } from "./stream";
    When the arguments to DerivedState do not change, it does not have to run its defining
    function again and can instead return the previous value.
  */
-export default class DerivedState<T> extends Stream<T> {
+export class DerivedState<T> extends Stream<T> {
 
   private parentUnsubscribers: (() => void)[] = [];
   private parentValues: any[] = [];
@@ -75,7 +75,7 @@ export default class DerivedState<T> extends Stream<T> {
   }
 
   /**
-   * Do not use this constructor directly. Instead, always use {@link DerivedState.create}.
+   * Do not use this constructor directly. Instead, always use rx.{@link derive}.
    */
   private constructor(
     private parents: Derivable<any>[],
@@ -115,81 +115,88 @@ export default class DerivedState<T> extends Stream<T> {
     }
   }
 
-  /** Shorthand for `{@link DerivedState.create}(this, definition)` */
+  /** Shorthand for rx.{@link derive}(this, definition) */
   derive<ReturnT>(definition: (value: T) => ReturnT): DerivedState<ReturnT> {
-    return DerivedState.create(this, definition);
+    return DerivedState.__create(this, definition);
   }
 
-  // nasty type definition incoming:
-
   /** @ignore */
-  static create<R, A>(
-    sa: Derivable<A>,
-    def: (a: A) => R
-  ): DerivedState<R>;
-
-  /**
-     Create a DerivedState from a set of {@link State} or existing DerivedState objects. The last
-     argument is a function that will taking the values of the State/DerivedState objects
-     defined in all prior arguments. There are overloads for providing up to eight parent
-     State/DerivedState objects.
-
-     @example
-     ```typescript
-     const s1 = new State(1);
-     const s2 = new State(2);
-     DerivedState.create(s1, s2, (v1, v2) => v1 + v2)
-       .subscribe(console.log); // => logs 3
-     s2.next(3); // => logs 5
-     ```
-   */
-  static create<R, A, B>(
-    sa: Derivable<A>, sb: Derivable<B>,
-    def: (a: A, b: B) => R
-  ): DerivedState<R>;
-
-  /** @ignore */
-  static create<R, A, B, C>(
-    sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>,
-    def: (a: A, b: B, c: C) => R
-  ): DerivedState<R>;
-
-  /** @ignore */
-  static create<R, A, B, C, D>(
-    sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
-    def: (a: A, b: B, c: C, d: D) => R
-  ): DerivedState<R>;
-
-  /** @ignore */
-  static create<R, A, B, C, D, E>(
-    sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
-    se: Derivable<E>,
-    def: (a: A, b: B, c: C, d: D, e: E) => R
-  ): DerivedState<R>;
-
-  /** @ignore */
-  static create<R, A, B, C, D, E, F>(
-    sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
-    se: Derivable<E>, sf: Derivable<F>,
-    def: (a: A, b: B, c: C, d: D, e: E, f: F) => R
-  ): DerivedState<R>;
-
-  /** @ignore */
-  static create<R, A, B, C, D, E, F, G>(
-    sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
-    se: Derivable<E>, sf: Derivable<F>, sg: Derivable<G>,
-    def: (a: A, b: B, c: C, d: D, e: E, f: F, g: G) => R
-  ): DerivedState<R>;
-
-  /** @ignore */
-  static create<R, A, B, C, D, E, F, G, H>(
-    sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
-    se: Derivable<E>, sf: Derivable<F>, sg: Derivable<G>, sh: Derivable<H>, 
-    def: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H) => R
-  ): DerivedState<R>;
-
-  /** @ignore */
-  static create(...args: any[]): any {
+  static __create(...args: any[]): any {
     return new DerivedState(args.slice(0, -1), args[args.length - 1]);
   }
+}
+
+// nasty type definition incoming:
+
+/** @ignore */
+export function derive<R, A>(
+  sa: Derivable<A>,
+  def: (a: A) => R
+): DerivedState<R>;
+
+/**
+   Create a {@link DerivedState} from a set of {@link State} or existing DerivedState
+   objects. The last argument is a function that will taking the values of the
+   State/DerivedState objects defined in all prior arguments. There are overloads for
+   providing up to eight parent State/DerivedState objects.
+
+   See {@link DerivedState} for details.
+
+   @example
+   ```typescript
+   const s1 = new State(1);
+   const s2 = new State(2);
+   rx.derive(s1, s2, (v1, v2) => v1 + v2)
+     .subscribe(console.log); // => logs 3
+   s2.next(3); // => logs 5
+   ```
+ */
+export function derive<R, A, B>(
+  sa: Derivable<A>, sb: Derivable<B>,
+  def: (a: A, b: B) => R
+): DerivedState<R>;
+
+/** @ignore */
+export function derive<R, A, B, C>(
+  sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>,
+  def: (a: A, b: B, c: C) => R
+): DerivedState<R>;
+
+/** @ignore */
+export function derive<R, A, B, C, D>(
+  sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
+  def: (a: A, b: B, c: C, d: D) => R
+): DerivedState<R>;
+
+/** @ignore */
+export function derive<R, A, B, C, D, E>(
+  sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
+  se: Derivable<E>,
+  def: (a: A, b: B, c: C, d: D, e: E) => R
+): DerivedState<R>;
+
+/** @ignore */
+export function derive<R, A, B, C, D, E, F>(
+  sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
+  se: Derivable<E>, sf: Derivable<F>,
+  def: (a: A, b: B, c: C, d: D, e: E, f: F) => R
+): DerivedState<R>;
+
+/** @ignore */
+export function derive<R, A, B, C, D, E, F, G>(
+  sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
+  se: Derivable<E>, sf: Derivable<F>, sg: Derivable<G>,
+  def: (a: A, b: B, c: C, d: D, e: E, f: F, g: G) => R
+): DerivedState<R>;
+
+/** @ignore */
+export function derive<R, A, B, C, D, E, F, G, H>(
+  sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
+  se: Derivable<E>, sf: Derivable<F>, sg: Derivable<G>, sh: Derivable<H>,
+  def: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H) => R
+): DerivedState<R>;
+
+/** @ignore */
+export function derive(...args: any[]): any {
+  return DerivedState.__create(...args);
 }
