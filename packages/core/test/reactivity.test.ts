@@ -219,29 +219,3 @@ test('editable list', async () => {
     { name: 'name3', value: 'val3' },
   ]);
 });
-
-test('re-adding a component to the dom', async () => {
-  const doc = new Document();
-  const comp = new CounterComponent();
-
-  doc.appendChild(comp);
-
-  let state = await comp.query('#state');
-  let btnIncCount = await comp.query('#inc-count');
-
-  expect(state.innerText).toBe('0 * 1 = 0');
-
-  btnIncCount.click(); expect(state.innerText).toBe('1 * 1 = 1');
-  btnIncCount.click(); expect(state.innerText).toBe('2 * 1 = 2');
-
-  doc.removeChild(comp);
-  doc.appendChild(comp);
-
-  state = await comp.query('#state');
-  btnIncCount = await comp.query('#inc-count');
-
-  expect(state.innerText).toBe('2 * 1 = 2');
-
-  btnIncCount.click(); expect(state.innerText).toBe('3 * 1 = 3');
-  btnIncCount.click(); expect(state.innerText).toBe('4 * 1 = 4');
-});

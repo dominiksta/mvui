@@ -8,25 +8,27 @@ class TemplateReferencesTest1 extends Component {
   private paragraphEl = this.query<HTMLParagraphElement>('.myClass');
   private listEls = this.queryAll<HTMLParagraphElement>('.myListEl');
 
-  async onRender() {
-    (await this.paragraphEl).innerText = 'Programatically added content';
-    for (let el of Array.from(await this.listEls)) {
-      el.innerText = 'Multiple query';
-      el.style.textDecoration = 'underline';
-    }
-  }
+  render() {
+    this.onRender(async () => {
+      (await this.paragraphEl).innerText = 'Programatically added content';
+      for (let el of Array.from(await this.listEls)) {
+        el.innerText = 'Multiple query';
+        el.style.textDecoration = 'underline';
+      }
+    });
 
-  render = () => [
-    h.fieldset([
-      h.legend('Template References'),
-      h.p({ attrs: { class: 'myClass' } }),
-      h.ul([
-        h.li({ attrs: { class: 'myListEl' }}),
-        h.li({ attrs: { class: 'myListEl' }}),
-        h.li({ attrs: { class: 'myListEl' }}),
+    return [
+      h.fieldset([
+        h.legend('Template References'),
+        h.p({ attrs: { class: 'myClass' } }),
+        h.ul([
+          h.li({ attrs: { class: 'myListEl' } }),
+          h.li({ attrs: { class: 'myListEl' } }),
+          h.li({ attrs: { class: 'myListEl' } }),
+        ])
       ])
-    ])
-  ]
+    ];
+  }
 }
 TemplateReferencesTest1.register();
 

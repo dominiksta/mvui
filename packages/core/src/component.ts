@@ -210,7 +210,7 @@ export default abstract class Component<
       this.attachShadow({mode: 'open'});
     }
 
-    this.lifecycleState = "created"; this.onCreated();
+    this.lifecycleState = "created"; this._lifecycleHooks.created.forEach(f => f());
   }
 
   static register() {
@@ -235,18 +235,46 @@ export default abstract class Component<
   // lifecycle
   // ----------------------------------------------------------------------
 
-  protected onCreated() { }
-  protected onAdded() { }
-  protected onRender() { }
-  protected onRemoved() { }
+  private _lifecycleHooks: {
+    created: (() => any)[], added: (() => any)[],
+    render: (() => any)[], removed: (() => any)[],
+  } = {
+    created: [], added: [], render: [], removed: []
+  }
+
+  /** Run a given function right at the end of construction. */
+  protected onCreated(callback: () => any) {
+    this._lifecycleHooks.created.push(callback);
+  }
+
+  /**
+   * Run a given function when the component is added to the DOM, but before it is
+   * rendered.
+   */
+  protected onAdded(callback: () => any) {
+    this._lifecycleHooks.added.push(callback);
+  }
+
+  /**
+   * Run a given function when the component is done rendering. A render happens each time
+     the component is added to the DOM.
+   */
+  protected onRender(callback: () => any) {
+    this._lifecycleHooks.render.push(callback);
+  }
+
+  /** Run a given function when the component is removed from the DOM. */
+  protected onRemoved(callback: () => any) {
+    this._lifecycleHooks.removed.push(callback);
+  }
 
   private connectedCallback() {
-    this.lifecycleState = "added"; this.onAdded();
     MVUI_GLOBALS.APP_DEBUG && this.flash('green');
 
     (this.shadowRoot || this).innerHTML = '';
 
     if (this._template === undefined) this._template = this.render();
+    this.lifecycleState = "added"; this._lifecycleHooks.added.forEach(f => f());
     for (let el of this._template) {
       (this.shadowRoot || this).appendChild(this._renderTemplate(el));
     }
@@ -280,11 +308,11 @@ export default abstract class Component<
       style.util.applySheetAsStyleTag(this, styles, 'mvui-instance-styles')
     );
 
-    this.lifecycleState = "rendered"; this.onRender();
+    this.lifecycleState = "rendered"; this._lifecycleHooks.render.forEach(f => f());
   }
 
   private disconnectedCallback() {
-    this.lifecycleState = "removed"; this.onRemoved();
+    this.lifecycleState = "removed"; this._lifecycleHooks.removed.forEach(f => f());
     this.attrReflectionObserver.disconnect();
     MVUI_GLOBALS.APP_DEBUG && this.flash('red');
     for (let unsub of this.unsubscribers) unsub();
