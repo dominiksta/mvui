@@ -9,10 +9,12 @@ import { MVUI_GLOBALS } from "./globals";
 import { throttle } from "./util/time";
 import * as style from "./style";
 import { BIND_MARKER } from "./rx/bind";
+import Context from "rx/context";
 
 // these symbols are used for properties that should be accessible from anywhere in mvui
 // but should not be part of api surface
 const STYLE_OVERRIDES = Symbol();
+const PROVIDED_CONTEXTS = Symbol();
 
 /**
  * The heart of mvui. Every mvui component is defined by inheriting from this class.
@@ -495,6 +497,46 @@ export default abstract class Component<
     }
   }
 
+  // ----------------------------------------------------------------------
+  // context
+  // ----------------------------------------------------------------------
+
+  [PROVIDED_CONTEXTS] = new Map<Context<any>, any>();
+
+  /**
+     Provide a given context in this component. See {@link Context} for details and an
+     example.
+   */
+  protected provideContext<T>(ctx: Context<T>): T {
+    if (this[PROVIDED_CONTEXTS].has(ctx))
+      throw new Error(
+        'The same context is alreday provided by this component',
+      );
+    const state = ctx.generateInitialValue();
+    this[PROVIDED_CONTEXTS].set(ctx, state);
+    return state;
+  }
+
+  /** @ignore */
+  protected getContext<T>(ctx: Context<T>, force: false): T | null;
+  /** @ignore */
+  protected getContext<T>(ctx: Context<T>, force?: true): T;
+  /** Get a given context. See {@link Context} for details and an example. */
+  protected getContext<T>(ctx: Context<T>, force?: boolean): T | null {
+    let parent = this.parentElement;
+    while (true) {
+      if (parent instanceof Component) {
+        if (parent[PROVIDED_CONTEXTS].has(ctx))
+          return parent[PROVIDED_CONTEXTS].get(ctx);
+        parent = parent.parentElement;
+      } else if (parent instanceof HTMLElement) {
+        parent = parent.parentElement;
+      } else {
+        if (force) throw new Error('Could not find Context');
+        else return null;
+      }
+    }
+  }
 
   // ----------------------------------------------------------------------
   // rendering
