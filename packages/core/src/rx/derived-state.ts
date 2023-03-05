@@ -97,7 +97,7 @@ export class DerivedState<T> extends Stream<T> {
           this.parentValues[i] = value;
           if (complete) {
             this.lastValue = memoized(...this.parentValues);
-            observer.next(this.lastValue);
+            for (let obs of this.observers) obs.next(this.lastValue);
           }
         }));
       }

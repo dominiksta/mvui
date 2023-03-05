@@ -38,7 +38,31 @@ test('basic derivation', () => {
   expect(count).toBe(4);
 });
 
-test('derivateion with multiple parents', () => {
+test('derivation with multiple subscriptions', () => {
+
+  const state = new rx.State(0);
+  const d1 = state.derive(v => v + 1);
+
+  let count = 0;
+
+  const valueChanges = new rx.State(0);
+
+  d1.subscribe(v => { count++; valueChanges.next(v); });
+  expect(count).toBe(1);
+  expect(valueChanges.value).toBe(1);
+
+  d1.subscribe(v => { count++; valueChanges.next(v); });
+  expect(count).toBe(2);
+  expect(valueChanges.value).toBe(1);
+
+  state.next(s => s + 1);
+
+  expect(count).toBe(4);
+  expect(valueChanges.value).toBe(2);
+
+});
+
+test('derivation with multiple parents', () => {
   
   const state1 = new State({ hi: 4 });
   const state2 = new State({ yes: 2 });
