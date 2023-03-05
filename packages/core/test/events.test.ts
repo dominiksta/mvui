@@ -4,13 +4,13 @@ import { State } from "rx";
 import Component from "component";
 import { testDoc } from './util';
 
-interface Events {
-  'customClick': MouseEvent,
-  'customEvtString': CustomEvent<string>,
-  'customEvtObject': CustomEvent<{hi: string, iAmAnObject: boolean}>,
-}
-
-export class EventEmitter extends Component<Events> {
+export class EventEmitter extends Component<{
+  events: {
+    'customClick': MouseEvent,
+    'customEvtString': CustomEvent<string>,
+    'customEvtObject': CustomEvent<{ hi: string, iAmAnObject: boolean }>,
+  }
+}> {
 
   render = () => [
     h.fieldset([

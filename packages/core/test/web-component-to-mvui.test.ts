@@ -41,7 +41,10 @@ customElements.define('some-web-component', SomeWebComponent);
 
 const SomeWebComponentLibraryWrapper = {
   SomeWebComponent: TemplateElement.fromCustom<
-    SomeWebComponent, { 'customEvt1': number }, { 'attr1': number }
+    SomeWebComponent, {
+      events: { 'customEvt1': number },
+      attributes: { 'attr1': number }
+    }
   >(
     () => new SomeWebComponent()
   )

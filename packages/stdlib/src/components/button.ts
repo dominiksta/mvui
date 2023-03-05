@@ -29,7 +29,9 @@ import theme from "theme";
    @slot {any} default
  */
 export class Button extends Component<{
-  click: MouseEvent
+  events: {
+    click: MouseEvent
+  },
 }> {
   static tagNameLibrary = 'std';
 

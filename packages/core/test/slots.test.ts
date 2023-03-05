@@ -4,22 +4,22 @@ import define from 'define';
 import h from "html";
 import { testDoc } from './util';
 
-class MyLayout extends Component<
-  {},
-  {
+class MyLayout extends Component<{
+  slots: {
     'after-footer': any,
     'only-divs': HTMLDivElement,
   }
+}
 > {
   render = () => [
     h.div('"Header"'),
-    h.div(h.slot({ attrs: { id: 'header' }})),
+    h.div(h.slot({ attrs: { id: 'header' } })),
     h.div('"Footer"'),
     h.slot({ attrs: { id: 'footer', name: "after-footer" } }),
     h.slot({ attrs: { id: 'only-divs', name: "only-divs" } }),
   ]
 }
-const [ myLayout ] = define(MyLayout);
+const [myLayout] = define(MyLayout);
 
 export class SlotsTest extends Component {
   render = () => [

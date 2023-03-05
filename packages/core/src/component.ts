@@ -1,4 +1,5 @@
 import TemplateElement, {
+  ParamSpec as _ParamSpec,
   TemplateElementChild, TemplateElementChildren
 } from "./template-element";
 import { Constructor } from "./util/types";
@@ -17,8 +18,7 @@ import { BIND_MARKER } from "./rx/bind";
 const STYLE_OVERRIDES = Symbol();
 const PROVIDED_CONTEXTS = Symbol();
 
-const EVENTS_TYPE_HIDE = Symbol();
-const SLOTS_TYPE_HIDE = Symbol();
+const GENERIC_TYPE_HIDE = Symbol();
 
 /**
  * The heart of mvui. Every mvui component is defined by inheriting from this class.
@@ -40,11 +40,10 @@ const SLOTS_TYPE_HIDE = Symbol();
  * ```
  */
 export default abstract class Component<
-  CustomEventsT extends { [key: string]: any } = {},
-  CustomSlotsT extends { [key: string]: HTMLElement } = {},
+  ParamSpec extends _ParamSpec = { },
 > extends HTMLElement {
 
-  protected abstract render(): TemplateElement<any, any, any, any>[];
+  protected abstract render(): TemplateElement<any, any, any>[];
 
   protected static useShadow: boolean = true;
   protected static tagNameSuffix?: string;
@@ -348,15 +347,13 @@ export default abstract class Component<
    *
    * @internal
    */
-  [EVENTS_TYPE_HIDE]?: CustomEventsT;
-  /** @internal see [EVENTS_TYPE_HIDE] */
-  [SLOTS_TYPE_HIDE]?: CustomSlotsT;
+  [GENERIC_TYPE_HIDE]?: ParamSpec;
 
   // TODO: maybe remove now that `define` is a thing?
   /** Get a new {@link TemplateElement} for use in a {@link render} method. */
   static new<
     T extends Component<E>,
-    E extends { [key: string]: any } = T extends Component<infer I> ? I : never
+    E extends _ParamSpec = T extends Component<infer I> ? I : never
   >(
     // A note on the implementation: In order for the type inference of the custom events
     // generic parameter to work, we must not use `E` anywhere in the parameters to this
@@ -462,8 +459,8 @@ export default abstract class Component<
    * component.
    */
   protected dispatch<
-    T extends keyof CustomEventsT,
-    V extends (CustomEventsT[T] extends CustomEvent<infer I> ? I : never)
+    T extends keyof ParamSpec['events'],
+    V extends (ParamSpec['events'][T] extends CustomEvent<infer I> ? I : never)
   >(
     name: T, value: V,
     options: EventInit = { bubbles: false }
@@ -482,8 +479,10 @@ export default abstract class Component<
    * component.
    */
   protected reDispatch<
-    T extends keyof CustomEventsT,
-    V extends (CustomEventsT[T] extends Event ? CustomEventsT[T] : never)
+    T extends keyof ParamSpec['events'],
+    V extends (
+      ParamSpec['events'][T] extends Event ? ParamSpec['events'][T] : never
+    )
   >(
     name: T, value: V,
     noBubble = true,
@@ -547,7 +546,7 @@ export default abstract class Component<
   // rendering
   // ----------------------------------------------------------------------
 
-  private _template?: TemplateElement<any, any, any, any>[];;
+  private _template?: TemplateElement<any, any, any>[];;
   private _renderTemplate<T extends HTMLElement>(el: TemplateElement<T>) {
     const thisEl = el.creator();
 
@@ -844,8 +843,6 @@ export type ComponentTemplateElement<
 > = TemplateElement<
   CompT,
   CompT extends Component<infer I> ? I : never,
-  CompT extends Component<any, infer I> ? I : never,
-  CompT,
   { [key in keyof CompT['props']]:
     CompT['props'][key] extends State<infer I> ? I : never }
 >;

@@ -16,17 +16,14 @@ type GlobalEventHandlersEventMapWithTarget<T extends HTMLElement> =
  */
 export default class TemplateElement<
   T extends HTMLElement,
-  Events extends { [key: string]: any } = {},
-  Slots extends { [key: string]: any } = {},
-  // by default, an elements custom attributes will mirror its properties. this is the
-  // default behaviour of both builtin htmlelements and mvui components
-  Attributes extends { [key: string]: any } = T,
-  Props extends { [key: string]: any } = {},
+  Params extends ParamSpec = { },
+  // props are not part of the param spec because they are infered while the paramspec has
+  // to be provided by the user
+  Props extends { [key: string]: any } = { },
 > {
 
-  public params: TemplateElementParams<T, Events, Slots, Attributes, Props> = {}
+  public params: TemplateElementParams<T, Params, Props> = {}
   public children: TemplateElementChildren = []
-
 
   constructor(
     public creator: () => T,
@@ -49,16 +46,18 @@ export default class TemplateElement<
 
   static fromCustom<
     T extends HTMLElement,
-    Events extends { [key: string]: any } = {},
-    Slots extends { [key: string]: any } = {},
+    Params extends {
+      events?: { [key: string]: any },
+      slots?: { [key: string]: HTMLElement },
+    } = {},
     Attributes extends { [key: string]: any } = T,
   >(
     creator: () => T,
   ) {
-    type El = TemplateElement<T, Events, Slots, Attributes>;
+    type El = TemplateElement<T, Params, Attributes>;
     return function(
       childrenOrParams?: TemplateElementChildren |
-        TemplateElementParams<T, Events, Slots, Attributes>,
+        TemplateElementParams<T, Params, Attributes>,
       children?: TemplateElementChildren,
     ) {
       return new TemplateElement<any, any, any>(
@@ -82,17 +81,23 @@ export default class TemplateElement<
 
 export type TemplateElementChild<T extends HTMLElement = any> =
   (T extends HTMLElement ? never : ToStringable) |
-  TemplateElement<T, any, any, any, any> |
+  TemplateElement<T, any, any> |
   undefined;
 
 export type TemplateElementChildren<T extends HTMLElement = any> =
   MaybeStream<TemplateElementChild<T> | (TemplateElementChild<T>)[]>;
 
+export type ParamSpec = {
+  events?: { [key: string]: any },
+  slots?: { [key: string]: HTMLElement },
+  // by default, an elements custom attributes will mirror its properties. this is the
+  // default behaviour of both builtin htmlelements and mvui components
+  attributes?: { [key: string]: any },
+};
+
 export type TemplateElementParams<
   T extends HTMLElement,
-  EventsT extends { [key: string]: any } = {},
-  Slots extends { [key: string]: any } = {},
-  Attributes extends { [key: string]: any } = T,
+  Params extends ParamSpec = { },
   Props extends { [key: string]: any } = {}
   > = {
     style?: Partial<{[key in keyof CSSStyleDeclaration]: MaybeStream<ToStringable>}>,
@@ -101,23 +106,25 @@ export type TemplateElementParams<
     classes?: {[key: string]: MaybeStream<boolean>},
 
     attrs?: Partial<{
-      [Property in keyof Attributes]:
-      MaybeStream<Attributes[Property]> | MaybeStream<ToStringable>
+      [Property in keyof Params['attributes']]:
+      MaybeStream<Params['attributes'][Property]> | MaybeStream<ToStringable>
     } & { class: MaybeStream<ToStringable> } &
     { [key: string]: MaybeStream<ToStringable> }>,
 
     events?: Partial<{
       [Property in Exclude<
-        keyof GlobalEventHandlersEventMapWithTarget<T>, keyof EventsT
+        keyof GlobalEventHandlersEventMapWithTarget<T>, keyof Params['events']
       >]:
       (event: GlobalEventHandlersEventMapWithTarget<T>[Property]) => any
     } & {
-        [Property in keyof EventsT]:
-        (event: EventsT[Property]) => any
+        [Property in keyof Params['events']]:
+        (event: Params['events'][Property]) => any
       }>,
 
     slots?: Partial<{
-      [Property in keyof Slots]: TemplateElementChildren<Slots[Property]>
+      [Property in keyof Params['slots']]: TemplateElementChildren<
+        Params['slots'] extends {} ? Params['slots'][Property] : any
+      >
     }>,
 
     fields?: Partial<{
