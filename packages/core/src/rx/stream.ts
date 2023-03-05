@@ -141,12 +141,25 @@ export default class Stream<T> {
     return pipe(...operations)(this);
   }
 
-  /** Shorthand for `.pipe(map(...))` */
+  /** Shorthand for `.pipe(rx.map(...))` */
   map<ReturnT>(mapper: (value: T) => ReturnT): Stream<ReturnT> {
     return _BasicOperators.map(mapper)(this);
   }
 
-  /** Shorthand for `.pipe(filter(...))` */
+  /** Shorthand for `.pipe(rx.ifelse(...))` */
+  ifelse<TrueT, FalseT>(
+    this: Stream<boolean>,
+    def: { if: TrueT, else: FalseT }
+  ): Stream<TrueT | FalseT> {
+    return _BasicOperators.ifelse(def)(this);
+  }
+
+  /** Shorthand for `.pipe(rx.if(...))` */
+  if<TrueT>(this: Stream<boolean>, def: TrueT): Stream<TrueT | undefined> {
+    return _BasicOperators.ifelse({if: def, else: undefined})(this);
+  }
+
+  /** Shorthand for `.pipe(rx.filter(...))` */
   filter(filter: (value: T) => boolean): Stream<T> {
     return _BasicOperators.filter(filter)(this);
   }
@@ -170,6 +183,16 @@ export const _BasicOperators = {
         ...observer,
         next: v => { observer.next(mapper(v)) },
       });
+    })
+  },
+
+  ifelse: function<TrueT, FalseT>(
+    def: { if: TrueT, else: FalseT }
+  ): OperatorFunction<boolean, TrueT | FalseT> {
+    return orig => new Stream(observer => {
+      return orig.subscribe(v => {
+        observer.next(v ? def.if : def.else);
+      })
     })
   },
 

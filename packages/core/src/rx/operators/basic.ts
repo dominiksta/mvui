@@ -10,6 +10,19 @@ export function map<T, ReturnT>(
 }
 
 /**
+   Create a new Stream where that emits what is given in the if or else properties
+   depending on the value of the original stream. Only works for boolean streams.
+
+   Funtionally equivalent to map(v => v ? IF : ELSE), but ternaries sometimes end up being
+   less readable.
+ */
+export function ifelse<TrueT, FalseT>(
+  def: { if: TrueT, else: FalseT }
+): OperatorFunction<boolean, TrueT | FalseT> {
+  return _BasicOperators.ifelse(def);
+};
+
+/**
  * Create a new Stream where values are filtered according to `filter`.
  */
 export function filter<T>(
