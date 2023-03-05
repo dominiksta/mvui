@@ -3,11 +3,10 @@ const fs = require('fs');
 const path = require('path');
 const jsdocUtil = require('./jsdoc-util');
 const markdownUtil = require('./markdown-util');
+const fsUtil = require('./fs-util');
 
 const IN_DIR = './src/components/';
 const OUT_DIR = './docs/';
-
-fs.mkdirSync(OUT_DIR, { recursive: true });
 
 function descForFile(filename) {
   const plainJs = babel.transformFileSync(filename, {
@@ -35,19 +34,28 @@ function descForFile(filename) {
 }
 
 function processFile(filename) {
+  const inFull = path.resolve(IN_DIR);
+  const fileFull = path.resolve(filename);
+  const pathDiff = fileFull.split(inFull)[1];
+
   console.log('processing ' + filename);
   const parsed = descForFile(filename);
   if (parsed) {
     console.log('found component');
     const reference = markdownUtil.markdownReferenceForComponentDescription(parsed);
     const description = parsed.description;
+
+    const outDir = OUT_DIR + path.dirname(pathDiff).substring(1) + '/';
+    fs.mkdirSync(outDir, { recursive: true });
+
     fs.writeFileSync(
-      OUT_DIR + path.basename(filename).split('.ts')[0] + '.reference.md',
+      outDir + path.basename(filename).split('.ts')[0] + '.reference.md',
       reference
     );
 
+    console.log(path.dirname(filename));
     fs.writeFileSync(
-      OUT_DIR + path.basename(filename).split('.ts')[0] + '.description.md',
+      outDir +  path.basename(filename).split('.ts')[0] + '.description.md',
       description
     );
   } else {
@@ -55,6 +63,4 @@ function processFile(filename) {
   }
 }
 
-fs.readdirSync(IN_DIR).forEach(file => {
-  processFile(IN_DIR + file);
-});
+for (let f of fsUtil.getFiles(IN_DIR)) processFile(f);
