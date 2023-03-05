@@ -1,5 +1,5 @@
 import * as rx from "./rx";
-import Component from "./component";
+import Component, { ComponentTemplateElement } from "./component";
 import TemplateElement, { TemplateElementChildren } from "./template-element";
 
 /**
@@ -22,17 +22,6 @@ export default function define<
   return [templateElementCreator, cls];
 }
 
-
-/** Helper type to infer the custom events of a Component */
-type ComponentTemplateElement<
-  CompT extends Component<any>,
-> = TemplateElement<
-  CompT,
-  CompT extends Component<infer I> ? I : never,
-  CompT,
-  { [key in keyof CompT['props']]:
-    CompT['props'][key] extends rx.State<infer I> ? I : never }
->;
 
 type TemplateElementCreator<T extends Component> = (
   childrenOrParams?: TemplateElementChildren |

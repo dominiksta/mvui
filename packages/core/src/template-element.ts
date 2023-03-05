@@ -17,13 +17,14 @@ type GlobalEventHandlersEventMapWithTarget<T extends HTMLElement> =
 export default class TemplateElement<
   T extends HTMLElement,
   Events extends { [key: string]: any } = {},
+  Slots extends { [key: string]: any } = {},
   // by default, an elements custom attributes will mirror its properties. this is the
   // default behaviour of both builtin htmlelements and mvui components
   Attributes extends { [key: string]: any } = T,
   Props extends { [key: string]: any } = {},
 > {
 
-  public params: TemplateElementParams<T, Events, Attributes, Props> = {}
+  public params: TemplateElementParams<T, Events, Slots, Attributes, Props> = {}
   public children: TemplateElementChildren = []
 
 
@@ -49,14 +50,15 @@ export default class TemplateElement<
   static fromCustom<
     T extends HTMLElement,
     Events extends { [key: string]: any } = {},
+    Slots extends { [key: string]: any } = {},
     Attributes extends { [key: string]: any } = T,
   >(
     creator: () => T,
   ) {
-    type El = TemplateElement<T, Events, Attributes>;
+    type El = TemplateElement<T, Events, Slots, Attributes>;
     return function(
       childrenOrParams?: TemplateElementChildren |
-        TemplateElementParams<T, Events, Attributes>,
+        TemplateElementParams<T, Events, Slots, Attributes>,
       children?: TemplateElementChildren,
     ) {
       return new TemplateElement<any, any, any>(
@@ -78,16 +80,18 @@ export default class TemplateElement<
   }
 }
 
-export type TemplateElementChild =
-  string | TemplateElement<any, any, any, any>;
+export type TemplateElementChild<T extends HTMLElement = any> =
+  (T extends HTMLElement ? never : ToStringable) |
+  TemplateElement<T, any, any, any, any> |
+  undefined;
 
-export type TemplateElementChildren =
-  string | Stream<any> | TemplateElement<any, any, any, any> |
-  (TemplateElement<any, any, any, any> | string)[];
+export type TemplateElementChildren<T extends HTMLElement = any> =
+  MaybeStream<TemplateElementChild<T> | (TemplateElementChild<T>)[]>;
 
 export type TemplateElementParams<
   T extends HTMLElement,
   EventsT extends { [key: string]: any } = {},
+  Slots extends { [key: string]: any } = {},
   Attributes extends { [key: string]: any } = T,
   Props extends { [key: string]: any } = {}
   > = {
@@ -111,6 +115,11 @@ export type TemplateElementParams<
         [Property in keyof EventsT]:
         (event: EventsT[Property]) => any
       }>,
+
+    slots?: Partial<{
+      [Property in keyof Slots]: TemplateElementChildren<Slots[Property]>
+    }>,
+
     fields?: Partial<{
       [Property in keyof T]: MaybeStream<T[Property]>
     }>,

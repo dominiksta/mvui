@@ -1,4 +1,6 @@
-import TemplateElement from "./template-element";
+import TemplateElement, {
+  TemplateElementChild, TemplateElementChildren
+} from "./template-element";
 import { Constructor } from "./util/types";
 import {
   Stream, State, Prop, Context,
@@ -14,6 +16,9 @@ import { BIND_MARKER } from "./rx/bind";
 // but should not be part of api surface
 const STYLE_OVERRIDES = Symbol();
 const PROVIDED_CONTEXTS = Symbol();
+
+const EVENTS_TYPE_HIDE = Symbol();
+const SLOTS_TYPE_HIDE = Symbol();
 
 /**
  * The heart of mvui. Every mvui component is defined by inheriting from this class.
@@ -35,7 +40,8 @@ const PROVIDED_CONTEXTS = Symbol();
  * ```
  */
 export default abstract class Component<
-  CustomEventsT extends { [key: string]: any } = {}
+  CustomEventsT extends { [key: string]: any } = {},
+  CustomSlotsT extends { [key: string]: HTMLElement } = {},
 > extends HTMLElement {
 
   protected abstract render(): TemplateElement<any, any, any, any>[];
@@ -342,7 +348,9 @@ export default abstract class Component<
    *
    * @internal
    */
-  private __t?: CustomEventsT;
+  [EVENTS_TYPE_HIDE]?: CustomEventsT;
+  /** @internal see [EVENTS_TYPE_HIDE] */
+  [SLOTS_TYPE_HIDE]?: CustomSlotsT;
 
   // TODO: maybe remove now that `define` is a thing?
   /** Get a new {@link TemplateElement} for use in a {@link render} method. */
@@ -564,6 +572,7 @@ export default abstract class Component<
           }
         }
       }
+
       if (el.params.events) {
         for (let key in el.params.events) {
           this.onRemoved(fromEvent(thisEl, key as any).subscribe(
@@ -685,33 +694,92 @@ export default abstract class Component<
       }
     }
 
-    // --- recurse
-    if (el.children) {
-      if (typeof el.children === 'string') {
-        thisEl.innerText = el.children;
-      } else if (el.children instanceof Stream) {
-        this._subscribe(
-          el.children, v => {
-            if (v instanceof Array && v[0] instanceof TemplateElement) {
-              thisEl.innerHTML = '';
-              for (let child of v) thisEl.appendChild(this._renderTemplate(child));
-            } else if (v instanceof TemplateElement) {
-              thisEl.innerHTML = '';
-              thisEl.appendChild(this._renderTemplate(v));
-            } else {
-              thisEl.innerText = v as string;
-            }
-          }
-        );
-      } else if (el.children instanceof TemplateElement) {
-        thisEl.appendChild(this._renderTemplate(el.children));
-      } else if (el.children instanceof Array) {
-        for (let child of el.children) {
-          thisEl.append(
-            child instanceof TemplateElement ? this._renderTemplate(child) : child
-          );
+    const recurse = (children: TemplateElementChildren, slot = 'default') => {
+      const clear = () => {
+        if (slot === 'default') {
+          thisEl.innerText = '';
+          thisEl.innerHTML = '';
+        }
+        else {
+          Array.from(thisEl.children).filter(el => el.slot === slot)
+            .forEach(el => thisEl.removeChild(el));
+        }
+      };
+
+      const createWrapper = () => {
+        const wrapper = document.createElement('span');
+        wrapper.slot = slot;
+        thisEl.appendChild(wrapper);
+        return wrapper;
+      }
+
+      // case (1): ['hi', h.div(), 'hi'] => wrapper
+      // case (2): ['hi', 'hi']          => wrapper
+      // case (3): 'hi'                  => wrapper
+      // case (4): [h.div(), h.div()]    => no wrapper
+      // case (5): h.div()               => no wrapper
+
+      // case (3, 5)
+      const addSingleChild = (
+        t: TemplateElementChild,
+        slot: string, addTo: HTMLElement = thisEl
+      ) => {
+        if (t === undefined) return;
+        if (t instanceof TemplateElement) { // case (5)
+          const rendered = this._renderTemplate(t);
+          if (slot !== 'default') rendered.slot = slot;
+          addTo.appendChild(rendered);
+        } else { // case (3)
+          addTo.append(t.toString());
         }
       }
+
+      // case (1, 2, 4)
+      const addMultipleChildren = (
+        t: TemplateElementChild[],
+        slot: string
+      ) => {
+        const includesString = t.map(
+          child => child instanceof TemplateElement
+        ).includes(false);
+        if (slot !== 'default' && includesString) {
+          const wrapper = createWrapper();
+          for (let child of t) addSingleChild(child, 'default', wrapper);
+        } else {
+          for (let child of t) addSingleChild(child, slot, thisEl);
+        }
+      }
+
+      const addChildren = (
+        t: TemplateElementChild | TemplateElementChild[],
+        slot: string
+      ) => {
+        clear();
+        if (t === undefined) return;
+        else if ((
+          typeof t === 'string' || typeof t === 'number'
+        ) && slot === 'default') thisEl.innerText = t.toString();
+        else if (t instanceof Array) addMultipleChildren(t, slot); // case (1, 2, 4)
+        else {
+          const addTo = (
+            slot === 'default' || t instanceof TemplateElement
+          ) ? thisEl : createWrapper();
+          if (typeof t === 'string' || typeof t === 'number')
+            addTo.innerText = t.toString();
+          addSingleChild(t, slot, addTo); // case (3, 5)
+        }
+      }
+
+      if (children instanceof Stream)
+        this._subscribe(children, v => addChildren(v, slot));
+      else
+        addChildren(children, slot);
+    }
+
+    if (el.children) recurse(el.children);
+    if (el.params && el.params.slots) {
+      const slots = el.params.slots;
+      for (let slot in slots) recurse((slots as any)[slot], slot);
     }
 
     return thisEl;
@@ -771,11 +839,12 @@ export default abstract class Component<
 }
 
 /** Helper type to infer the custom events of a Component */
-type ComponentTemplateElement<
+export type ComponentTemplateElement<
   CompT extends Component<any>,
 > = TemplateElement<
   CompT,
   CompT extends Component<infer I> ? I : never,
+  CompT extends Component<any, infer I> ? I : never,
   CompT,
   { [key in keyof CompT['props']]:
     CompT['props'][key] extends State<infer I> ? I : never }

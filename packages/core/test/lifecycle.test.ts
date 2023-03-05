@@ -34,36 +34,36 @@ test('general lifecycle', async () => {
   lifecycle.pipe(rx.skip(1)).subscribe(l => lifecycles.push(l));
 
   doc.appendChild(comp);
-  
+
   let btn = await comp.query('button');
   let counterDiv = await comp.query('div');
-  
+
   expect(arrayCompare(lifecycles, [
     'added', 'render'
   ])).toBeTruthy();
-  expect(counterDiv.innerText).toBe(0); 
-  
-  btn.click(); expect(counterDiv.innerText).toBe(1);
-  btn.click(); expect(counterDiv.innerText).toBe(2);
-  
+  expect(counterDiv.innerText).toBe('0');
+
+  btn.click(); expect(counterDiv.innerText).toBe('1');
+  btn.click(); expect(counterDiv.innerText).toBe('2');
+
   doc.removeChild(comp);
-  
+
   expect(arrayCompare(lifecycles, [
     'added', 'render', 'removed'
   ])).toBeTruthy();
-  
-  expect(counterDiv.innerText).toBe(2);
-  
+
+  expect(counterDiv.innerText).toBe('2');
+
   doc.appendChild(comp);
-  
+
   expect(arrayCompare(lifecycles, [
     'added', 'render', 'removed', 'added', 'render'
   ])).toBeTruthy();
-  
+
   btn = await comp.query('button');
   counterDiv = await comp.query('div');
-  
-  expect(counterDiv.innerText).toBe(2);
-  
-  btn.click(); expect(counterDiv.innerText).toBe(3);
+
+  expect(counterDiv.innerText).toBe('2');
+
+  btn.click(); expect(counterDiv.innerText).toBe('3');
 });

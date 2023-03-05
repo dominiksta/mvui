@@ -103,7 +103,7 @@ test('reactive list', async () => {
     expect(staticEls.children.length).toBe(elCount);
     expect(reactiveEls.children.length).toBe(elCount);
     for (let child of Array.from(reactiveEls.children)) {
-      expect((child as HTMLLIElement).innerText).toBe(counter);
+      expect((child as HTMLLIElement).innerText).toBe(counter.toString());
     }
   };
 
