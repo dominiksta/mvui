@@ -1,4 +1,3 @@
-import select from "./operators/select";
 import State from "./state";
 
 interface ResultT<DataT> {
@@ -37,9 +36,9 @@ export default class PromisedSubject<DataT> extends State<ResultT<DataT>> {
     }
   }
   
-  public loading = this.pipe(select(v => v.loading));
-  public hasError = this.pipe(select(v => v.error));
-  public success = this.pipe(select(v => v.success));
-  public data = this.pipe(select(v => v.data));
+  loading = this.derive(v => v.loading);
+  hasError = this.derive(v => v.error);
+  success = this.derive(v => v.success);
+  data = this.derive(v => v.data);
 
 }

@@ -2,7 +2,7 @@ import { test, expect } from '@jest/globals';
 import { arrayCompare } from 'util/datastructure';
 import { OperatorFunction } from 'rx/stream';
 import { pipe } from 'rx/util';
-import { filter, map, select } from 'rx/operators';
+import { filter, map } from 'rx/operators';
 import { State, Stream } from 'rx';
 import { sleep } from 'util/time';
 
@@ -118,26 +118,6 @@ test('filter operator', () => {
   obs$.filter(v => v === 2 || v === 3).subscribe(v => result.push(v));
   expect(result.length).toBe(2);
   expect(arrayCompare(result, [2, 3])).toBeTruthy();
-})
-
-test('select', () => {
-  const base = new State({a: 0, b: '0'});
-  const counters = {a: 0, b: 0};
-  base.pipe(select(s => s.a)).subscribe(v => {
-    counters.a++;
-    expect(v).toBe(base.value.a)
-  });
-  base.pipe(select(s => s.b)).subscribe(v => {
-    counters.b++;
-    expect(v).toBe(base.value.b)
-  });
-  base.next({a: 0, b: '1'});
-  base.next({a: 0, b: '2'});
-  base.next({a: 1, b: '2'});
-  base.next({a: 2, b: '2'});
-  base.next({a: 3, b: '2'});
-  expect(counters.a).toBe(4);
-  expect(counters.b).toBe(3);
 })
 
 test('map & filter chain', () => {
