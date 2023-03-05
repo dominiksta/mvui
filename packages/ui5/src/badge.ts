@@ -10,6 +10,5 @@ import "@ui5/webcomponents/dist/Badge.js";
  src="https://sap.github.io/ui5-webcomponents/playground/components/Badge/">
  </iframe>
  */
-export const badge = TemplateElement.fromCustom<Ui5Badge,
-  {}
->(() => document.createElement('ui5-badge') as any)
+export const badge = TemplateElement.fromCustom<Ui5Badge, {
+}>(() => document.createElement('ui5-badge') as any)

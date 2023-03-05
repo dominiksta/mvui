@@ -19,9 +19,9 @@ export declare class AvatarGroup extends UI5Element {
  src="https://sap.github.io/ui5-webcomponents/playground/components/AvatarGroup/">
  </iframe>
  */
-export const avatarGroup = TemplateElement.fromCustom<AvatarGroup,
-  {
+export const avatarGroup = TemplateElement.fromCustom<AvatarGroup, {
+  events: {
     click: { targetRef: Avatar, overflowButtonClicked: boolean },
     overflow: void
   }
->(() => document.createElement('ui5-avatar-group') as any);
+}>(() => document.createElement('ui5-avatar-group') as any);

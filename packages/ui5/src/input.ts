@@ -9,8 +9,8 @@ import "@ui5/webcomponents/dist/Input.js";
  <iframe class="ui5"
   src="https://sap.github.io/ui5-webcomponents/playground/components/Input/"></iframe>
  */
-export const input = TemplateElement.fromCustom<Ui5Input,
-  {
+export const input = TemplateElement.fromCustom<Ui5Input, {
+  events: {
     change: void
     input: void
     'suggestion-item-previer': {
@@ -21,4 +21,4 @@ export const input = TemplateElement.fromCustom<Ui5Input,
       item: HTMLElement
     }
   }
->(() => document.createElement('ui5-input') as any);
+}>(() => document.createElement('ui5-input') as any);

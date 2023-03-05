@@ -17,6 +17,5 @@ export declare class Toast extends UI5Element {
  src="https://sap.github.io/ui5-webcomponents/playground/components/Toast/">
  </iframe>
  */
-export const toast = TemplateElement.fromCustom<Toast,
-  {}
->(() => document.createElement('ui5-toast') as any);
+export const toast = TemplateElement.fromCustom<Toast, {
+}>(() => document.createElement('ui5-toast') as any);

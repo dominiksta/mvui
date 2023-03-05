@@ -1,4 +1,5 @@
-import TemplateElement, {
+import {
+  TemplateElement,
   ParamSpec as _ParamSpec,
   TemplateElementChild, TemplateElementChildren
 } from "./template-element";

@@ -10,11 +10,11 @@ import "@ui5/webcomponents/dist/Breadcrumbs.js";
  src="https://sap.github.io/ui5-webcomponents/playground/components/Breadcrumbs/">
  </iframe>
  */
-export const breadcrumbs = TemplateElement.fromCustom<Ui5Breadcrumbs,
-  {
+export const breadcrumbs = TemplateElement.fromCustom<Ui5Breadcrumbs, {
+  events: {
     'item-click': {
       item: HTMLElement,
       altKey: boolean, ctrlKey: boolean, metaKey: boolean, shiftKey: boolean,
     }
   }
->(() => document.createElement('ui5-breadcrumbs') as any);
+}>(() => document.createElement('ui5-breadcrumbs') as any);

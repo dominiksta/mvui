@@ -1,4 +1,6 @@
-import TemplateElement, { TemplateElementChildren, TemplateElementParams } from "./template-element";
+import {
+  TemplateElement, TemplateElementChildren, TemplateElementParams
+} from "./template-element";
 
 type HTMLTemplateElement<T extends keyof HTMLElementTagNameMap> = (
   childrenOrParams?: TemplateElementChildren |

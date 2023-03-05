@@ -14,7 +14,7 @@ type GlobalEventHandlersEventMapWithTarget<T extends HTMLElement> =
 /**
  * TODO
  */
-export default class TemplateElement<
+export class TemplateElement<
   T extends HTMLElement,
   Params extends ParamSpec = { },
   // props are not part of the param spec because they are infered while the paramspec has

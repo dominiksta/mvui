@@ -1,6 +1,6 @@
 import * as rx from "./rx";
 import Component, { ComponentTemplateElement } from "./component";
-import TemplateElement, { TemplateElementChildren } from "./template-element";
+import { TemplateElement, TemplateElementChildren } from "./template-element";
 
 /**
  * TODO
