@@ -7,11 +7,6 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack-dev-server"
   },
-  "typedoc": {
-    "displayName": "ui5",
-    "tsconfig": "./tsconfig.json",
-    "entryPoint": "./src/index.ts"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dominiksta/mvui.git"

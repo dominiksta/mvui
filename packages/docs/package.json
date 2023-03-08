@@ -1,0 +1,15 @@
+{
+  "name": "@mvui/docs",
+  "version": "0.0.1",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "gendoc:stdlib": "cd ../stdlib && npm run gendoc && cd ../docs",
+    "gendoc:api-fix": "node scripts/insert-frontmatter-alias.js",
+    "gendoc:api": "cd ../core && typedoc && cd ../docs && npm run gendoc:api-fix",
+    "gendoc:watch": "hugo serve",
+    "gendoc": "npm run gendoc:api && hugo"
+  },
+  "author": "dominiksta",
+  "license": "MIT"
+}

@@ -1,0 +1,18 @@
+{
+  "entryPointStrategy": "resolve",
+  "tsconfig": "./src/tsconfig.esm2015.json",
+  "entryPoints": ["src/index.ts"],
+  "out": "../docs/content/reference",
+  "theme": "markdown",
+  "excludePrivate": true,
+  "visibilityFilters": {
+    "protected": true,
+    "private": false,
+    "inherited": false,
+    "external": false
+  },
+  "hideInPageTOC": true,
+  "baseUrl": "/reference/",
+  "readme": null,
+  "enableFrontmatter": true
+}

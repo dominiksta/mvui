@@ -12,11 +12,6 @@
     "test": "jest --watch",
     "test:once": "jest"
   },
-  "typedoc": {
-    "displayName": "core",
-    "tsconfig": "./src/tsconfig.esm2015.json",
-    "entryPoint": "./src/index.ts"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dominiksta/mvui.git"

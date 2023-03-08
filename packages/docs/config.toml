@@ -1,0 +1,14 @@
+baseURL = 'http://example.org/'
+languageCode = 'en-us'
+title = 'Mvui'
+theme = 'hugo-book'
+
+[params]
+    BookTheme = 'auto'
+    BookSection = 'tutorial'
+
+
+[markup]
+  [markup.highlight]
+    style = 'dracula'
+    tabWidth = 2

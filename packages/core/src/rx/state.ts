@@ -17,6 +17,7 @@ import { derive, DerivedState } from "./derived-state";
  * // The difference to a normal Subject is that we provide an initial value
  * // and we could always access the current value with `.value`.
  * ```
+ * @noInheritDoc
  */
 export default class State<T> extends MulticastStream<T> {
 

@@ -126,4 +126,34 @@ const MyComponent = define<MyEvents>(function<T>() {
 })
 ```
 
-Maybe there is a solution to this problem, but it is definitely not obvious.
+Here are two more attempts to show
+
+```js
+function MyComponent<T>({
+  value: new rx.Prop(undefined),
+}: {
+  value: rx.Prop<T | undefined>,
+}) {
+  // how would this know which component you are "inside of" right now?
+  const dispatch = createDispatch<MyEvents>(); 
+
+  return define<MyEvents<T>>([ h.div(value) ]);
+}
+
+// return TemplateElement creator function
+```
+
+
+```js
+const MyComponent = define.outer(
+  function<T> (self, {
+    value = new rx.Prop(undefined),
+  }: {
+    value: rx.Prop<T | undefined>,
+  }) {
+    const dispatch = self.createDispatch<MyEvents>();
+
+    return define.inner<MyEvents<T>>([ h.div(value) ]);
+  }
+)
+```

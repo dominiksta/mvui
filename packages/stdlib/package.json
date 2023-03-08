@@ -8,11 +8,6 @@
     "dev": "webpack-dev-server",
     "gendoc": "node scripts/get-docs.js"
   },
-  "typedoc": {
-    "displayName": "stdlib",
-    "tsconfig": "./tsconfig.json",
-    "entryPoint": "./src/index.ts"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dominiksta/mvui.git"

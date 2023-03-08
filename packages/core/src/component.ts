@@ -39,6 +39,7 @@ const GENERIC_TYPE_HIDE = Symbol();
  *   ];
  * }
  * ```
+ * @noInheritDoc
  */
 export default abstract class Component<
   ParamSpec extends _ParamSpec = { },
