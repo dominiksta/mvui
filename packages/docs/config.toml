@@ -6,9 +6,13 @@ theme = 'hugo-book'
 [params]
     BookTheme = 'auto'
     BookSection = 'tutorial'
+    BookLogo = 'icon.svg'
 
 
 [markup]
-  [markup.highlight]
-    style = 'dracula'
-    tabWidth = 2
+    [markup.highlight]
+        style = 'dracula'
+        tabWidth = 2
+
+    [markup.goldmark.renderer]
+        unsafe = true

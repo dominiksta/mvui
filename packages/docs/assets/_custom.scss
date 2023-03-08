@@ -1,0 +1,37 @@
+body {
+    font-family: Ubuntu;
+}
+
+.book-brand {
+    font-family: Ubuntu Mono;
+}
+
+.markdown code {
+    font-family: Ubuntu Mono;
+    font-size: 12pt;
+}
+
+.markdown {
+    line-height: 1.4;
+}
+
+.get-started-btn {
+    display: inline-block;
+    font-family: Ubuntu Mono;
+    margin-right: 20px;
+    font-size: 15pt;
+    background: #325cff;
+    padding: 10px;
+    color: white;
+    border: none;
+    box-shadow: 5px 5px grey;
+
+    &:visited {
+        color: white !important;
+    }
+
+    &:hover {
+        outline: 2px solid black;
+        text-decoration: none !important;
+    }
+}
