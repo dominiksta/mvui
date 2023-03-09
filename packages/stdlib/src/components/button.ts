@@ -4,13 +4,13 @@ import theme from "theme";
 /**
    This is a really cool button.
 
-   ### Example
+   ### Usage
    ```typescript
    import * as std from '@mvui/stdlib';
 
    class Example extends Component {
      render = () => [
-       std.button('Click Me!'),
+     std.button('Click Me!'),
      ]
    }
    ```

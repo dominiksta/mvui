@@ -6,7 +6,7 @@ const markdownUtil = require('./markdown-util');
 const fsUtil = require('./fs-util');
 
 const IN_DIR = './src/components/';
-const OUT_DIR = './docs/';
+const OUT_DIR = '../docs/stdlib/';
 
 function descForFile(filename) {
   const plainJs = babel.transformFileSync(filename, {

@@ -41,9 +41,11 @@ export const STYLE_MENU_ITEM = {
 }
 
 /**
-   A MenuItem only makes sense in the context of a Menu (which see).
+   An arbitrarily nested menu. Unlinke traditional desktop context menus, the nested menus
+   do not appear separately and instead appear in place, making this more suitable for
+   mobile use. See also MenuItem.
 
-   ### Example
+   ### Usage
 
    ```typescript
    // ...

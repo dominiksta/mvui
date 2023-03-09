@@ -21,7 +21,7 @@ export function openSnackbar(
 /**
    A snackbar for simple "toast" notifications.
 
-   ### Example
+   ### Usage
    ```typescript
    import * as std from '@mvui/stdlib';
 

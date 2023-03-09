@@ -1,0 +1,4 @@
+{{ $filename := printf "%s%s%s" "/stdlib/" (.Get "file") ".md" }}
+{{ $file := $filename | readFile }}
+
+{{ (print $file) | safeHTML }}
