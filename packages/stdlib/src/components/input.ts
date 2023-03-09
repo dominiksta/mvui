@@ -25,11 +25,18 @@ export class Input extends Component {
       background: theme.bgContrastMiddle,
       color: theme.fg,
       border: 'none',
+      borderTop: `1px solid ${theme.bgContrastMiddle}`,
+      borderRight: `1px solid ${theme.bgContrastMiddle}`,
+      borderLeft: `1px solid ${theme.bgContrastMiddle}`,
       borderBottom: `1px solid ${theme.fg}`,
       padding: '5px',
       marginRight: '5px',
       marginBottom: '5px',
     },
+    'input:focus': {
+      border: `1px solid ${theme.fg}`,
+      outline: 'none',
+    }
   });
 
   props = {
