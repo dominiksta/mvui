@@ -1,5 +1,5 @@
 const globals = {
-  APP_DEBUG: true,
+  APP_DEBUG: false,
   STYLE_SHEET_NONCE: 'mvui-component',
   PREFIXES: new Map<string, string>(),
 };

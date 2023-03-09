@@ -13,7 +13,7 @@ import theme from "theme";
  *
  * TODO: maybe make onlyEmitOnBlur an option for rx.bind ?
  */
-export const [input, Input] = define(class Input extends Component {
+export class Input extends Component {
   static tagNameLibrary = 'std';
 
   static styles = style.sheet({
@@ -49,4 +49,6 @@ export const [input, Input] = define(class Input extends Component {
       }
     }})
   ]
-})
+}
+
+export const [ input ] = define(Input);

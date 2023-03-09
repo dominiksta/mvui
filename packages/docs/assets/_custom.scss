@@ -6,6 +6,10 @@ body {
     font-family: Ubuntu Mono;
 }
 
+:focus {
+    outline: none;
+}
+
 .markdown code {
     font-family: Ubuntu Mono;
     font-size: 12pt;

@@ -225,6 +225,10 @@ export default abstract class Component<
     if (!this.tagNameSuffix)
       this.tagNameSuffix = camelToDash(this.name).substring(1);
 
+    // fix bundled names starting with `_`
+    if (this.tagNameSuffix.startsWith("-"))
+      this.tagNameSuffix = this.tagNameSuffix.substring(1);
+
     let prefix;
     if (this.tagNameLibrary) {
       prefix = MVUI_GLOBALS.PREFIXES.get(this.tagNameLibrary) ??
@@ -428,9 +432,10 @@ export default abstract class Component<
   // ----------------------------------------------------------------------
 
   private _subscribe<T>(obs: Stream<T>, observer: ((value: T) => void)) {
-    this.onRemoved(obs.subscribe(
-      !MVUI_GLOBALS.APP_DEBUG ? observer : v => { this.flash(); return observer(v) }
-    ));
+    this.onRemoved(obs.subscribe(v => {
+      if (MVUI_GLOBALS.APP_DEBUG) this.flash();
+      return observer(v)
+    }));
   }
 
   // ----------------------------------------------------------------------

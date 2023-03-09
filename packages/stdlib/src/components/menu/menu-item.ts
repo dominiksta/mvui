@@ -33,7 +33,7 @@ import { menuContext, STYLE_MENU_ITEM } from './menu';
 
    @slot {any} default
  */
-export const [menuitem, MenuItem] = define(class MenuItem extends Component<{
+export class MenuItem extends Component<{
   slots: {
     right: HTMLDivElement
   }
@@ -41,6 +41,7 @@ export const [menuitem, MenuItem] = define(class MenuItem extends Component<{
   static tagNameLibrary = 'std';
 
   render() {
+    console.log('menu-item');
     const ctx = this.getContext(menuContext);
     const hidden = ctx.derive(v => v.active !== this.parentElement);
 
@@ -66,4 +67,6 @@ export const [menuitem, MenuItem] = define(class MenuItem extends Component<{
       display: 'block',
     }
   });
-});
+};
+
+export const [ menuitem ] = define(MenuItem);

@@ -7,8 +7,11 @@
     "gendoc:stdlib": "cd ../stdlib && npm run gendoc && cd ../docs",
     "gendoc:api-fix": "node scripts/insert-frontmatter-alias.js",
     "gendoc:api": "cd ../core && typedoc && cd ../docs && npm run gendoc:api-fix",
-    "gendoc:watch": "hugo serve",
-    "gendoc": "npm run gendoc:api && hugo"
+    "bundle:mvui": "cd ../core && npm run compile:minified && cd ../docs",
+    "bundle:stdlib": "cd ../stdlib && npm run compile:minified && cd ../stdlib",
+    "bundle:all": "npm run bundle:mvui && npm run bundle:stdlib",
+    "build": "npm run bundle:all && npm run gendoc:api && hugo",
+    "dev": "npm run bundle:all && hugo serve"
   },
   "author": "dominiksta",
   "license": "MIT"

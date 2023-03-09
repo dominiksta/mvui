@@ -1,1 +1,22 @@
 <link rel="icon" type="image/x-icon" href="/icon.svg">
+
+<script type="importmap">
+  {
+    "imports": {
+      "@mvui/core": "/js/mvui/core/mvui-core.js",
+      "@mvui/stdlib": "/js/mvui/stdlib/mvui-stdlib.js"
+    }
+  }
+</script>
+
+<script type="module">
+import { style, MVUI_GLOBALS } from "@mvui/core";
+import { theme } from "@mvui/stdlib";
+
+ style.currentTheme$.subscribe(t => {
+     style.setTheme(
+         theme.MVUI_STDLIB_THEME_NAME,
+         t === 'dark' ? theme.darkTheme : theme.lightTheme
+     );
+ });
+</script>

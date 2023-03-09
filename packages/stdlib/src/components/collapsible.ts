@@ -22,7 +22,7 @@ import theme from '../theme';
    This will be shown as the clickable header that will toggle wether the content is
    collapsed.
  */
-export const [collapsible, Collapsible] = define(class Collapsible extends Component {
+export class Collapsible extends Component {
   static tagNameLibrary = 'std';
 
   props = {
@@ -77,6 +77,7 @@ export const [collapsible, Collapsible] = define(class Collapsible extends Compo
       border: `1px solid ${theme.fg}`,
       marginRight: '5px',
       boxShadow: `5px 5px ${theme.fgContrastMiddle}`,
+      background: theme.bg,
     },
     '#content': {
       padding: '1em',
@@ -111,4 +112,6 @@ export const [collapsible, Collapsible] = define(class Collapsible extends Compo
       paddingRight: '0.5em',
     }
   });
-});
+}
+
+export const [ collapsible ] = define(Collapsible);

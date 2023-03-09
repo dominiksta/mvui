@@ -81,12 +81,13 @@ export class Menu extends Component {
   static tagNameLibrary = 'std';
 
   props = {
-    text: new rx.Prop(''),
+    text: new rx.Prop('', { reflect: true }),
   }
 
   
   render() {
     // warning: recursive context magic incoming
+    console.log('menu');
 
     // the top most menu element will provide the context
     const ctx = this.parentElement instanceof Menu

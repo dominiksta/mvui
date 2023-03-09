@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile:minified": "node esbuild.mjs",
     "dev": "webpack-dev-server",
     "gendoc": "node scripts/get-docs.js"
   },

@@ -4,6 +4,13 @@ title: ""
 
 # Collapsible
 
+## Example
+
+<std-collapsible> 
+  <span slot="header"> Header </span>
+  Content
+</std-collapsible>
+
 ## Description
 
 {{% stdlib-doc file="collapsible.description" %}}
