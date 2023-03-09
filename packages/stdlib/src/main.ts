@@ -38,25 +38,46 @@ class Main extends Component {
       std.button({ props: { kind: 'accent' } }, 'Accent'),
     ]),
     std.collapsible([
-      h.span({attrs: { slot: 'header' }}, 'Snackbar'),
+      h.span({ attrs: { slot: 'header' } }, 'Menus'),
+      std.menu({ props: { text: 'Menu 1 (should not display)' }}, [
+        std.menuitem({ slots: { right: [h.div('')] }}, 'Menu 1 Item 1'),
+        std.menuitem('Menu 1 Item 2'),
+        std.menu({ props: { text: 'Submenu 1' }}, [
+          std.menuitem('Submenu 1 Item 1'),
+          std.menu({ props: { text: 'SubSubmenu 1' } }, [
+            std.menuitem('SubSubmenu 1 Item 1'),
+            std.menuitem('SubSubmenu 1 Item 2'),
+          ]),
+          std.menuitem('Submenu 1 Item 2'),
+        ]),
+        std.menuitem('Menu 1 Item 3'),
+      ]),
+      h.br(),
+    ]),
+    std.collapsible([
+      h.span({ attrs: { slot: 'header' } }, 'Snackbar'),
       std.button(
-        { events: { click: _ => std.openSnackbar('Text 1') }},
+        { events: { click: _ => std.openSnackbar('Text 1') } },
         'Trigger with Text 1'
       ),
       std.button(
-        { events: { click: _ => std.openSnackbar('Text 2') }},
+        { events: { click: _ => std.openSnackbar('Text 2') } },
         'Trigger with Text 2'
       ),
       std.button(
-        { events: { click: _ => std.openSnackbar(std.collapsible([
-          h.span({attrs: { slot: 'header'}}, 'header'),
-          h.div('content')
-        ]), 5000) }},
+        {
+          events: {
+            click: _ => std.openSnackbar(std.collapsible([
+              h.span({ attrs: { slot: 'header' } }, 'header'),
+              h.div('content')
+            ]), 5000)
+          }
+        },
         'Trigger with Custom Elements'
       ),
     ]),
     std.collapsible([
-      h.span({attrs: { slot: 'header' }}, 'Bindings Test'),
+      h.span({ attrs: { slot: 'header' } }, 'Bindings Test'),
       h.p([
         'Cras placerat accumsan nulla.  Nullam tempus.',
         'Nullam tristique diam non turpis.  Phasellus lacus.  ',
@@ -75,7 +96,7 @@ class Main extends Component {
         }
       }),
       std.button({ events: { click: _ => this.#state.next('intial') } }, 'reset'),
-    ])
+    ]),
   ]
 }
 Main.register();
