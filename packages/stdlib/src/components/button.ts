@@ -10,7 +10,7 @@ import theme from "theme";
 
    class Example extends Component {
      render = () => [
-     std.button('Click Me!'),
+       std.button('Click Me!'),
      ]
    }
    ```

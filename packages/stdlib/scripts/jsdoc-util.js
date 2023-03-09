@@ -31,7 +31,7 @@ function getCommentBlocks(plainJs) {
         continue;
       }
       const starIdx = splitJs[i].indexOf(' * ');
-      if (starIdx !== -1) {
+      if (starIdx !== -1 && starIdx < 3) {
         res.push(splitJs[i].substring(starIdx + 3));
       } else {
         res.push(splitJs[i].substring(3));
