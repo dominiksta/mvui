@@ -5,7 +5,7 @@ theme = 'hugo-book'
 
 [params]
     BookTheme = 'auto'
-    BookSection = 'tutorial'
+    BookSection = 'docs'
     BookLogo = 'icon.svg'
 
 

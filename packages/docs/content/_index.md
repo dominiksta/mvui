@@ -24,7 +24,7 @@ export class CounterComponent extends Component {
 ```
 
 <p style="text-align: center">
-<a class="get-started-btn" href="/tutorial/getting-started">
+<a class="get-started-btn" href="/docs/getting-started">
 => Get Started
 </a>
 
