@@ -1,4 +1,4 @@
-import { Stream } from '../rx';
+import { State, Stream } from '../rx';
 import { camelToDash } from '../util/strings';
 import { MvuiCSSRuleset, MvuiCSSSheet, sheet, util } from './general';
 
@@ -30,7 +30,7 @@ export function setTheme(
 }
 
 // TODO: share with refcount
-export const currentTheme$ = new Stream<'dark' | 'light'>(observer => {
+const _currentTheme$ = new Stream<'dark' | 'light'>(observer => {
   if (!window.matchMedia) {
     observer.next('light');
     return;
@@ -52,3 +52,9 @@ export const currentTheme$ = new Stream<'dark' | 'light'>(observer => {
     window.matchMedia('(prefers-color-scheme: dark)')
       .removeEventListener('change', eventHandler);
 });
+
+export const currentTheme$ = new State<'dark' | 'light'>(
+  window.matchMedia('(prefers-color-scheme: dark)').matches
+  ? "dark" : "light"
+);
+_currentTheme$.subscribe(currentTheme$);
