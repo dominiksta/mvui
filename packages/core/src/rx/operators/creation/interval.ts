@@ -3,7 +3,7 @@ import Stream from "../../stream";
 /**
  * TODO
  */
-export default function fromInterval(
+export default function interval(
   ms: number
 ): Stream<void> {
   return new Stream(observer => {

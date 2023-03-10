@@ -16,7 +16,7 @@ export default class CounterComponent extends Component {
   render() {
     const count = new rx.State(0);
     // this will get properly torn down on unmount
-    this.onRemoved(rx.fromInterval(1000).subscribe(_ => {
+    this.onRemoved(rx.interval(1000).subscribe(_ => {
       count.next(v => v + 1);
     }));
     return [
