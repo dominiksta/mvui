@@ -1,5 +1,5 @@
 import { Component, rx, h, style, define } from "@mvui/core";
-import theme from "theme";
+import { theme } from "theme";
 
 /**
  * Some general doc

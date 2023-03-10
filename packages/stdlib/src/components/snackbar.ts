@@ -1,6 +1,6 @@
 import { Component, define, h, rx, style } from "@mvui/core";
 import { TemplateElementChild } from "@mvui/core";
-import theme from "theme";
+import { theme } from "theme";
 
 const CONTENT = new rx.State<TemplateElementChild | undefined>(undefined);
 

@@ -6,10 +6,20 @@ title: ""
 
 ## Example
 
-<std-collapsible> 
-  <span slot="header"> Header </span>
-  Content
-</std-collapsible>
+{{<codeview output-height="100px">}}
+import { Component, rx, h } from "@mvui/core";
+import * as std from "@mvui/stdlib";
+
+export default class Example extends Component {
+  render() {
+    return [
+      std.collapsible({
+        slots: { header: h.span('Header') },
+      }, 'Content'),
+    ];
+  }
+}
+{{</codeview>}}
 
 ## Description
 

@@ -1,5 +1,5 @@
 import { Component, define, h, MVUI_GLOBALS, rx, style } from "@mvui/core";
-import theme, { darkTheme, lightTheme, MVUI_STDLIB_THEME_NAME } from "theme";
+import { theme, darkTheme, lightTheme, MVUI_STDLIB_THEME_NAME } from "theme";
 import * as std from "./index";
 
 style.currentTheme$.subscribe(theme => {

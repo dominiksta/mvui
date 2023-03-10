@@ -6,7 +6,21 @@ title: ""
 
 ## Example
 
-<std-input value="hi"></std-input>
+{{<codeview output-height="100px">}}
+import { Component, rx, h } from "@mvui/core";
+import * as std from "@mvui/stdlib";
+
+export default class Example extends Component {
+  render() {
+    const value = new rx.State('hi');
+    return [
+      std.input({props: { value: rx.bind(value) }}),
+      std.input({props: { value: rx.bind(value) }}),
+      h.span(value),
+    ];
+  }
+}
+{{</codeview>}}
 
 ## Description
 

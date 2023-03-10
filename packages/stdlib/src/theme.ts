@@ -36,5 +36,4 @@ export const darkTheme: StdLibTheme = {
 
 export const MVUI_STDLIB_THEME_NAME = 'mvui-stdlib';
 
-const theme = style.themeVariables(MVUI_STDLIB_THEME_NAME, lightTheme);
-export default theme;
+export const theme = style.themeVariables(MVUI_STDLIB_THEME_NAME, lightTheme);

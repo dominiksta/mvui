@@ -1,3 +1,6 @@
 [submodule "packages/docs/themes/hugo-book"]
 	path = packages/docs/themes/hugo-book
 	url = https://github.com/alex-shpak/hugo-book
+[submodule "packages/docs/static/js/ace-builds"]
+	path = packages/docs/static/js/ace-builds
+	url = https://github.com/ajaxorg/ace-builds/

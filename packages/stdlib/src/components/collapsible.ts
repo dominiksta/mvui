@@ -1,6 +1,6 @@
 import { Component, define, h, rx, style } from "@mvui/core";
 import { button } from "./button";
-import theme from '../theme';
+import { theme } from '../theme';
 
 /**
    A container that can be collapsed and expanded at will.
@@ -91,6 +91,7 @@ export class Collapsible extends Component {
       border: 'none',
       textAlign: 'left',
     },
+    // TODO: css parts dont seem work in frames in firefox...
     '#header::part(button):hover': {
       outline: 'none',
       background: theme.bgContrastMiddle,

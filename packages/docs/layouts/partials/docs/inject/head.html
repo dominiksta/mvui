@@ -1,17 +1,22 @@
 <link rel="icon" type="image/x-icon" href="/icon.svg">
+<link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
 
 <script type="importmap">
   {
     "imports": {
       "@mvui/core": "/js/mvui/core/mvui-core.js",
-      "@mvui/stdlib": "/js/mvui/stdlib/mvui-stdlib.js"
+      "@mvui/stdlib": "/js/mvui/stdlib/mvui-stdlib.js",
+      "app/": "/js/app/"
     }
   }
 </script>
 
 <script type="module">
-import { style, MVUI_GLOBALS } from "@mvui/core";
-import { theme } from "@mvui/stdlib";
+ import { style, MVUI_GLOBALS } from "@mvui/core";
+ import { theme } from "@mvui/stdlib";
+
+ import CodeView from "app/codeview/codeview.js";
 
  style.currentTheme$.subscribe(t => {
      style.setTheme(
@@ -19,4 +24,7 @@ import { theme } from "@mvui/stdlib";
          t === 'dark' ? theme.darkTheme : theme.lightTheme
      );
  });
+
+ // not pretty, but gets the job done
+ document.getElementById('book-search-input').setAttribute('data-hotkeys', 'ü');
 </script>

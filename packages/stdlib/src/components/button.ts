@@ -1,5 +1,5 @@
 import { Component, define, h, rx, style } from "@mvui/core";
-import theme from "theme";
+import { theme } from "theme";
 
 /**
    This is a really cool button.

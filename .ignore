@@ -1,0 +1,4 @@
+# this file is for tools like ripgrep
+
+/packages/docs/static/js/ace-builds/
+/packages/docs/themes/hugo-book/

@@ -1,5 +1,5 @@
 import { Component, define, h, rx, style } from "@mvui/core";
-import theme from "theme";
+import { theme } from "theme";
 
 export const menuContext = new rx.Context(() => new rx.State<{
   active: Menu | null

@@ -9,19 +9,23 @@ bookToC: false
   <i style="font-size: 130%">"Minimum Viable UI"</i>
 </div>
 
-```typescript
+{{<codeview>}}
 import { Component, rx, h } from "@mvui/core";
 
-export class CounterComponent extends Component {
+export default class CounterComponent extends Component {
   render() {
     const count = new rx.State(0);
+    // this will get properly torn down on unmount
+    this.onRemoved(rx.fromInterval(1000).subscribe(_ => {
+      count.next(v => v + 1);
+    }));
     return [
-      h.button({ events: { click: _ => count.next(c => c + 1) } }, 'Increment'),
-      h.span(count.derive(v => `count: ${v}`))
+      // synchronous memoized state derivation
+      h.span(count.derive(v => `You are looking at Mvui for ${v}s`)),
     ];
   }
 }
-```
+{{</codeview>}}
 
 <p style="text-align: center">
 <a class="get-started-btn" href="/docs/getting-started">

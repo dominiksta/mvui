@@ -6,16 +6,14 @@ title: ""
 
 ## Example
 
-<script type="module">
+{{<codeview output-height="100px">}}
+import { Component, rx, h } from "@mvui/core";
 import * as std from "@mvui/stdlib";
-import { Component, h } from "@mvui/core";
 
-const snackbar = new std.Snackbar();
-document.body.appendChild(snackbar);
-
-class SnackbarTest extends Component {
+export default class Example extends Component {
   render() {
     return [
+      std.snackbar(), // can be anywhere
       std.button(
         { events: { click: _ => std.openSnackbar('hi') }},
         'Trigger Snackbar'
@@ -23,8 +21,7 @@ class SnackbarTest extends Component {
     ];
   }
 }
-SnackbarTest.register();
-</script>
+{{</codeview>}}
 
 <app-snackbar-test><app-snackbar-test/>
 

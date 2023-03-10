@@ -6,19 +6,30 @@ title: ""
 
 ## Example
 
-<script type="module">
-import { Menu, MenuItem } from "@mvui/stdlib";
-console.log(Menu, MenuItem);
-</script>
+{{<codeview output-height="150px">}}
+import { Component, rx } from "@mvui/core";
+import * as std from "@mvui/stdlib";
 
-<std-menu>
-  <std-menu-item> Menu Item 1 </std-menu-item>
-  <std-menu text="Submenu"> 
-    <std-menu-item> Submenu Item 1 </std-menu-item>
-    <std-menu-item> Submenu Item 2 </std-menu-item>
-  </std-menu>
-  <std-menu-item> Menu Item 2 </std-menu-item>
-</std-menu>
+export default class Example extends Component {
+  render() {
+    return [
+      std.menu([
+        std.menuitem('Menu 1 Item 1'),
+        std.menuitem('Menu 1 Item 2'),
+        std.menu({ props: { text: 'Submenu 1' }}, [
+          std.menuitem('Submenu 1 Item 1'),
+          std.menuitem('Submenu 1 Item 2'),
+          std.menu({ props: { text: 'SubSubmenu 1' } }, [
+            std.menuitem('SubSubmenu 1 Item 1'),
+            std.menuitem('SubSubmenu 1 Item 2'),
+          ]),
+        ]),
+        std.menuitem('Menu 1 Item 3'),
+      ]),
+    ];
+  }
+}
+{{</codeview>}}
 
 ## Description
 
