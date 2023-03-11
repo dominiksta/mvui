@@ -703,6 +703,7 @@ export default abstract class Component<
     const recurse = (children: TemplateElementChildren, slot = 'default') => {
       const clear = () => {
         if (slot === 'default') {
+          if (children instanceof Array && children.length === 0) return;
           thisEl.innerText = '';
           thisEl.innerHTML = '';
         }
