@@ -42,7 +42,7 @@ export default class CounterComponent extends Component {
 {{<columns>}}
 ## It's Tiny
 
-Mvui is less then 2000 lines of well documented and tested code with no dependencies. You
+Mvui is less than 2000 lines of well documented and tested code with no dependencies. You
 could probably maintain it yourself if you had to.
 
 <--->
