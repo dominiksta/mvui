@@ -11,7 +11,7 @@ class MyBoundInput extends Component {
     h.input({ fields: { ...this.props }, events: {
       change: e => {
         // console.log('event');
-        this.props.value.next(e.target.value) 
+        this.props.value.next(e.target.value)
       }
     }})
   ]
@@ -31,7 +31,7 @@ test('one binding', async () => {
   const [_, comp] = testDoc(new BindingTest());
   const myInput = await comp.query<MyBoundInput>('app-my-bound-input');
   const input = await myInput.query<HTMLInputElement>('input');
-  
+
   expect(input.value).toBe('initial');
 
   comp.state.next('from outer');
@@ -90,7 +90,7 @@ test('two bindings', async () => {
     expect(inputs[1].value).toBe(text);
     expect(inputs[2].value).toBe(text);
   }
-  
+
   check('initial');
 
   comp.state.next('from outer');

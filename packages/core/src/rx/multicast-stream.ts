@@ -46,7 +46,7 @@ import Stream, { Observer } from "./stream";
  */
 export default class MulticastStream<T> extends Stream<T> implements Observer<T> {
 
-  private observers: Observer<T>[] = [];
+  protected observers: Observer<T>[] = [];
 
   constructor() {
     super((_observer) => undefined);
