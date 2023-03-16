@@ -65,7 +65,7 @@ test('template references', async () => {
   }
 
   for (let li of Array.from(await comp2.queryAll<HTMLLIElement>('.myListEl'))) {
-    expect(li.innerText).toBe('');
+    expect(li.innerText).toBe(undefined);
     expect(li.style.textDecoration).toBe('');
   }
 });

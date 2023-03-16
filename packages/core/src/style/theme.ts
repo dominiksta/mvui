@@ -54,7 +54,12 @@ const _currentTheme$ = new Stream<'dark' | 'light'>(observer => {
 });
 
 export const currentTheme$ = new State<'dark' | 'light'>(
-  window.matchMedia('(prefers-color-scheme: dark)').matches
-  ? "dark" : "light"
+  window.matchMedia
+    ? (
+      window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? "dark"
+        : "light"
+    )
+    : "dark"
 );
 _currentTheme$.subscribe(currentTheme$);
