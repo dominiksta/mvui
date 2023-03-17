@@ -1,6 +1,8 @@
-import State from "./state";
+import { identity } from "util/other";
+import State, { LinkedState } from "./state";
 
-export const BIND_MARKER = Symbol();
+const BIND_MARKER = Symbol();
+export type Binding<T> = { marker: typeof BIND_MARKER, value: State<T> };
 
 /**
  * This marks a {@link State} object in a template to be a two-way-binding
@@ -32,7 +34,20 @@ export const BIND_MARKER = Symbol();
 export default function bind<T>(
   state: State<T>
   // TODO: type coercion, maybe custom transform functions
-): State<T> {
-  (state as any)[BIND_MARKER] = true;
-  return state;
+): Binding<T> {
+  return { marker: BIND_MARKER, value: state };
+}
+
+
+export function isBinding<T>(maybeBinding: unknown): undefined | State<T> {
+  if (
+    typeof maybeBinding === 'object' && maybeBinding !== null &&
+      'marker' in maybeBinding && 'value' in maybeBinding
+      && maybeBinding['value'] instanceof State
+  ) {
+    return maybeBinding.value;
+  } else {
+    return undefined;
+  }
+}
 }

@@ -12,7 +12,7 @@ import { camelToDash } from "./util/strings";
 import { MVUI_GLOBALS } from "./globals";
 import { throttle } from "./util/time";
 import * as style from "./style";
-import { BIND_MARKER } from "./rx/bind";
+import { isBinding } from "./rx/bind";
 
 // these symbols are used for properties that should be accessible from anywhere in mvui
 // but should not be part of api surface
@@ -592,33 +592,29 @@ export default abstract class Component<
 
         for (let prop in el.params.fields) {
           const val = el.params.fields[prop];
-          if (val instanceof Stream) {
+
+          let bind: State<any> | undefined;
+          if (bind = isBinding(val)) {
             let ignoreNextDown = false;
 
             // dataflow: upwards
-            if (val instanceof State && BIND_MARKER in val) {
-              if (!events$) events$ = fromAllEvents(thisEl);
-              // console.debug('found bind marker');
-              this._subscribe(events$.pipe(
-                map(_ => thisEl[prop]),
-                distinctUntilChanged(),
-              ), v => {
-                // console.debug(`prop changed detected: ${v}`, thisEl);
-                ignoreNextDown = true;
-                val.next(v);
-              });
-            }
-
-            // dataflow: downwards
-            this._subscribe(val, (v) => {
-              if (val instanceof State && BIND_MARKER in val) {
-                // console.debug(`state change detected: ${v}`, thisEl);
-                if (ignoreNextDown) { ignoreNextDown = false; return; }
-                // console.debug(`state change acted on: ${v}`, thisEl);
-              }
-              (thisEl as any)[prop] = v
+            if (!events$) events$ = fromAllEvents(thisEl);
+            this._subscribe(events$.pipe(
+              map(_ => thisEl[prop]),
+              distinctUntilChanged(),
+            ), v => {
+              // console.debug(`prop changed detected: ${v}`, thisEl);
+              ignoreNextDown = true;
+              bind!.next(v);
             });
 
+            // dataflow: downwards
+            this._subscribe(bind, (v) => {
+              if (ignoreNextDown) { ignoreNextDown = false; return; }
+              (thisEl as any)[prop] = v
+            });
+          } else if (val instanceof Stream) {
+            this._subscribe(val, (v) => (thisEl as any)[prop] = v);
           } else { (thisEl as any)[prop] = val; }
         }
       }
@@ -630,32 +626,28 @@ export default abstract class Component<
         );
         for (let prop in el.params.props) {
           const val = (el.params.props as any)[prop];
-          if (val instanceof Stream) {
+
+          let bind: State<any> | undefined;
+          if (bind = isBinding(val)) {
             let ignoreNextDown = false;
-
+            const p: Prop<any> = (thisEl.props as any)[prop];
             // dataflow: upwards
-            if (val instanceof State && BIND_MARKER in val) {
-              const p: Prop<any> = (thisEl.props as any)[prop];
-              this._subscribe(p.pipe(skip(1)), v => {
-                // console.debug(`setting binding ${v}`);
-                if (ignoreNextDown) { ignoreNextDown = false; return; }
-                else { ignoreNextDown = true; }
-                // console.debug(`${ignoreNext}: setting binding ${v}`);
-                val.next(v);
-              });
-            }
-
-            // dataflow: downwards
-            this._subscribe(val, (v) => {
-              // console.debug(`considering prop ${v}`);
-              if (val instanceof State && BIND_MARKER in val) {
-                if (ignoreNextDown) { ignoreNextDown = false; return; }
-                else { ignoreNextDown = true; }
-              }
-              // console.debug(`setting prop ${v}`);
-              thisEl.props[prop].next(v);
+            this._subscribe(p.pipe(skip(1)), v => {
+              // console.debug(`setting binding ${v}`);
+              if (ignoreNextDown) { ignoreNextDown = false; return; }
+              else { ignoreNextDown = true; }
+              // console.debug(`${ignoreNext}: setting binding ${v}`);
+              bind!.next(v);
             });
 
+            // dataflow: downwards
+            this._subscribe(bind, (v) => {
+              if (ignoreNextDown) { ignoreNextDown = false; return; }
+              else { ignoreNextDown = true; }
+              thisEl.props[prop].next(v);
+            });
+          } else if (val instanceof Stream) {
+            this._subscribe(val, (v) => thisEl.props[prop].next(v));
           } else {
             thisEl.props[prop].next(val);
           }
