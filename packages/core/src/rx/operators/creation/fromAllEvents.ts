@@ -5,8 +5,8 @@ import Stream from "../../stream";
 // might be interesting, but should not be necessary:
 // auxclick, dblclick, copy, focusin, focusout, mousedown, mouseup, wheel
 const RELEVANT_EVENTS = [
-  'blur', 'click', 'contextmenu', 'cut', 'focus', 'keydown', 'keyup',
-  'paste', 'pointerdown', 'pointerup', 'wheel'
+  'change', 'blur', 'click', 'contextmenu', 'cut', 'focus', 'keydown',
+  'keyup', 'paste', 'pointerdown', 'pointerup', 'wheel'
 ];
 
 // https://stackoverflow.com/a/22545622

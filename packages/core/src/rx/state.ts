@@ -1,7 +1,6 @@
 import { Observer } from "./stream";
 import MulticastStream from "./multicast-stream";
 import { derive, DerivedState } from "./derived-state";
-import { identity } from "util/other";
 
 /**
  * A {@link MulticastStream} that remembers the last emitted value. Useful to model state.
