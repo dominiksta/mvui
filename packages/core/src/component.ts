@@ -739,8 +739,8 @@ export default abstract class Component<
         slot: string
       ) => {
         const includesString = t.map(
-          child => child instanceof TemplateElement
-        ).includes(false);
+          child => typeof child === 'string'
+        ).includes(true);
         if (slot !== 'default' && includesString) {
           const wrapper = createWrapper();
           for (let child of t) addSingleChild(child, 'default', wrapper);
@@ -763,8 +763,6 @@ export default abstract class Component<
           const addTo = (
             slot === 'default' || t instanceof TemplateElement
           ) ? thisEl : createWrapper();
-          if (typeof t === 'string' || typeof t === 'number')
-            addTo.innerText = t.toString();
           addSingleChild(t, slot, addTo); // case (3, 5)
         }
       }

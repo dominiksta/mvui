@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "strict": true,
+    "module": "esnext",
+    "target": "es2015",
+    "moduleResolution": "node",
+    "lib": ["esnext", "dom"],
+    "types": ["cypress", "node"],
+    "baseUrl": ".",
+    "paths": {
+      "@mvui/core": ["../src"]
+    },
+  },
+  "include": [
+    "**/*.ts",
+    "../src"
+  ]
+}

@@ -1,7 +1,5 @@
-import { test, expect } from '@jest/globals';
-import Component from "component";
-import h from "html";
-import { testDoc, waitFrame } from './util';
+import { Component, h } from "@mvui/core";
+import { mount, waitFrame } from "../support/helpers";
 
 class TemplateReferencesTest1 extends Component {
 
@@ -32,7 +30,6 @@ class TemplateReferencesTest1 extends Component {
 }
 TemplateReferencesTest1.register();
 
-
 class TemplateReferencesTest2 extends Component {
 
   render = () => [
@@ -54,18 +51,21 @@ class TemplateReferencesTest2 extends Component {
 }
 TemplateReferencesTest2.register();
 
-test('template references', async () => {
-  const comp1 = testDoc(new TemplateReferencesTest1())[1];
-  const comp2 = testDoc(new TemplateReferencesTest2())[1];
-  await waitFrame();
+describe('Template References', function() {
+  it('kinda work', async function() {
+    const comp1 = mount(TemplateReferencesTest1);
+    const comp2 = mount(TemplateReferencesTest2);
 
-  for (let li of Array.from(await comp1.queryAll<HTMLLIElement>('.myListEl'))) {
-    expect(li.innerText).toBe('Multiple query');
-    expect(li.style.textDecoration).toBe('underline');
-  }
+    await waitFrame();
 
-  for (let li of Array.from(await comp2.queryAll<HTMLLIElement>('.myListEl'))) {
-    expect(li.innerText).toBe(undefined);
-    expect(li.style.textDecoration).toBe('');
-  }
-});
+    for (let li of Array.from(await comp1.queryAll<HTMLLIElement>('.myListEl'))) {
+      expect(li.innerText).to.be.eq('Multiple query');
+      expect(li.style.textDecoration).to.be.eq('underline');
+    }
+
+    for (let li of Array.from(await comp2.queryAll<HTMLLIElement>('.myListEl'))) {
+      expect(li.innerText).to.be.eq('');
+      expect(li.style.textDecoration).to.be.eq('');
+    }
+  });
+})
