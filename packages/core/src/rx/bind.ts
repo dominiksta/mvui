@@ -38,6 +38,9 @@ export type Binding<T> = { marker: typeof BIND_MARKER, value: State<T> };
    always a string regardless of wether or not that makes sense, like with an input with
    `type`=`number`.
 
+   Note however that specifically when serializing from a number input, the resulting
+   value may be NaN if a non parseable string was entered.
+
    (You could also do this serialization manually by using {@link State#linked}.)
 
    ```typescript
@@ -91,11 +94,7 @@ function serialize<T>(
       return state.createLinked(
         JSON.stringify,
         v => {
-          const ret = parseFloat(v);
-          if (isNaN(ret)) throw new Error(
-            `Could not parse number for serialized state: ${v}`
-          );
-          return ret as any;
+          return parseFloat(v) as any;
         },
       );
     case 'string':
