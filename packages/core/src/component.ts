@@ -3,7 +3,7 @@ import {
   ParamSpec as _ParamSpec,
   TemplateElementChild, TemplateElementChildren
 } from "./template-element";
-import { Constructor } from "./util/types";
+import { Constructor, MaybeStream } from "./util/types";
 import {
   Stream, State, Prop, Context,
   fromAllEvents, fromEvent, map, distinctUntilChanged, skip
@@ -559,23 +559,66 @@ export default abstract class Component<
 
     // --- setup attributes, events, props, class fields
     if (el.params) {
+
+      let events$: Stream<Event> | undefined;
+
+      const bindAttrOrField = <T>(
+        bind: State<T>,
+        getter: () => T,
+        setter: (value: T) => void,
+      ) => {
+        let ignoreNextDown = false;
+
+        // dataflow: upwards
+        if (!events$) events$ = fromAllEvents(thisEl);
+        this._subscribe(events$.pipe(
+          map(_ => getter()),
+          distinctUntilChanged(),
+        ), v => {
+          // console.debug(`prop changed detected: ${v}`, thisEl);
+          ignoreNextDown = true;
+          bind.next(v);
+        });
+
+        // dataflow: downwards
+        this._subscribe(bind, (v) => {
+          if (ignoreNextDown) { ignoreNextDown = false; return; }
+          setter(v);
+        });
+      }
+
+      const maybeBindAttrOrField = <T>(
+        value: MaybeStream<T>,
+        getter: () => T,
+        setter: (value: T) => void,
+      ) => {
+        let bind: State<any> | undefined;
+        if (bind = isBinding(value)) {
+          bindAttrOrField(bind, getter, setter);
+        } else if (value instanceof Stream) {
+          this._subscribe(value, (v) => setter(v));
+        } else { setter(value); }
+      }
+
+      if (el.params.fields) {
+        for (let prop in el.params.fields) {
+          maybeBindAttrOrField(
+            el.params.fields[prop],
+            () => thisEl[prop],
+            (v) => { (thisEl as any)[prop] = v }
+          )
+        }
+      }
+
       if (el.params.attrs) {
         for (let attr in el.params.attrs) {
-          const attrVal = (el as any).params.attrs[attr]
-          // the camelToDash transformations here are actually not an mvui specific
-          // assumption: html attributes are forced to be all lowercase by the browser
-          if (attrVal instanceof Stream) {
-            this._subscribe(
-              attrVal, v => {
-                thisEl.setAttribute(camelToDash(attr), v as string)
-                // console.debug("next");
-              }
-            );
-          } else {
-            thisEl.setAttribute(
-              camelToDash(attr), (el as any).params.attrs[attr] as string
-            );
-          }
+          maybeBindAttrOrField(
+            (el as any).params.attrs[attr],
+            // the camelToDash transformations here are actually not an mvui specific
+            // assumption: html attributes are forced to be all lowercase by the browser
+            () => thisEl.getAttribute(attr),
+            (v) => thisEl.setAttribute(camelToDash(attr), v),
+          );
         }
       }
 
@@ -584,38 +627,6 @@ export default abstract class Component<
           this.onRemoved(fromEvent(thisEl, key as any).subscribe(
             (el.params.events as any)[key])
           );
-        }
-      }
-
-      if (el.params.fields) {
-        let events$: Stream<Event> | undefined;
-
-        for (let prop in el.params.fields) {
-          const val = el.params.fields[prop];
-
-          let bind: State<any> | undefined;
-          if (bind = isBinding(val)) {
-            let ignoreNextDown = false;
-
-            // dataflow: upwards
-            if (!events$) events$ = fromAllEvents(thisEl);
-            this._subscribe(events$.pipe(
-              map(_ => thisEl[prop]),
-              distinctUntilChanged(),
-            ), v => {
-              // console.debug(`prop changed detected: ${v}`, thisEl);
-              ignoreNextDown = true;
-              bind!.next(v);
-            });
-
-            // dataflow: downwards
-            this._subscribe(bind, (v) => {
-              if (ignoreNextDown) { ignoreNextDown = false; return; }
-              (thisEl as any)[prop] = v
-            });
-          } else if (val instanceof Stream) {
-            this._subscribe(val, (v) => (thisEl as any)[prop] = v);
-          } else { (thisEl as any)[prop] = val; }
         }
       }
 

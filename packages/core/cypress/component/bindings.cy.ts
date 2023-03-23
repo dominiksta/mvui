@@ -96,6 +96,39 @@ describe('bindings', () => {
     expect(comp.state.value).to.be.eq('from inner 4');
   }));
 
+  it('attribute binding', attempt(async () => {
+    class BindingTestAttribute extends Component {
+      state = new rx.State('initial');
+
+      render = () => [
+        h.input({ attrs: { value: rx.bind(this.state) } }),
+      ]
+    }
+    BindingTestAttribute.register();
+
+    const comp = mount(BindingTestAttribute);
+    const input = await comp.query<HTMLInputElement>('input');
+
+    expect(input.value).to.be.eq('initial');
+
+    comp.state.next('from outer');
+    expect(input.value).to.be.eq('from outer');
+
+    input.setAttribute('value', 'from inner');
+    input.dispatchEvent(new Event('change'));
+    expect(comp.state.value).to.be.eq('from inner');
+
+    comp.state.next('from outer 2');
+    expect(input.getAttribute('value')).to.be.eq('from outer 2');
+
+    comp.state.next('from outer 4');
+    expect(input.getAttribute('value')).to.be.eq('from outer 4');
+
+    input.setAttribute('value', 'from inner 4');
+    input.dispatchEvent(new Event('change'));
+    expect(comp.state.value).to.be.eq('from inner 4');
+  }));
+
 
   it('type coercion/serialization', attempt(async () => {
     class BindingsTestSerialization extends Component {
