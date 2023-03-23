@@ -35,6 +35,7 @@ export class TemplateElement<
       || childrenOrParams instanceof Array
       || childrenOrParams instanceof Stream
       || childrenOrParams instanceof TemplateElement
+      || childrenOrParams instanceof HTMLElement
     ) {
       if (children) throw new Error('Invalid arguments');
       this.children = childrenOrParams as any;
@@ -82,6 +83,7 @@ export class TemplateElement<
 export type TemplateElementChild<T extends HTMLElement = any> =
   (T extends HTMLElement ? never : ToStringable) |
   TemplateElement<T, any, any> |
+  HTMLElement |
   undefined;
 
 export type TemplateElementChildren<T extends HTMLElement = any> =
