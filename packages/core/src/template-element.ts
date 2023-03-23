@@ -11,6 +11,16 @@ export interface EventWithTarget<T extends HTMLElement> extends Event {
 type GlobalEventHandlersEventMapWithTarget<T extends HTMLElement> =
   Omit<GlobalEventHandlersEventMap, "change"> & { change: EventWithTarget<T> };
 
+export type TemplateElementCreator<
+  T extends HTMLElement,
+  Params extends ParamSpec = {},
+  Props extends { [key: string]: any } = T,
+> = (
+  childrenOrParams?: TemplateElementChildren |
+    TemplateElementParams<T, Params, Props>,
+  children?: TemplateElementChildren,
+) => TemplateElement<T, Params, Props>;
+
 /**
  * TODO
  */
@@ -47,35 +57,51 @@ export class TemplateElement<
 
   static fromCustom<
     T extends HTMLElement,
-    Params extends {
-      events?: { [key: string]: any },
-      slots?: { [key: string]: HTMLElement },
-    } = {},
-    Attributes extends { [key: string]: any } = T,
+    Params extends ParamSpec = {},
   >(
     creator: () => T,
-  ) {
-    type El = TemplateElement<T, Params, Attributes>;
+  ): TemplateElementCreator<T, Params, never>;
+
+  static fromCustom<
+    T extends HTMLElement,
+    Params extends ParamSpec = {},
+  >(
+    creator: { new (): T },
+  ): TemplateElementCreator<T, Params, never>;
+
+  static fromCustom<T extends keyof HTMLElementTagNameMap>(tagName: T):
+    TemplateElementCreator<HTMLElementTagNameMap[T], {}, never>;
+
+  static fromCustom<
+    T extends HTMLElement = HTMLElement,
+    Params extends ParamSpec = any,
+  >(tagName: string): TemplateElementCreator<any, Params, never>;
+
+  static fromCustom(
+    tagNameOrCreator: string | (() => HTMLElement) | { new (): HTMLElement }
+  ): TemplateElementCreator<any, any, any> {
+
+    let creator: () => HTMLElement;
+    if (typeof tagNameOrCreator === 'string') {
+      creator = () => document.createElement(tagNameOrCreator);
+    } else if (
+      'prototype' in tagNameOrCreator
+      && tagNameOrCreator.prototype instanceof HTMLElement
+    ) {
+      console.log(tagNameOrCreator);
+      creator = () => new (tagNameOrCreator as any)();
+    } else {
+      creator = tagNameOrCreator as any;
+    }
+
     return function(
       childrenOrParams?: TemplateElementChildren |
-        TemplateElementParams<T, Params, Attributes>,
+        TemplateElementParams<any, any, any>,
       children?: TemplateElementChildren,
     ) {
       return new TemplateElement<any, any, any>(
         creator, childrenOrParams, children
-      ) as El;
-    }
-  }
-
-  static fromBuiltin<T extends keyof HTMLElementTagNameMap>(tagName: T) {
-    return function(
-      childrenOrParams?: TemplateElementChildren |
-        TemplateElementParams<HTMLElementTagNameMap[T]>,
-      children?: TemplateElementChildren,
-    ) {
-      return new TemplateElement<HTMLElementTagNameMap[T]>(
-        () => document.createElement(tagName), childrenOrParams, children
-      )
+      );
     }
   }
 }
@@ -99,46 +125,46 @@ export type ParamSpec = {
 
 export type TemplateElementParams<
   T extends HTMLElement,
-  Params extends ParamSpec = { },
+  Params extends ParamSpec = {},
   Props extends { [key: string]: any } = {}
-  > = {
-    style?: Partial<{[key in keyof CSSStyleDeclaration]: MaybeStream<ToStringable>}>,
-    styleOverrides?: MvuiCSSSheet,
+> = {
+  style?: Partial<{ [key in keyof CSSStyleDeclaration]: MaybeStream<ToStringable> }>,
+  styleOverrides?: MvuiCSSSheet,
 
-    classes?: {[key: string]: MaybeStream<boolean>},
+  classes?: { [key: string]: MaybeStream<boolean> },
 
-    attrs?: Partial<{
-      [Property in keyof Params['attributes']]:
-      MaybeStream<Params['attributes'][Property]> | MaybeStream<ToStringable>
-    } & { class: MaybeStream<ToStringable> } &
-    { [key: string]: MaybeStream<ToStringable> }>,
+  attrs?: Partial<{
+    [Property in keyof Params['attributes']]:
+    MaybeStream<Params['attributes'][Property]> | MaybeStream<ToStringable>
+  } & { class: MaybeStream<ToStringable> } &
+  { [key: string]: MaybeStream<ToStringable> }>,
 
-    events?: Partial<{
-      [Property in Exclude<
-        keyof GlobalEventHandlersEventMapWithTarget<T>, keyof Params['events']
-      >]:
-      (event: GlobalEventHandlersEventMapWithTarget<T>[Property]) => any
-    } & {
-        [Property in keyof Params['events']]:
-        (event: Params['events'][Property]) => any
-      }>,
-
-    slots?: Partial<{
-      [Property in keyof Params['slots']]: TemplateElementChildren<
-        Params['slots'] extends {} ? Params['slots'][Property] : any
-      >
+  events?: Partial<{
+    [Property in Exclude<
+      keyof GlobalEventHandlersEventMapWithTarget<T>, keyof Params['events']
+    >]:
+    (event: GlobalEventHandlersEventMapWithTarget<T>[Property]) => any
+  } & {
+      [Property in keyof Params['events']]:
+      (event: Params['events'][Property]) => any
     }>,
 
-    fields?: Partial<{
-      [Property in keyof T]: MaybeStream<T[Property]>
-    }>,
+  slots?: Partial<{
+    [Property in keyof Params['slots']]: TemplateElementChildren<
+      Params['slots'] extends {} ? Params['slots'][Property] : any
+    >
+  }>,
 
-    // Props are always optional for a technical reason: A webcomponent may be
-    // instantiated from a call to document.createElement, which does not have the ability
-    // to pass anything to the constructor. Therefore, any webcomponent must have some
-    // valid initial state and props must always be optional.
-    props?: Partial<{
-      [Property in keyof Props]:
-      MaybeStream<Props[Property]>
-    }>
-  };
+  fields?: Partial<{
+    [Property in keyof T]: MaybeStream<T[Property]>
+  }>,
+
+  // Props are always optional for a technical reason: A webcomponent may be
+  // instantiated from a call to document.createElement, which does not have the ability
+  // to pass anything to the constructor. Therefore, any webcomponent must have some
+  // valid initial state and props must always be optional.
+  props?: Partial<{
+    [Property in keyof Props]:
+    MaybeStream<Props[Property]>
+  }>
+};

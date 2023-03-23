@@ -9,10 +9,10 @@ export default function define<
   ClassT extends { new(): Component },
 >(
   cls: ClassT
-): [ TemplateElementCreator<InstanceType<ClassT>>, ClassT ] {
+): [ ComponentTemplateElementCreator<InstanceType<ClassT>>, ClassT ] {
   (cls as any).register();
 
-  const templateElementCreator: TemplateElementCreator<InstanceType<ClassT>> = (
+  const templateElementCreator: ComponentTemplateElementCreator<InstanceType<ClassT>> = (
     childrenOrParams, children,
   ) => new TemplateElement<InstanceType<ClassT>>(
     () => new (cls as any)(),
@@ -23,7 +23,7 @@ export default function define<
 }
 
 
-type TemplateElementCreator<T extends Component> = (
+type ComponentTemplateElementCreator<T extends Component> = (
   childrenOrParams?: TemplateElementChildren |
     ComponentTemplateElement<T>['params'],
   children?: TemplateElementChildren,
