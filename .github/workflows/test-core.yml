@@ -2,7 +2,7 @@ name: test-core
 on:
   push:
     paths:
-      - '/packages/core'
+      - 'packages/core/**'
 
 jobs:
   cypress-run:

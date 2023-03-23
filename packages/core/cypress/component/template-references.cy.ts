@@ -2,7 +2,6 @@ import { Component, h } from "$thispkg";
 import { sleep } from "$thispkg/util/time";
 import { attempt, mount, waitFrame } from "../support/helpers";
 
-
 class TemplateReferencesTest1 extends Component {
 
   private paragraphEl = this.query<HTMLParagraphElement>('.myClass');
