@@ -1,8 +1,5 @@
-import { test, expect } from '@jest/globals';
-import h from "html";
-import { State } from "rx";
-import Component from "component";
-import { testDoc } from './util';
+import { Component, h, rx } from "$thispkg";
+import { mount } from "../support/helpers";
 
 export class EventEmitter extends Component<{
   events: {
@@ -46,7 +43,7 @@ EventEmitter.register();
 
 
 export class EventReceiver extends Component {
-  state = new State<Event>(new CustomEvent(''));
+  state = new rx.State<Event>(new CustomEvent(''));
 
   render() {
     return [
@@ -68,19 +65,21 @@ export class EventReceiver extends Component {
 }
 EventReceiver.register();
 
+describe('custom events', () => {
+  it('kinda works', async () => {
+    const comp = mount(EventReceiver);
+    const emitter = await comp.query<EventEmitter>('app-event-emitter');
+    const emitterString = await emitter.query('button#evt-string');
+    const emitterObject = await emitter.query('button#evt-object');
+    const emitterMouseEvt = await emitter.query('button#evt-mouse-evt');
 
-test('custom events', async () => {
-  const [_, comp] = testDoc(new EventReceiver());
-  const emitter = await comp.query<EventEmitter>('app-event-emitter');
-  const emitterString = await emitter.query('button#evt-string');
-  const emitterObject = await emitter.query('button#evt-object');
-  const emitterMouseEvt = await emitter.query('button#evt-mouse-evt');
-
-  expect(comp.state.value.type).toBe('');
-  emitterString.click();
-  expect(comp.state.value.type).toBe('customEvtString');
-  emitterObject.click();
-  expect(comp.state.value.type).toBe('customEvtObject');
-  emitterMouseEvt.click();
-  expect(comp.state.value.type).toBe('customClick');
+    expect(comp.state.value.type).to.be.eq('');
+    emitterString.click();
+    expect(comp.state.value.type).to.be.eq('customEvtString');
+    emitterObject.click();
+    expect(comp.state.value.type).to.be.eq('customEvtObject');
+    emitterMouseEvt.click();
+    expect(comp.state.value.type).to.be.eq('customClick');
+  })
 })
+
