@@ -12,5 +12,6 @@ export default defineConfig({
     // every time you start cypress and the relevant framework plugin is not installed
 
     indexHtmlFile: "cypress/support/component-index.html",
-  }
+  },
+  video: false,
 });
