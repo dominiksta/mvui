@@ -9,7 +9,8 @@
     "types": ["cypress", "node"],
     "baseUrl": ".",
     "paths": {
-      "@mvui/core": ["../src"]
+      "$thispkg": ["../src"],
+      "$thispkg/*": ["../src/*"]
     },
   },
   "include": [

@@ -1,4 +1,4 @@
-import { Component, h } from "@mvui/core";
+import { Component, h } from "$thispkg";
 import { mount, waitFrame } from "../support/helpers";
 
 class TemplateReferencesTest1 extends Component {

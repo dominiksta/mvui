@@ -1,6 +1,6 @@
-import { rx } from "@mvui/core";
+import { rx } from "$thispkg";
+import { OperatorFunction } from "$thispkg/rx/stream";
 import { sleep } from "../../support/helpers";
-import { OperatorFunction } from "../../../src/rx/stream";
 
 context('Reactivity', () => {
   describe('Streams', () => {

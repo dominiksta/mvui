@@ -12,12 +12,7 @@ const webpack = require('webpack');
 module.exports = {
   entry: './src/index.ts',
   mode: 'development',
-  devtool: false,
-  plugins: [
-    new webpack.SourceMapDevToolPlugin({
-      moduleFilenameTemplate: 'webpack://[resource-path]',
-    })
-  ],
+  devtool: 'inline-source-map',
   devServer: {
     hot: true,
     host: '127.0.0.1',
@@ -39,5 +34,8 @@ module.exports = {
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     extensions: [ '.js', '.ts' ],
+    alias: {
+      '$thispkg': path.resolve(__dirname, 'src')
+    }
   },
 };

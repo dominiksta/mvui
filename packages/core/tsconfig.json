@@ -12,6 +12,9 @@
     ],
     "target": "esnext",
     "baseUrl": "./src",
+    "paths": {
+      "$thispkg": ["."]
+    },
     "outDir": "./lib"
   },
   "include": [

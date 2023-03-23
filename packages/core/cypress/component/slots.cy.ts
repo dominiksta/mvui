@@ -1,4 +1,4 @@
-import { Component, h, define } from "@mvui/core";
+import { Component, h, define } from "$thispkg";
 import { mount } from "../support/helpers";
 
 class MyLayout extends Component<{
