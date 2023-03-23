@@ -1,5 +1,7 @@
 # Mvui - A Minimalist Webcomponent Framework
 
+[![Tests](https://github.com/dominiksta/mvui/actions/workflows/test-core.yml/badge.svg)](https://github.com/dominiksta/mvui/actions/workflows/test-core.yml)
+
 *"Minimum Viable UI"*
 
 Yes, this is a new frontend framework, and no, I am not joking.
