@@ -1,8 +1,5 @@
-import { test, expect } from '@jest/globals';
-import Component from 'component';
-import h from 'html';
-import { TemplateElement } from "template-element";
-import { testDoc, waitFrame } from './util';
+import { Component, h, TemplateElement } from '$thispkg';
+import { attempt, mount, waitFrame } from '../support/helpers';
 
 class SomeWebComponent extends HTMLElement {
 
@@ -50,35 +47,36 @@ const SomeWebComponentLibraryWrapper = {
   )
 }
 
+describe('web component to mvui', () => {
+  it('kinda works', attempt(async () => {
 
-test('template references', async () => {
+    let state = 'initial';
 
-  let state = 'initial';
+    class ComponentUsingWrapper extends Component {
+      render = () => [
+        h.fieldset([
+          h.legend('Web Component Wrappers'),
+          SomeWebComponentLibraryWrapper.SomeWebComponent({
+            attrs: { id: 'wrapped-comp', attr1: 4 }, fields: { prop1: 5 },
+            events: {
+              customEvt1: e => { state = 'changed' }
+            },
+          }),
+        ]),
+      ]
+    }
+    ComponentUsingWrapper.register();
 
-  class ComponentUsingWrapper extends Component {
-    render = () => [
-      h.fieldset([
-        h.legend('Web Component Wrappers'),
-        SomeWebComponentLibraryWrapper.SomeWebComponent({
-          attrs: { id: 'wrapped-comp', attr1: 4 }, fields: { prop1: 5 },
-          events: {
-            customEvt1: e => { state = 'changed' }
-          },
-        }),
-      ]),
-    ]
-  }
-  ComponentUsingWrapper.register();
+    const comp = mount(ComponentUsingWrapper);
+    const wrapped = await comp.query<SomeWebComponent>('#wrapped-comp');
 
-  const comp = testDoc(new ComponentUsingWrapper())[1];
-  const wrapped = await comp.query<SomeWebComponent>('#wrapped-comp');
+    expect(wrapped.getAttribute('attr1')).to.be.eq('4');
+    expect(wrapped.prop1).to.be.eq(5);
+    expect(state).to.be.eq('initial');
+    (wrapped.children[0] as any).click();
+    await waitFrame();
+    expect(state).to.be.eq('changed');
+  }));
 
-  expect(wrapped.getAttribute('attr1')).toBe('4');
-  expect(wrapped.prop1).toBe(5);
-  expect(state).toBe('initial');
-  (wrapped.children[0] as any).click();
-  waitFrame();
-  expect(state).toBe('changed');
-  
+})
 
-});
