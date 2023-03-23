@@ -1,5 +1,5 @@
 import { Component, h } from "$thispkg";
-import { mount, waitFrame } from "../support/helpers";
+import { attempt, mount, waitFrame } from "../support/helpers";
 
 class TemplateReferencesTest1 extends Component {
 
@@ -52,7 +52,7 @@ class TemplateReferencesTest2 extends Component {
 TemplateReferencesTest2.register();
 
 describe('Template References', function() {
-  it('kinda work', async function() {
+  it('kinda work', attempt(async () => {
     const comp1 = mount(TemplateReferencesTest1);
     const comp2 = mount(TemplateReferencesTest2);
 
@@ -67,5 +67,5 @@ describe('Template References', function() {
       expect(li.innerText).to.be.eq('');
       expect(li.style.textDecoration).to.be.eq('');
     }
-  });
+  }));
 })

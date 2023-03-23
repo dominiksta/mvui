@@ -1,22 +1,23 @@
 import { rx } from "$thispkg";
 import { OperatorFunction } from "$thispkg/rx/stream";
-import { sleep } from "../../support/helpers";
+import { attempt, sleep } from "../../support/helpers";
 
 context('Reactivity', () => {
   describe('Streams', () => {
-    it('subscribing to a synchronous definition returns the correct result', () => {
+    it('subscribing to a synchronous definition returns the correct result',
+      attempt(() => {
 
-      const obs$ = new rx.Stream<number>(observer => {
-        observer.next(1); observer.next(2); observer.next(3);
-      })
+        const obs$ = new rx.Stream<number>(observer => {
+          observer.next(1); observer.next(2); observer.next(3);
+        })
 
-      const result: number[] = [];
-      obs$.subscribe(v => result.push(v));
-      expect(result.length).to.be.eq(3);
-      expect(result).to.deep.eq([1, 2, 3]);
-    })
+        const result: number[] = [];
+        obs$.subscribe(v => result.push(v));
+        expect(result.length).to.be.eq(3);
+        expect(result).to.deep.eq([1, 2, 3]);
+      }))
 
-    it('completion', () => {
+    it('completion', attempt(() => {
       const obs$ = new rx.Stream<number>(observer => {
         observer.next(1);
         observer.next(2);
@@ -35,9 +36,9 @@ context('Reactivity', () => {
       expect(completed).to.be.true;
       expect(result.length).to.eq(2);
       expect(result).to.deep.eq([2, 3]);
-    })
+    }))
 
-    it('error handling', () => {
+    it('error handling', attempt(() => {
       const obs$ = new rx.Stream<number>(observer => {
         observer.next(1);
         observer.next(2);
@@ -67,10 +68,10 @@ context('Reactivity', () => {
       expect(calledError).to.be.true;
       expect(result.length).to.eq(2);
       expect(result).to.deep.eq([2, 3]);
-    })
+    }))
 
 
-    it('streams are unicast', () => {
+    it('streams are unicast', attempt(() => {
       let resource = 0;
       const obs$ = new rx.Stream<number>(observer => {
         resource++;
@@ -81,9 +82,9 @@ context('Reactivity', () => {
       obs$.subscribe(_ => null);
 
       expect(resource).to.eq(2);
-    })
+    }))
 
-    it('pipe', () => {
+    it('pipe', attempt(() => {
       const obs$ = new rx.Stream<number>(observer => {
         observer.next(1); observer.next(2); observer.next(3);
       })
@@ -94,9 +95,9 @@ context('Reactivity', () => {
       ).subscribe(v => result.push(v));
       expect(result.length).to.eq(3);
       expect(result).to.deep.eq([4, 5, 6]);
-    })
+    }))
 
-    it('map operator', () => {
+    it('map operator', attempt(() => {
       const obs$ = new rx.Stream<number>(observer => {
         observer.next(1); observer.next(2); observer.next(3);
       })
@@ -105,9 +106,9 @@ context('Reactivity', () => {
       obs$.map(v => v + 3).subscribe(v => result.push(v));
       expect(result.length).to.eq(3);
       expect(result).to.deep.eq([4, 5, 6]);
-    })
+    }))
 
-    it('filter operator', () => {
+    it('filter operator', attempt(() => {
       const obs$ = new rx.Stream<number>(observer => {
         observer.next(1); observer.next(2); observer.next(3);
       })
@@ -116,10 +117,10 @@ context('Reactivity', () => {
       obs$.filter(v => v === 2 || v === 3).subscribe(v => result.push(v));
       expect(result.length).to.eq(2);
       expect(result).to.deep.eq([2, 3]);
-    })
+    }))
 
 
-    it('map & filter chain', () => {
+    it('map & filter chain', attempt(() => {
       const obs$ = new rx.Stream<number>(observer => {
         observer.next(1); observer.next(2); observer.next(3);
         observer.next(4); observer.next(5); observer.next(6);
@@ -143,10 +144,10 @@ context('Reactivity', () => {
 
       expect(result.length).to.eq(3);
       expect(result).to.deep.eq(['hi', 6, 8]);
-    })
+    }))
 
 
-    it('custom operators', () => {
+    it('custom operators', attempt(() => {
       const obs$ = new rx.Stream<number>(observer => {
         observer.next(1); observer.next(2); observer.next(3);
         observer.next(4); observer.next(5); observer.next(6);
@@ -167,9 +168,9 @@ context('Reactivity', () => {
       expect(result.length).to.eq(3);
       expect(result).to.deep.eq(['hi', 6, 8]);
 
-    })
+    }))
 
-    it('async subscribe & cleanup', async () => {
+    it('async subscribe & cleanup', attempt(async () => {
       const values: {
         one: number[], two: number[]
       } = {
@@ -216,7 +217,7 @@ context('Reactivity', () => {
 
       expect(values.one).to.deep.eq([0, 1, 2, 3, 4]);
       expect(values.two).to.deep.eq([0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
-    })
+    }))
 
   })
 })

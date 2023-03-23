@@ -1,5 +1,5 @@
 import { Component, h, define } from "$thispkg";
-import { mount } from "../support/helpers";
+import { attempt, mount } from "../support/helpers";
 
 class MyLayout extends Component<{
   slots: {
@@ -34,7 +34,7 @@ export class SlotsTest extends Component {
 SlotsTest.register();
 
 describe('Slots', function() {
-  it('kinda work', async function() {
+  it('kinda work', attempt(async () => {
     const comp = mount(SlotsTest);
     const layout = await comp.query<MyLayout>('app-my-layout');
 
@@ -48,9 +48,9 @@ describe('Slots', function() {
     expect(headerEls[1].innerText).to.contain('Content Children 2');
 
     expect(footerEls[0].innerText).to.be.eq('After Footer');
-  })
+  }))
 
-  it('multiple children in default slot', async function() {
+  it('multiple children in default slot', attempt(async () => {
     class TestSlotDefaultMultipleMixed extends Component {
       render() {
         return [
@@ -68,9 +68,9 @@ describe('Slots', function() {
 
     expect(headerEls[0].innerHTML).to.contain('yes');
     expect(headerEls[1].textContent).to.contain('very much');
-  })
+  }))
 
-  it('multiple string children in default slot', async function() {
+  it('multiple string children in default slot', attempt(async () => {
     class TestSlotDefaultMultipleString extends Component {
       render() {
         return [
@@ -88,9 +88,9 @@ describe('Slots', function() {
 
     expect(headerEls[0].textContent).to.contain('yes');
     expect(headerEls[1].textContent).to.contain('very much');
-  })
+  }))
 
-  it('multiple element children in default slot', async function() {
+  it('multiple element children in default slot', attempt(async () => {
     class TestSlotDefaultMultipleElement extends Component {
       render() {
         return [
@@ -108,9 +108,9 @@ describe('Slots', function() {
 
     expect(headerEls[0].innerText).to.contain('yes');
     expect(headerEls[1].innerText).to.contain('very much');
-  })
+  }))
 
-  it('multiple children in named slot', async function() {
+  it('multiple children in named slot', attempt(async () => {
     class TestSlotNamedMultipleMixed extends Component {
       render() {
         return [
@@ -130,9 +130,9 @@ describe('Slots', function() {
 
     expect(footerEls[0].innerText).to.contain('yes');
     expect(footerEls[0].innerText).to.contain('very much');
-  })
+  }))
 
-  it('multiple string only children in named slot', async function() {
+  it('multiple string only children in named slot', attempt(async () => {
     class TestSlotNamedMultipleString extends Component {
       render() {
         return [
@@ -152,9 +152,9 @@ describe('Slots', function() {
 
     expect(footerEls[0].innerText).to.contain('yes');
     expect(footerEls[0].innerText).to.contain('very much');
-  })
+  }))
 
-  it('multiple element only children in named slot', async function() {
+  it('multiple element only children in named slot', attempt(async () => {
     class TestSlotNamedMultipleElement extends Component {
       render() {
         return [
@@ -174,6 +174,6 @@ describe('Slots', function() {
 
     expect(footerEls[0].innerHTML).to.contain('yes');
     expect(footerEls[1].innerHTML).to.contain('very much');
-  })
+  }))
 
 })

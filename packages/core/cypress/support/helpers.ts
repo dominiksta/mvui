@@ -54,3 +54,37 @@ export function mount<T extends HTMLElement>(klass: { new(): T }): T {
   container.appendChild(comp);
   return comp;
 }
+
+/**
+   The fact that this function has to exist is a bit stupid. Without wrapping every single
+   test in this function (`it('testname', attempt(() => { <test code here> }))`), when an
+   error is thrown, you cannot get a properly source mapped trace in the console in
+   firefox. This is because cypress apparently catches all errors and when you click
+   "print to console", it will print the trace as a string in a format that only
+   chrome/electron understands instead of just printing the error object - for some
+   reason.
+
+   This also applies to cypress events like with `cy.on('uncaught:exception', ..)` or
+   equivalent global listeners. Maybe there is some fancy mocha thing where you can wrap
+   an entier suite but if so its not exactly obvious.
+ */
+export function attempt(
+  this: any,
+  cb: Mocha.Func | Mocha.AsyncFunc | undefined
+): (done: Mocha.Done) => any {
+  return (done) => {
+    if (typeof cb === 'undefined') return;
+    try {
+      const ret = (cb as any)();
+      if (ret instanceof Promise) {
+        ret.then(() => done());
+      } else {
+        done();
+      }
+      return;
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  }
+}
