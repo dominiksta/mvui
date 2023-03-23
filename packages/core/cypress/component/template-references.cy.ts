@@ -1,4 +1,5 @@
 import { Component, h } from "$thispkg";
+import { sleep } from "$thispkg/util/time";
 import { attempt, mount, waitFrame } from "../support/helpers";
 
 class TemplateReferencesTest1 extends Component {
@@ -52,7 +53,7 @@ class TemplateReferencesTest2 extends Component {
 TemplateReferencesTest2.register();
 
 describe('Template References', function() {
-  it('kinda work', attempt(async () => {
+  it('queries', attempt(async () => {
     const comp1 = mount(TemplateReferencesTest1);
     const comp2 = mount(TemplateReferencesTest2);
 
@@ -67,5 +68,36 @@ describe('Template References', function() {
       expect(li.innerText).to.be.eq('');
       expect(li.style.textDecoration).to.be.eq('');
     }
+  }));
+
+  it('ref field in template element creator', attempt(async () => {
+    class TemplateReferencesTestRef extends Component {
+
+      render() {
+        const myRef = this.ref<HTMLElement>();
+
+        try {
+          myRef.current.innerText = 'itsame 3';
+          throw new Error('Should not be reached');
+        } catch (e) {
+          expect((e as Error).message).to.contain(
+            'reference currently does not resolve to anything'
+          );
+        }
+
+        this.onRender(async () => {
+          myRef.current.innerText = 'itsame 2';
+        });
+
+        return [
+          h.div({ ref: myRef }, 'itsame')
+        ]
+      }
+    }
+    TemplateReferencesTestRef.register();
+
+    const comp = mount(TemplateReferencesTestRef);
+    await waitFrame();
+    expect((await comp.query('div')).innerText).to.be.eq('itsame 2');
   }));
 })

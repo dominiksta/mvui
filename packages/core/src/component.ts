@@ -299,7 +299,7 @@ export default abstract class Component<
         this, this[STYLE_OVERRIDES], 'mvui-instance-styles-overrides'
       );
 
-    for (let ref of this.templateRefs) ref.resolve(ref.query());
+    for (let ref of this.queryRefs) ref.resolve(ref.query());
 
     this.attrReflectionObserver.observe(this, { attributes: true });
 
@@ -665,6 +665,14 @@ export default abstract class Component<
         }
       }
 
+      if (el.params.ref) {
+        const value = el.params.ref;
+        if (!('id' in value)) throw new Error('Invalid template reference object');
+        this.templateRefs.find(
+          el => el.id === (value as any).id
+        )!.current = thisEl;
+      }
+
       if (el.params.style) {
         for (let key in el.params.style) {
           const val = el.params.style[key]!;
@@ -796,10 +804,60 @@ export default abstract class Component<
   }
 
   // ----------------------------------------------------------------------
-  // template references (aka querySelector/All)
+  // template references
   // ----------------------------------------------------------------------
 
   private templateRefs: {
+    id: Symbol,
+    current?: HTMLElement,
+  }[] = [];
+  // private TEMPLATE_REF_MARKER = Symbol();
+
+  /**
+     Get a reference to an element in the template as a promise that will be resolved on
+     render.
+
+     @example
+     ```typescript
+     class TemplateReferences extends Component {
+
+       render() {
+         const myRef = this.ref<HTMLElement>();
+
+         this.onRender(async () => {
+           myRef.current.innerText = 'itsame 2';
+         });
+
+         return [ h.div({ ref: myRef }, 'itsame') ]
+       }
+     }
+     ```
+   */
+  ref<T extends HTMLElement = any>(): { current: T } {
+    const ret = {
+      id: Symbol(),
+    };
+    Object.defineProperty(ret, 'current', {
+      get: () => {
+        const found = this.templateRefs.find(el => el.id === ret.id);
+        if (!found?.current)
+          throw new Error(
+            'Template reference currently does not resolve to anything.' +
+            ' Try only dereferencing when the component is rendered.'
+          )
+        else return found?.current;
+      },
+      // configurable: true,
+    })
+    this.templateRefs.push({ id: ret.id, current: undefined });
+    return ret as any;
+  }
+
+  // ----------------------------------------------------------------------
+  // queries
+  // ----------------------------------------------------------------------
+
+  private queryRefs: {
     resolve: (value: any) => void, query: () => any
   }[] = [];
 
@@ -818,7 +876,7 @@ export default abstract class Component<
     };
     if (this.lifecycleState === "rendered") return queryFun();
     return new Promise<T>(resolve => {
-      this.templateRefs.push({ resolve, query: queryFun });
+      this.queryRefs.push({ resolve, query: queryFun });
     });
   }
 
@@ -841,7 +899,7 @@ export default abstract class Component<
     };
     if (this.lifecycleState === "rendered") return queryFun();
     return new Promise(resolve => {
-      this.templateRefs.push({ resolve, query: queryFun });
+      this.queryRefs.push({ resolve, query: queryFun });
     });
   }
 

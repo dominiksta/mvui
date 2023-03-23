@@ -167,4 +167,6 @@ export type TemplateElementParams<
     [Property in keyof Props]:
     MaybeStream<Props[Property]>
   }>
+
+  ref?: { current: HTMLElement },
 };
