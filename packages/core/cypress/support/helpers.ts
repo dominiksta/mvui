@@ -73,7 +73,6 @@ export function attempt(
   cb: Mocha.Func | Mocha.AsyncFunc | undefined
 ): (done: Mocha.Done) => any {
   return (done) => {
-    if (typeof cb === 'undefined') return;
     try {
       const ret = (cb as any)();
       if (ret instanceof Promise) {
@@ -83,7 +82,7 @@ export function attempt(
       }
       return;
     } catch (e) {
-      console.log(e);
+      console.error(e);
       throw e;
     }
   }

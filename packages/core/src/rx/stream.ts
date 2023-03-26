@@ -14,8 +14,8 @@ export type OperatorFunction<InputT, ResultT> =
   (stream: Stream<InputT>) => Stream<ResultT>;
 
 /**
- * A potentially asynchronous series of values which can be subscribed to for basic
- * reactive programming.
+ * A potentially asynchronous series of values which can be subscribed to for reactive
+ * programming.
  */
 export default class Stream<T> {
 
@@ -57,9 +57,12 @@ export default class Stream<T> {
     try {
       const subscriber: Observer<T> = {
         next: observer.next.bind(observer),
-        error: observer.error.bind(observer),
+        error: e => {
+          if (!this.completed) observer.error(e);
+        },
         complete: () => {
           observer.complete();
+          this.completed = true;
           subscriber.next = _ => undefined;
         },
       }

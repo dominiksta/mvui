@@ -15,6 +15,7 @@ module.exports = {
   devtool: 'inline-source-map',
   devServer: {
     hot: true,
+    static: path.resolve(__dirname, 'cypress/support/static'),
     host: '127.0.0.1',
   },
   module: {

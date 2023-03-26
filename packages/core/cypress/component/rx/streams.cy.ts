@@ -70,6 +70,27 @@ context('Reactivity', () => {
       expect(result).to.deep.eq([2, 3]);
     }))
 
+    it('complete before error', attempt(() => {
+      const stream = new rx.Stream<number>(observer => {
+        observer.next(1);
+        observer.next(2);
+        observer.complete();
+        throw new Error('err');
+        observer.next(3);
+      })
+
+      let result: number[] = [];
+      let completed = false;
+      stream.map(v => v + 1).subscribe({
+        next(v) { result.push(v); },
+        complete() { completed = true; }
+      });
+
+      expect(completed).to.be.true;
+      expect(result.length).to.eq(2);
+      expect(result).to.deep.eq([2, 3]);
+    }))
+
 
     it('streams are unicast', attempt(() => {
       let resource = 0;
