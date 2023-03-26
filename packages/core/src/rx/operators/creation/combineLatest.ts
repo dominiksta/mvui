@@ -1,7 +1,7 @@
 import Stream from "../../stream";
 
 /** @ignore */
-export default function fromLatest<T extends any[]>(
+export default function combineLatest<T extends any[]>(
   sources: [...{ [K in keyof T]: Stream<T[K]> }]
 ): Stream<T>;
 
@@ -12,12 +12,12 @@ export default function fromLatest<T extends any[]>(
  * @example
  * ```ts
  * const [counter, multiplier] = [new State(2), new State(2)];
- * const sum = fromLatest(counter, multiplier).map([c, m] => c * m);
+ * const sum = combineLatest(counter, multiplier).map([c, m] => c * m);
  * sum.subscribe(console.log); // => 4
  * counter.next(3); // => 6
  * ```
  */
-export default function fromLatest<T extends any[]>(
+export default function combineLatest<T extends any[]>(
   ...sources: [...{ [K in keyof T]: Stream<T[K]> }]
 ): Stream<T>;
 
@@ -28,29 +28,29 @@ export default function fromLatest<T extends any[]>(
  * @example
  * ```ts
  * const [counter, multiplier] = [new State(2), new State(2)];
- * const sum = fromLatest({c: counter, m: multiplier}).map(v => v.c * v.m);
+ * const sum = combineLatest({c: counter, m: multiplier}).map(v => v.c * v.m);
  * sum.subscribe(console.log); // => 4
  * counter.next(3); // => 6
  * ```
  */
-export default function fromLatest<T extends { [key: string]: Stream<any> }>(
+export default function combineLatest<T extends { [key: string]: Stream<any> }>(
   sources: T
 ): Stream<{ [K in keyof T]: T[K] extends Stream<infer I> ? I : never }>;
 
-export default function fromLatest(
+export default function combineLatest(
   ...args: any[]
 ): any {
-  if (args[0] instanceof Array) { // fromLatest([obs1$, obs2$])
-    return _fromLatestArr(args[0]);
-  } else if (args.length > 1) { // fromLatest(obs1$, obs2$)
-    return _fromLatestArr(args);
-  } else { // fromLatest({o1: obs1$, o2: obs2$})
-    return _fromLatestObj(args[0]);
+  if (args[0] instanceof Array) { // combineLatest([obs1$, obs2$])
+    return _combineLatestArr(args[0]);
+  } else if (args.length > 1) { // combineLatest(obs1$, obs2$)
+    return _combineLatestArr(args);
+  } else { // combineLatest({o1: obs1$, o2: obs2$})
+    return _combineLatestObj(args[0]);
   }
 }
 
-// implementation for first fromLatest override
-function _fromLatestArr<T extends any[]>(
+// implementation for first combineLatest override
+function _combineLatestArr<T extends any[]>(
   sources: [...{ [K in keyof T]: Stream<T[K]> }]
 ): Stream<T> {
   return new Stream(observer => {
@@ -67,8 +67,8 @@ function _fromLatestArr<T extends any[]>(
   });
 }
 
-// implementation for second fromLatest override
-function _fromLatestObj<T extends { [key: string]: Stream<any> }>(
+// implementation for second combineLatest override
+function _combineLatestObj<T extends { [key: string]: Stream<any> }>(
   sources: T
 ): Stream < { [K in keyof T]: T[K] extends Stream<infer I> ? I : never } > {
   return new Stream(observer => {

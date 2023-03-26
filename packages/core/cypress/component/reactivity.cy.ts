@@ -5,7 +5,7 @@ describe('reactive templates', () => {
   class CounterComponent extends Component {
     private count = new rx.State(0);
     private multiplier = new rx.State(1);
-    private sum = rx.fromLatest(this.count, this.multiplier);
+    private sum = rx.combineLatest(this.count, this.multiplier);
 
     render = () => [
       h.fieldset([

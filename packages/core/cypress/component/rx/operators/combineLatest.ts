@@ -14,17 +14,16 @@ export const testFromLatest = () => attempt(() => {
     multiplier.next(5);
   }
 
-  const sumObj = rx.fromLatest(
-    { c: counter, m: multiplier }
+  const sumObj = rx.combineLatest({ c: counter, m: multiplier }
   ).map(v => v.c * v.m);
   testSum(sumObj);
 
-  const sumArr1 = rx.fromLatest(
+  const sumArr1 = rx.combineLatest(
     [counter, multiplier]
   ).map(([counter, multiplier]) => counter * multiplier);
   testSum(sumArr1);
 
-  const sumArr2 = rx.fromLatest(
+  const sumArr2 = rx.combineLatest(
     counter, multiplier
   ).map(([counter, multiplier]) => counter * multiplier);
   testSum(sumArr2);

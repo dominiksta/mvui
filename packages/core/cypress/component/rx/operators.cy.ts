@@ -1,8 +1,8 @@
-import { testFromLatest } from './operators/fromLatest';
+import { testFromLatest } from './operators/combineLatest';
 import { testIfElese } from './operators/ifelse';
 
 describe('operators', () => {
-  it('fromLatest', testFromLatest());
+  it('combineLatest', testFromLatest());
   it('ifelse', testIfElese());
 })
 
