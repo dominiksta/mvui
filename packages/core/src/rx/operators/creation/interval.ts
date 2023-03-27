@@ -5,9 +5,12 @@ import Stream from "../../stream";
  */
 export default function interval(
   ms: number
-): Stream<void> {
+): Stream<number> {
   return new Stream(observer => {
-    const interval = setInterval(observer.next.bind(observer), ms);
+    let iteration = 0;
+    const interval = setInterval(() => {
+      observer.next(iteration++);
+    }, ms);
 
     return function teardown() {
       clearInterval(interval);
