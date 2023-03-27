@@ -38,6 +38,20 @@ context('Reactivity', () => {
       expect(result).to.deep.eq([2, 3]);
     }))
 
+    it('unsubscribe cancels further emissions', attempt(async () => {
+      let values: number[] = [];
+      const unsub = new rx.Stream<number>(observer => {
+        observer.next(1);
+        sleep(300).then(() => observer.next(2));
+      }).subscribe(v => values.push(v));
+
+      expect(values).to.deep.eq([1]);
+      unsub();
+      await sleep(400);
+      expect(values).to.deep.eq([1]);
+    }))
+
+
     it('error handling', attempt(() => {
       const obs$ = new rx.Stream<number>(observer => {
         observer.next(1);

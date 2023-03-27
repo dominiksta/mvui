@@ -19,8 +19,6 @@ export type OperatorFunction<InputT, ResultT> =
  */
 export default class Stream<T> {
 
-  protected completed = false;
-
   constructor(
     private definition: (observer: Observer<T>) => TeardownLogic
   ) { }
@@ -54,19 +52,25 @@ export default class Stream<T> {
 
   /** @ignore */
   protected _subscribe(observer: Observer<T>): TeardownLogic {
+    let completed = false;
     try {
       const subscriber: Observer<T> = {
-        next: observer.next.bind(observer),
+        next: v => {
+          if (!completed) observer.next(v);
+        },
         error: e => {
-          if (!this.completed) observer.error(e);
+          if (!completed) observer.error(e);
         },
         complete: () => {
           observer.complete();
-          this.completed = true;
-          subscriber.next = _ => undefined;
+          completed = true;
         },
       }
-      return this.definition(subscriber);
+      const teardown = this.definition(subscriber);
+      return () => {
+        if (teardown) teardown();
+        subscriber.complete();
+      };
     } catch (e) {
       observer.error(e);
     }

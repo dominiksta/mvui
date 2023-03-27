@@ -46,6 +46,7 @@ import Stream, { Observer } from "./stream";
  */
 export default class MulticastStream<T> extends Stream<T> implements Observer<T> {
 
+  protected completed = false;
   protected observers: Observer<T>[] = [];
 
   constructor() {
