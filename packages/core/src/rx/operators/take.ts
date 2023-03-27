@@ -20,7 +20,7 @@ export default function take<T>(amount: number): OperatorFunction<T, T> {
         emitted++;
         observer.next(v);
         if (emitted === amount) {
-          console.log('take: complete');
+          // console.debug('take: complete');
           observer.complete(); 
         }
       }

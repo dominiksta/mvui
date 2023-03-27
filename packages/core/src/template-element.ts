@@ -88,7 +88,7 @@ export class TemplateElement<
       'prototype' in tagNameOrCreator
       && tagNameOrCreator.prototype instanceof HTMLElement
     ) {
-      console.log(tagNameOrCreator);
+      // console.debug(tagNameOrCreator);
       creator = () => new (tagNameOrCreator as any)();
     } else {
       creator = tagNameOrCreator as any;
