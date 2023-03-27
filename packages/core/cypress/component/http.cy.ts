@@ -1,6 +1,6 @@
-import { rx } from "$thispkg";
+import { http, rx } from "$thispkg";
 import { sleep } from "$thispkg/util/time";
-import { attempt } from "../../../support/helpers";
+import { attempt } from "../support/helpers";
 
 context('Reactivity', () => {
   
@@ -37,6 +37,28 @@ context('Reactivity', () => {
       });
 
     }))
+
+    it('switchMap with http.get', attempt(async () => {
+
+      let values: number[] = [];
+      rx.interval(200).pipe(
+        rx.take(3),
+        rx.switchMap(iter =>
+          http.get<number[]>('/first-takes-longer').pipe(
+            rx.map(resp => {
+              // console.log(resp.body);
+              return resp.body.map(el => el + iter)
+            })
+          )
+        ),
+      ).subscribe(v => v.forEach(v => values.push(v)));
+
+      await sleep(800);
+
+      expect(values).to.deep.eq([2, 3, 4, 3, 4, 5])
+
+    }))
+
 
   })
 })

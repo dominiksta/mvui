@@ -1,7 +1,7 @@
 import Stream from "../../stream";
 
 /**
-   A thin wrapper around `fetch`. Functionally equivalent to `rx.of(fetch(...)`, but
+   A thin wrapper around `fetch`. Functionally equivalent to `rx.from(fetch(...)`, but
    requests will be cancelled on completion.
 
    @example
