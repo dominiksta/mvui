@@ -4,7 +4,7 @@ import { OperatorFunction, _BasicOperators } from "../stream";
  * Create a new Stream where values are transformed according to `mapper`.
  */
 export function map<T, ReturnT>(
-  mapper: (value: T) => ReturnT
+  mapper: (value: T, index: number) => ReturnT
 ): OperatorFunction<T, ReturnT> {
   return _BasicOperators.map(mapper);
 }

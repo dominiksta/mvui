@@ -183,12 +183,13 @@ export default class Stream<T> {
  */
 export const _BasicOperators = {
   map: function <T, ReturnT>(
-    mapper: (value: T) => ReturnT
+    mapper: (value: T, index: number) => ReturnT
   ): OperatorFunction<T, ReturnT> {
     return orig => new Stream(observer => {
+      let index = 0;
       return orig.subscribe({
         ...observer,
-        next: v => { observer.next(mapper(v)) },
+        next: v => { observer.next(mapper(v, index++)) },
       });
     })
   },

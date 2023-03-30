@@ -39,8 +39,6 @@ export default function switchMap<T, O>(
       }
     });
 
-    return () => {
-      unsubOrig();
-    }
+    return unsubOrig;
   });
 }

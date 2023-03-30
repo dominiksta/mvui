@@ -26,8 +26,6 @@ export default function take<T>(amount: number): OperatorFunction<T, T> {
       }
     });
 
-    return () => {
-      unsub();
-    }
+    return unsub;
   })
 }
