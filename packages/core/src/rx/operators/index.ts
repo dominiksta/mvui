@@ -7,3 +7,4 @@ export { default as catchError } from "./catch-error";
 export { default as take } from "./take";
 export { default as retry } from "./retry";
 export { default as switchMap } from "./switchMap";
+export { default as scan } from "./scan";
