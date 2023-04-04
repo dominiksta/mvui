@@ -6,12 +6,14 @@ import { testRetry } from './operators/retry';
 import { testScan } from './operators/scan';
 import { testSwitchMap } from './operators/switchMap';
 import { testTake } from './operators/take';
+import { testTakeUntil } from './operators/takeUntil';
 
 describe('operators', () => {
   it('combineLatest', testFromLatest());
   it('ifelse', testIfElese());
   it('catchError', testCatchError());
   it('take', testTake());
+  it('takeUntil', testTakeUntil());
   it('scan', testScan());
   it('debounce', testDebounce());
   it('retry', testRetry());
