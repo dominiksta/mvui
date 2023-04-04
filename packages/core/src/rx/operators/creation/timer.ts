@@ -5,5 +5,5 @@ import take from "../take";
 
 /** The stream equivalent of a setTimeout. */
 export default function timer(due: number | Date) {
-  return new Stream<null>(obs => { obs.next(null) }).pipe(delay(due), take(1));
+  return new Stream<void>(obs => { obs.next() }).pipe(delay(due), take(1));
 }
