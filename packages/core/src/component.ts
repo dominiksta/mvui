@@ -5,12 +5,11 @@ import {
 } from "./template-element";
 import { Constructor, MaybeStream } from "./util/types";
 import {
-  Stream, State, Prop, Context,
-  fromAllEvents, fromEvent, map, distinctUntilChanged, skip
+  Stream, State, Prop, Context, fromAllEvents, fromEvent, map,
+  distinctUntilChanged, skip, MulticastStream, throttleTime, debounceTime
 } from "./rx";
 import { camelToDash } from "./util/strings";
 import { MVUI_GLOBALS } from "./globals";
-import { throttle } from "./util/time";
 import * as style from "./style";
 import { isBinding } from "./rx/bind";
 
@@ -267,7 +266,7 @@ export default abstract class Component<
   }
 
   private connectedCallback() {
-    MVUI_GLOBALS.APP_DEBUG && this.flash('green');
+    MVUI_GLOBALS.APP_DEBUG && this.flash.next('green');
 
     (this.shadowRoot || this).innerHTML = '';
 
@@ -306,6 +305,7 @@ export default abstract class Component<
     this._subscribe(this.styles, styles =>
       style.util.applySheetAsStyleTag(this, styles, 'mvui-instance-styles')
     );
+    this.setupFlash();
 
     this.lifecycleState = "rendered"; this._lifecycleHooks.render.forEach(f => f());
   }
@@ -313,7 +313,7 @@ export default abstract class Component<
   private disconnectedCallback() {
     this.lifecycleState = "removed"; this._lifecycleHooks.removed.forEach(f => f());
     this.attrReflectionObserver.disconnect();
-    MVUI_GLOBALS.APP_DEBUG && this.flash('red');
+    MVUI_GLOBALS.APP_DEBUG && this.flash.next('red');
   }
 
   /**
@@ -420,7 +420,7 @@ export default abstract class Component<
 
   private _subscribe<T>(obs: Stream<T>, observer: ((value: T) => void)) {
     this.onRemoved(obs.subscribe(v => {
-      if (MVUI_GLOBALS.APP_DEBUG) this.flash();
+      if (MVUI_GLOBALS.APP_DEBUG) this.flash.next();
       return observer(v)
     }));
   }
@@ -429,17 +429,23 @@ export default abstract class Component<
   // debugging
   // ----------------------------------------------------------------------
 
-  private flash = throttle((color = "blue") => {
-    const prevOutline = this.style.outline;
-    this.style.outline = `1px solid ${color}`;
-    setTimeout(
-      () => {
-        this.style.outline = prevOutline;
-        if (this.getAttribute('style') === '') this.removeAttribute('style');
-      },
-      400
-    );
-  }, 500);
+  private flash = new MulticastStream<string | void>();
+  private setupFlash() {
+    let prevOutline = this.style.outline;
+    let isFlashing = false;
+    this.onRemoved(this.flash.pipe(throttleTime(100)).subscribe(color => {
+      if (!color) color = 'blue';
+      if (!isFlashing) {
+        prevOutline = this.style.outline;
+        isFlashing = true;
+      }
+      this.style.outline = `1px solid ${color}`;
+    }));
+    this.onRemoved(this.flash.pipe(debounceTime(400)).subscribe(_ => {
+      this.style.outline = prevOutline;
+      isFlashing = false;
+    }));
+  }
 
   // ----------------------------------------------------------------------
   // events

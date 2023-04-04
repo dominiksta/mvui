@@ -7,6 +7,7 @@ import { testScan } from './operators/scan';
 import { testSwitchMap } from './operators/switchMap';
 import { testTake } from './operators/take';
 import { testTakeUntil } from './operators/takeUntil';
+import { testThrottle } from './operators/throttle';
 
 describe('operators', () => {
   it('combineLatest', testFromLatest());
@@ -16,6 +17,7 @@ describe('operators', () => {
   it('takeUntil', testTakeUntil());
   it('scan', testScan());
   it('debounce', testDebounce());
+  it('throttle', testThrottle());
   it('retry', testRetry());
   it('switchMap', testSwitchMap());
 })

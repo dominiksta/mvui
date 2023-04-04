@@ -42,8 +42,13 @@ export function debounce<T>(
      rx.debounceTime(100)
    ).subscribe(console.log);
 
-   // will only print events every 100 ms
+   // will only print *after no events where fired for 100 ms*
    ```
+
+   ## See Also
+   - {@link debounce}
+   - {@link throttleTime}
+   - https://web.archive.org/web/20220117092326/http://demo.nimius.net/debounce_throttle/
  */
 export function debounceTime<T>(
   ms: number, emitFirst: boolean = false,
