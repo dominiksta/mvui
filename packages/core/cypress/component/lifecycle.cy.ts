@@ -5,16 +5,26 @@ const lifecycle = new rx.State<string>('initial');
 
 class LifecycleTestComponent extends Component {
 
-  render() {
-    this.onAdded(() => lifecycle.next('added'));
-    this.onRender(() => lifecycle.next('render'));
-    this.onRemoved(() => lifecycle.next('removed'));
+  stickyCounter = new rx.State(100);
 
+  render() {
     const counter = new rx.State(0);
 
+    lifecycle.next('added');
+    this.onRendered(() => lifecycle.next('rendered'));
+    this.onRemoved(() => lifecycle.next('removed'));
+
     return [
-      h.button({ events: { click: _ => counter.next(c => c + 1)} }),
-      h.div(counter),
+      h.button({
+        fields: { id: 'inc' },
+        events: { click: _ => counter.next(c => c + 1)},
+      }),
+      h.button({
+        fields: { id: 'incSticky' },
+        events: { click: _ => this.stickyCounter.next(c => c + 1)},
+      }),
+      h.div({ fields: { id: 'display' }}, counter),
+      h.div({ fields: { id: 'displaySticky' }}, this.stickyCounter),
     ];
   }
 }
@@ -33,33 +43,45 @@ describe('lifecycle', () => {
 
     doc.appendChild(comp);
 
-    let btn = await comp.query('button');
-    let counterDiv = await comp.query('div');
+    let btn           = await comp.query('#inc');
+    let btnSticky     = await comp.query('#incSticky');
+    let display       = await comp.query('#display');
+    let displaySticky = await comp.query('#displaySticky');
 
-    expect(lifecycles).to.deep.eq(['added', 'render']);
-    expect(counterDiv.innerText).to.be.eq('0');
+    expect(lifecycles).to.deep.eq(['added', 'rendered']);
+    expect(display.innerText).to.be.eq('0');
+    expect(displaySticky.innerText).to.be.eq('100');
 
-    btn.click(); expect(counterDiv.innerText).to.be.eq('1');
-    btn.click(); expect(counterDiv.innerText).to.be.eq('2');
+    btn.click(); expect(display.innerText).to.be.eq('1');
+    btn.click(); expect(display.innerText).to.be.eq('2');
+
+    btnSticky.click(); expect(displaySticky.innerText).to.be.eq('101');
+    btnSticky.click(); expect(displaySticky.innerText).to.be.eq('102');
 
     doc.removeChild(comp);
 
-    expect(lifecycles).to.deep.eq(['added', 'render', 'removed']);
+    expect(lifecycles).to.deep.eq(['added', 'rendered', 'removed']);
 
-    expect(counterDiv.innerText).to.be.eq('2');
+    expect(display.innerText).to.be.eq('2');
 
+    console.log(lifecycles);
     doc.appendChild(comp);
 
+    console.log(lifecycles);
     expect(lifecycles).to.deep.eq([
-      'added', 'render', 'removed', 'added', 'render'
+      'added', 'rendered', 'removed', 'added', 'rendered'
     ]);
 
-    btn = await comp.query('button');
-    counterDiv = await comp.query('div');
+    btn           = await comp.query('#inc');
+    btnSticky     = await comp.query('#incSticky');
+    display       = await comp.query('#display');
+    displaySticky = await comp.query('#displaySticky');
 
-    expect(counterDiv.innerText).to.be.eq('2');
+    expect(display.innerText).to.be.eq('0');
+    expect(displaySticky.innerText).to.be.eq('102');
 
-    btn.click(); expect(counterDiv.innerText).to.be.eq('3');
+    btn.click(); expect(display.innerText).to.be.eq('1');
+    btnSticky.click(); expect(displaySticky.innerText).to.be.eq('103');
   }));
 
 })

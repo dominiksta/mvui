@@ -7,6 +7,7 @@ title: ""
 ## Example
 
 {{<codeview>}}
+```typescript
 import { Component, rx } from "@mvui/core";
 import * as std from "@mvui/stdlib";
 
@@ -19,6 +20,7 @@ export default class Example extends Component {
     ];
   }
 }
+```
 {{</codeview>}}
 
 ## Description

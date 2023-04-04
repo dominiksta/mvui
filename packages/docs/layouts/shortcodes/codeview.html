@@ -1,4 +1,8 @@
 <app-codeview output-height="{{ .Get "output-height" }}"
               style="white-space: pre; font-family: Ubuntu Mono">
-  {{ .Inner }}
+    {{- range $val := (split .Inner "\n")}}
+      {{- if (not (strings.HasPrefix $val "```"))}}
+{{$val}}
+      {{- end}}
+    {{- end}}
 </app-codeview>

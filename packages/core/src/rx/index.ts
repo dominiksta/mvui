@@ -50,3 +50,4 @@ export { derive, DerivedState } from "./derived-state";
 export { default as Prop } from "./prop";
 export { default as bind } from "./bind";
 export { default as Context } from "./context";
+export { default as EMPTY } from "./empty";

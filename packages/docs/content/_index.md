@@ -10,6 +10,7 @@ bookToC: false
 </div>
 
 {{<codeview>}}
+```typescript
 import { Component, rx, h } from "@mvui/core";
 
 export default class CounterComponent extends Component {
@@ -25,6 +26,7 @@ export default class CounterComponent extends Component {
     ];
   }
 }
+```
 {{</codeview>}}
 
 <p style="text-align: center">

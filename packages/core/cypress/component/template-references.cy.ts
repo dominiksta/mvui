@@ -8,7 +8,7 @@ class TemplateReferencesTest1 extends Component {
   private listEls = this.queryAll<HTMLParagraphElement>('.myListEl');
 
   render() {
-    this.onRender(async () => {
+    this.onRendered(async () => {
       (await this.paragraphEl).innerText = 'Programatically added content';
       for (let el of Array.from(await this.listEls)) {
         el.innerText = 'Multiple query';
@@ -85,7 +85,7 @@ describe('Template References', function() {
           );
         }
 
-        this.onRender(async () => {
+        this.onRendered(async () => {
           myRef.current.innerText = 'itsame 2';
         });
 

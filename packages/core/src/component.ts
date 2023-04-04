@@ -218,7 +218,7 @@ export default abstract class Component<
       this.attachShadow({mode: 'open'});
     }
 
-    this.lifecycleState = "created"; this._lifecycleHooks.created.forEach(f => f());
+    this.lifecycleState = "created";
   }
 
   static register() {
@@ -248,30 +248,16 @@ export default abstract class Component<
   // ----------------------------------------------------------------------
 
   private _lifecycleHooks: {
-    created: (() => any)[], added: (() => any)[],
     render: (() => any)[], removed: (() => any)[],
   } = {
-    created: [], added: [], render: [], removed: []
-  }
-
-  /** Run a given function right at the end of construction. */
-  protected onCreated(callback: () => any) {
-    this._lifecycleHooks.created.push(callback);
-  }
-
-  /**
-   * Run a given function when the component is added to the DOM, but before it is
-   * rendered.
-   */
-  protected onAdded(callback: () => any) {
-    this._lifecycleHooks.added.push(callback);
+    render: [], removed: []
   }
 
   /**
    * Run a given function when the component is done rendering. A render happens each time
      the component is added to the DOM.
    */
-  protected onRender(callback: () => any) {
+  protected onRendered(callback: () => any) {
     this._lifecycleHooks.render.push(callback);
   }
 
@@ -285,8 +271,9 @@ export default abstract class Component<
 
     (this.shadowRoot || this).innerHTML = '';
 
-    if (this._template === undefined) this._template = this.render();
-    this.lifecycleState = "added"; this._lifecycleHooks.added.forEach(f => f());
+    this._lifecycleHooks = { removed: [], render: [] };
+    this._template = this.render();
+    this.lifecycleState = "added";
     for (let el of this._template) {
       (this.shadowRoot || this).appendChild(this._renderTemplate(el));
     }
@@ -824,7 +811,7 @@ export default abstract class Component<
        render() {
          const myRef = this.ref<HTMLElement>();
 
-         this.onRender(async () => {
+         this.onRendered(async () => {
            myRef.current.innerText = 'itsame 2';
          });
 

@@ -1,5 +1,6 @@
 import { Component, h, rx, define, style } from '@mvui/core';
-import 'https://unpkg.com/@babel/standalone/babel.min.js'; // TODO
+// import 'https://unpkg.com/@babel/standalone/babel.min.js'; // TODO
+import Babel from 'https://esm.sh/@babel/standalone@7.21.4/babel.min.js';
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));

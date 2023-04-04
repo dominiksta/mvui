@@ -40,7 +40,7 @@ export default class Codeview extends Component {
   render() {
     const editorChange = new rx.State('');
 
-    this.onRender(async () => {
+    this.onRendered(async () => {
       const slot = await this.query('#slot');
 
       let text = slot.children[0].assignedNodes()[0].data;

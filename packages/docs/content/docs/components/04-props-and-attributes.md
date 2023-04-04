@@ -23,6 +23,7 @@ ease of debugging (you can see the attributes in your browsers devtools) or if y
 your component to be used outside of Mvui.
 
 {{<codeview>}}
+```typescript
 import { Component, rx, h, define } from "@mvui/core";
 
 class MyButton extends Component {
@@ -55,6 +56,5 @@ export default class Main extends Component {
     ]
   }
 }
-
-
+```
 {{</codeview>}}
