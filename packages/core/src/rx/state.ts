@@ -25,10 +25,13 @@ export default class State<T> extends MulticastStream<T> {
   /** The current value/state */
   get value() { return this._value }
 
-  constructor(initialValue: T) {
+  constructor(private initialValue: T) {
     super();
     this._value = initialValue;
   }
+
+  /** Reset state to initial value */
+  reset() { this.next(this.initialValue); }
 
   /** @ignore */
   protected override _subscribe(observer: Observer<T>) {
