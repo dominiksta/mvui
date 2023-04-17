@@ -1,25 +1,39 @@
 import { RecursivePartial } from "./types";
 
-export function arrayCompare<T>(arr1: Array<T>, arr2: Array<T>): boolean {
-  if (arr1.length !== arr2.length) return false;
-  for (let i = 0, l = arr1.length; i < l; i++) {
-    // Check if we have nested arrays
-    if (arr1[i] instanceof Array && arr2[i] instanceof Array) {
-      // recurse into the nested arrays
-      if (!arrayCompare(arr1[i] as any, arr2[i] as any))
-        return false;
-    }
-    else if (arr1[i] != arr2[i]) {
-      return false;
-    }
-  }
-  return true;
-}
+/**
+   "Patch" (partially update) a given object `obj` with antother object `patch`. Useful
+   specifically for immutability, e.g. in the context of a {@link rx.Store}.
 
-export function uniq<T>(arr: Array<T>): Array<T> {
-  return arr.filter((el, index) => arr.indexOf(el) === index);
-}
+   @example
+   ```typescript
+   const patchee = {
+     hi: 4,
+     yes: {
+       deep: {
+         nesting: 'is cool',
+         otherProp: 7,
+       }
+     },
+   };
 
+   const patcher = {
+     hi: 2,
+     yes: { deep: { nesting: 'is funny' }}
+   };
+
+   console.log(patchObject(patchee, patcher));
+   // logs:
+   // {
+   //   hi: 2,
+   //   yes: {
+   //     deep: {
+   //       nesting: 'is funny',
+   //       otherProp: 7,
+   //     }
+   //   },
+   // }
+   ```
+ */
 export function patchObject<T extends object>(obj: T, patch: RecursivePartial<T>): T {
   const newObj = structuredClone(obj) as any;
 

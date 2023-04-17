@@ -1,6 +1,7 @@
 import memoizeOne from "./memoize-one";
 import { Derivable } from "./derivable";
-import Stream, { Observer } from "./stream";
+import Stream from "./stream";
+import { Observer } from "./interface";
 
 /**
    A `DerivedState` object derives state from an existing DerivedState or {@link State}

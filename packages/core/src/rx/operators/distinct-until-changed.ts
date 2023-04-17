@@ -6,23 +6,20 @@ import Stream, { OperatorFunction } from "../stream";
  */
 export default function distinctUntilChanged<T, SelectedT>(
   comparator: (
-    current: SelectedT, previous: SelectedT | typeof UNDEFINED
+    current: SelectedT, previous: SelectedT
   ) => boolean
     = (current, previous) => current === previous,
   keySelector: (value: T) => SelectedT
     = identity as (v: T) => SelectedT,
 ): OperatorFunction<T, T> {
   return orig => new Stream(observer => {
-    let previousValue: SelectedT | typeof UNDEFINED = UNDEFINED;
+    let previousValue: SelectedT | undefined;
     return orig.subscribe(v => {
       const selected = keySelector(v);
-      if (!comparator(selected, previousValue)) {
+      if (previousValue && !comparator(selected, previousValue)) {
         observer.next(v);
         previousValue = selected;
       }
     })
   })
 }
-
-// guaranteed unique value to identify initial values
-const UNDEFINED = Symbol();

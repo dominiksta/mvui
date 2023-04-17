@@ -1,8 +1,8 @@
 import { State, Stream } from '../rx';
 import { camelToDash } from '../util/strings';
-import { MvuiCSSRuleset, MvuiCSSSheet, sheet, util } from './general';
+import { MvuiCSSRuleset, util } from './general';
 
-type ThemeDef = { [key: string]: string };
+export type ThemeDef = { [key: string]: string };
 
 export function themeVariables<T extends ThemeDef>(
   libName: string, variables: T

@@ -1,4 +1,4 @@
-import { Observer } from "./stream";
+import { Observer } from "./interface";
 import MulticastStream from "./multicast-stream";
 import { derive, DerivedState } from "./derived-state";
 

@@ -1,14 +1,12 @@
 import { MvuiCSSSheet } from "./style";
 import { isSubscribable } from "./rx/interface";
-import { MaybeSubscribable } from "./util/types";
-
-type ToStringable = { toString: () => string };
+import { MaybeSubscribable, ToStringable } from "./util/types";
 
 export interface EventWithTarget<T extends HTMLElement> extends Event {
   target: T;
 }
 
-type GlobalEventHandlersEventMapWithTarget<T extends HTMLElement> =
+export type GlobalEventHandlersEventMapWithTarget<T extends HTMLElement> =
   Omit<GlobalEventHandlersEventMap, "change"> & { change: EventWithTarget<T> };
 
 export type TemplateElementCreator<

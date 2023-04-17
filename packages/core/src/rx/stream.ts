@@ -1,16 +1,5 @@
-import { Subscribable } from "./interface";
+import { Observer, ObserverDefinition, Subscribable, TeardownLogic } from "./interface";
 import { pipe } from "./util";
-
-type TeardownLogic = (() => void) | void;
-
-export type Observer<T> = {
-  next(value: T): void,
-  error(err: any): void,
-  complete(): void,
-}
-
-export type ObserverDefinition<T> =
-  Partial<Observer<T>> | ((value: T) => void) | void;
 
 export type OperatorFunction<InputT, ResultT> =
   (stream: Stream<InputT>) => Stream<ResultT>;

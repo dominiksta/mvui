@@ -519,7 +519,7 @@ export default abstract class Component<
   [PROVIDED_CONTEXTS] = new Map<Context<any>, any>();
 
   /**
-     Provide a given context in this component. See {@link Context} for details and an
+     Provide a given context in this component. See {@link rx.Context} for details and an
      example.
    */
   protected provideContext<T>(ctx: Context<T>): T {
@@ -532,11 +532,9 @@ export default abstract class Component<
     return state;
   }
 
-  /** @ignore */
   protected getContext<T>(ctx: Context<T>, force: false): T | null;
-  /** @ignore */
   protected getContext<T>(ctx: Context<T>, force?: true): T;
-  /** Get a given context. See {@link Context} for details and an example. */
+  /** Get a given context. See {@link rx.Context} for details and an example. */
   protected getContext<T>(ctx: Context<T>, force?: boolean): T | null {
     let parent = this.parentElement;
     while (true) {

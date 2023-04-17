@@ -61,7 +61,7 @@ export type MvuiCSSAtRuleBodyTMap = {
  * ```
  */
 export type MvuiCSSAtRule<BodyT extends 'sheet' | 'declarations' | 'none'> = {
-  marker: typeof AT_RULE,
+  marker: '__MVUI_AT_RULE__',
   identifier: string,
   parameters: string,
   body: {

@@ -9,6 +9,18 @@ export function isSubscribable<T>(input: unknown): input is Subscribable<T> {
   );
 }
 
+export type TeardownLogic = (() => void) | void;
+
+export type Observer<T> = {
+  next(value: T): void,
+  error(err: any): void,
+  complete(): void,
+}
+
+export type ObserverDefinition<T> =
+  Partial<Observer<T>> | ((value: T) => void) | void;
+
+
 // export interface Writable<T> extends Subscribable<T> {
 //   next(value: T): void;
 // }

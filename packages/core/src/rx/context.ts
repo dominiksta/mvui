@@ -1,3 +1,5 @@
+import type Component from "../component";
+
 /**
    Contexts are a way that components can share state (or any arbitrary object really)
    that is local to a component *and all its arbitrarily deeply nested children*. In that

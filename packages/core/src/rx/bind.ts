@@ -41,7 +41,7 @@ export type Binding<T> = { marker: typeof BIND_MARKER, value: State<T> };
    Note however that specifically when serializing from a number input, the resulting
    value may be NaN if a non parseable string was entered.
 
-   (You could also do this serialization manually by using {@link State#linked}.)
+   (You could also do this serialization manually by using {@link State#createLinked}.)
 
    ```typescript
    // ... in some component

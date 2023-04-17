@@ -1,4 +1,4 @@
-import { patchObject } from "$thispkg/util/datastructure";
+import { patchObject } from "$thispkg/util";
 
 describe('util', () => {
   it('patchObject simple', () => {

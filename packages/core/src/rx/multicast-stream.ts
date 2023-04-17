@@ -1,4 +1,5 @@
-import Stream, { Observer } from "./stream";
+import { Observer } from "./interface";
+import Stream from "./stream";
 
 /**
    A {@link Stream} that is *multicast*. A normal Stream is *unicast* in the sense that

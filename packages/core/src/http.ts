@@ -7,8 +7,8 @@ import from from "./rx/operators/creation/from";
    A simple HTTP client. When compared to a bare fetch, there are three main things
    added/changed:
 
-   1. It returns a {@link Stream}. This enables the easier use of higher order operators
-      like {@link switchMap}.
+   1. It returns a {@link rx.Stream}. This enables the easier use of higher order
+      operators like {@link rx.switchMap}.
    2. There is some basic convenience around parsing a json body and setting request path
       parameters.
    3. Instead of just silently failing and setting an `ok` value to false like fetch does,
@@ -41,7 +41,7 @@ import from from "./rx/operators/creation/from";
 
    Note that this example will *cancel unfinished requests and ensure that the emitted
    response always maps to the most current input value*. For more information on this
-   behaviour, have a look at the {@link switchMap} operator.
+   behaviour, have a look at the {@link rx.switchMap} operator.
  */
 export const http = {
   get: _get,
@@ -135,7 +135,7 @@ function _delete<ResponseT>(
 // generic request
 // ----------------------------------------------------------------------
 
-interface RequestOptions<ParseJsonT extends boolean> {
+export interface RequestOptions<ParseJsonT extends boolean> {
   pathParams?: { [key: string]: any },
   body?: string | object,
   parseBody?: ParseJsonT,

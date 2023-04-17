@@ -1,21 +1,21 @@
-import { Subscribable } from "./interface";
+import { ObserverDefinition, Subscribable } from "./interface";
 import { identity } from "../util/other";
 import { DerivedState } from "./derived-state";
 import MulticastStream from "./multicast-stream";
 import State, { LinkedState } from "./state";
-import Stream, { ObserverDefinition } from "./stream";
+import Stream from "./stream";
 import { RecursivePartial } from "../util/types";
 import { patchObject } from "../util/datastructure";
 
-type DefaultReducers<StateT> = {
+export type DefaultReducers<StateT> = {
   set: (current: StateT, payload: StateT) => StateT,
   patch: (current: StateT, payload: RecursivePartial<StateT>) => StateT,
   reset: (current: StateT) => StateT,
 };
 
-type ReducersT<ReducersT, StateT> = ReducersT & DefaultReducers<StateT>;
+export type ReducersT<ReducersT, StateT> = ReducersT & DefaultReducers<StateT>;
 
-type ReduceT<
+export type ReduceT<
   CustomReducersT extends {
     [key: string]: (current: StateT, payload: any) => StateT
   }, StateT
@@ -27,7 +27,7 @@ type ReduceT<
   ) => void
 };
 
-type EffectDefinition<
+export type EffectDefinition<
   CustomReducersT extends { [key: string]: (current: StateT, payload: any) => StateT },
   StateT,
   PayloadT
