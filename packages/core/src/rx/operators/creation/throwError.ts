@@ -2,6 +2,8 @@ import Stream from "../../stream";
 
 /**
    TODO
+
+   @group Stream Creation Operators
  */
 export default function throwError(
   errorOrFactory: Error | (() => Error),

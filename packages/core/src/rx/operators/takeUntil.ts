@@ -12,8 +12,8 @@ import Stream, { OperatorFunction } from "../stream";
    // will log 1, 2, 3, 4
    ```
 
-   ## See Also
-   - {@link take}
+   @group Stream Operators
+   @see {@link take}
  */
 export default function takeUntil<T>(notifier: Stream<any>): OperatorFunction<T, T> {
   return orig => new Stream(observer => {

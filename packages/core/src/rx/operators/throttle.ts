@@ -4,6 +4,8 @@ import { timer } from "./creation";
 /**
    Throttle emissions using `durationSelector`. Most of the time, you probably will want
    to use {@link throttleTime}, which see for more details and an example.
+
+   @group Stream Operators
  */
 export function throttle<T>(
   durationSelector: (value: T) => Stream<any>,
@@ -60,10 +62,11 @@ export function throttle<T>(
    // will only print events *every 100 ms*
    ```
 
-   ## See Also
-   - {@link throttle}
-   - {@link debounceTime}
-   - https://web.archive.org/web/20220117092326/http://demo.nimius.net/debounce_throttle/
+   @group Stream Operators
+
+   @see {@link throttle}
+   @see {@link debounceTime}
+   @see https://web.archive.org/web/20220117092326/http://demo.nimius.net/debounce_throttle/
  */
 export function throttleTime<T>(
   ms: number,

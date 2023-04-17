@@ -44,10 +44,8 @@ import { of, timer } from "./creation";
    ).subscribe(x => console.log);
    ```
 
-   ## See Also
-
-   - https://rxjs-dev.firebaseapp.com/api/index/function/retry
-
+   @group Stream Operators
+   @see https://rxjs-dev.firebaseapp.com/api/index/function/retry
  */
 export default function retry<T>(
   amount: number = Infinity,

@@ -60,6 +60,8 @@ export interface ShareConfig<T> {
    // notice how there is no delay after subscribing for a second time. without the
    // `share` operator, there would have been.
    ```
+
+   @group Stream Operators
  */
 export default function share<T>(options?: ShareConfig<T>): OperatorFunction<T, T> {
   const _options = {
@@ -186,6 +188,8 @@ export interface ShareReplayConfig {
    // subscription 2: 4
    // ...
    ```
+
+   @group Stream Operators
  */
 export function shareReplay<T>(options?: ShareReplayConfig): OperatorFunction<T, T> {
   const _options = {

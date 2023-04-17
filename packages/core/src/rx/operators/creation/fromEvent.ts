@@ -1,7 +1,9 @@
 import Stream from "../../stream";
 
 /**
- * TODO
+   TODO
+
+   @group Stream Creation Operators
  */
 export default function fromEvent<T extends keyof HTMLElementEventMap>(
   el: HTMLElement, eventType: T

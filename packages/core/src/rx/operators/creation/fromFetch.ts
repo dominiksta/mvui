@@ -10,6 +10,10 @@ import Stream from "../../stream";
    ```
 
    TODO: point to switchMap, concatMap, etc.
+
+   @group Stream Creation Operators
+
+   @see {@link switchMap}
  */
 export default function fromFetch(
   input: RequestInfo | URL, init?: RequestInit

@@ -27,6 +27,8 @@ export default function scan<From, To>(
 
    // will print: 3, 5, 8, 12
    ```
+
+   @group Stream Operators
  */
 export default function scan<From, To>(
   accumulator: (acc: From | To, value: From, index: number) => From | To,
@@ -35,7 +37,7 @@ export default function scan<From, To>(
   return orig => new Stream(observer => {
     let accumulated: From | To;
     let index = 0;
-    orig.subscribe({
+    return orig.subscribe({
       ...observer, next: v => {
         if (accumulated === undefined) {
           accumulated = seed ? accumulator(seed, v, index++) : v;

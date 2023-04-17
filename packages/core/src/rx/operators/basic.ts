@@ -1,7 +1,9 @@
 import { OperatorFunction, _BasicOperators } from "../stream";
 
 /**
- * Create a new Stream where values are transformed according to `mapper`.
+   Create a new Stream where values are transformed according to `mapper`.
+
+   @group Stream Operators
  */
 export function map<T, ReturnT>(
   mapper: (value: T, index: number) => ReturnT
@@ -15,6 +17,8 @@ export function map<T, ReturnT>(
 
    Funtionally equivalent to map(v => v ? IF : ELSE), but ternaries sometimes end up being
    less readable.
+
+   @group Stream Operators
  */
 export function ifelse<TrueT, FalseT>(
   def: { if: TrueT, else: FalseT }
@@ -23,7 +27,9 @@ export function ifelse<TrueT, FalseT>(
 };
 
 /**
- * Create a new Stream where values are filtered according to `filter`.
+   Create a new Stream where values are filtered according to `filter`.
+
+   @group Stream Operators
  */
 export function filter<T>(
   filter: (value: T) => boolean

@@ -10,8 +10,9 @@ import Stream, { OperatorFunction } from "../stream";
    // will print: 2, 3
    ```
 
-   ## See Also
-   - {@link take}
+   @group Stream Operators
+
+   @see {@link take}
  */
 export default function take<T>(amount: number): OperatorFunction<T, T> {
   return orig => new Stream(observer => {

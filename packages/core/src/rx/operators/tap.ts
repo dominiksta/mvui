@@ -19,6 +19,8 @@ import Stream, { OperatorFunction } from "../stream";
 
    // logs: 4, 5
    ```
+
+   @group Stream Operators
  */
 export default function tap<T>(
   callback: (value: T) => void

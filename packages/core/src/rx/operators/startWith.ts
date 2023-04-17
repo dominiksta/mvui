@@ -11,6 +11,8 @@ import Stream, { OperatorFunction } from "../stream";
 
    // will log 1337 (100ms pause), 0 (100ms pause), 1 (100ms pause), ...
    ```
+
+   @group Stream Operators
  */
 export default function startWith<T>(value: T): OperatorFunction<T, T> {
   return orig => new Stream(observer => {

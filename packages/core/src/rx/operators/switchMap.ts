@@ -2,6 +2,8 @@ import Stream, { OperatorFunction } from "../stream";
 
 /**
    TODO
+
+   @group Stream Operators
  */
 export default function switchMap<T, O>(
   project: (value: T) => Stream<O>,

@@ -6,32 +6,36 @@ export default function combineLatest<T extends any[]>(
 ): Stream<T>;
 
 /**
- * Combine the latest values of the given Streams. Emits every time one of the
- * sources emits, but only once all sources have emitted at least once.
- *
- * @example
- * ```ts
- * const [counter, multiplier] = [new State(2), new State(2)];
- * const sum = combineLatest(counter, multiplier).map([c, m] => c * m);
- * sum.subscribe(console.log); // => 4
- * counter.next(3); // => 6
- * ```
+   Combine the latest values of the given Streams. Emits every time one of the
+   sources emits, but only once all sources have emitted at least once.
+  
+   @example
+   ```ts
+   const [counter, multiplier] = [new State(2), new State(2)];
+   const sum = combineLatest(counter, multiplier).map([c, m] => c * m);
+   sum.subscribe(console.log); // => 4
+   counter.next(3); // => 6
+   ```
+
+   @group Stream Creation Operators
  */
 export default function combineLatest<T extends any[]>(
   ...sources: [...{ [K in keyof T]: Stream<T[K]> }]
 ): Stream<T>;
 
 /**
- * Combine the latest values of the given Streams. Emits every time one of the
- * sources emits, but only once all sources have emitted at least once.
- *
- * @example
- * ```ts
- * const [counter, multiplier] = [new State(2), new State(2)];
- * const sum = combineLatest({c: counter, m: multiplier}).map(v => v.c * v.m);
- * sum.subscribe(console.log); // => 4
- * counter.next(3); // => 6
- * ```
+   Combine the latest values of the given Streams. Emits every time one of the
+   sources emits, but only once all sources have emitted at least once.
+  
+   @example
+   ```ts
+   const [counter, multiplier] = [new State(2), new State(2)];
+   const sum = combineLatest({c: counter, m: multiplier}).map(v => v.c * v.m);
+   sum.subscribe(console.log); // => 4
+   counter.next(3); // => 6
+   ```
+
+   @group Stream Creation Operators
  */
 export default function combineLatest<T extends { [key: string]: Stream<any> }>(
   sources: T

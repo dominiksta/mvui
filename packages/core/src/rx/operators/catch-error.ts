@@ -17,6 +17,8 @@ import Stream, { OperatorFunction } from "../stream";
 
    // will print: 1, 2, 3, I, II, III, IV, V
    ```
+
+   @group Stream Operators
  */
 export default function catchError<T, O>(
   selector: ((err: any, caught: Stream<T>) => Stream<O>),

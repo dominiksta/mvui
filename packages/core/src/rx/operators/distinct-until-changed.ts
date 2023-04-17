@@ -2,7 +2,9 @@ import { identity } from "../../util/other";
 import Stream, { OperatorFunction } from "../stream";
 
 /**
- * TODO
+   TODO
+
+   @group Stream Operators
  */
 export default function distinctUntilChanged<T, SelectedT>(
   comparator: (

@@ -3,6 +3,8 @@ import Stream, { OperatorFunction } from "../stream";
 /**
    Delay all emissions according to `due` (either in relative milliseconds or an absolute
    Date).
+
+   @group Stream Operators
  */
 export default function delay<T>(due: number | Date): OperatorFunction<T, T> {
   return orig => new Stream(observer => {

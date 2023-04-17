@@ -4,6 +4,8 @@ import timer from "./creation/timer";
 /**
    Debounce emissions using `durationSelector`. Most of the time, you probably will want
    to use {@link debounceTime}, which see for more details and an example.
+
+   @group Stream Operators
  */
 export function debounce<T>(
   durationSelector: (value: T) => Stream<any>, emitFirst: boolean = false,
@@ -45,10 +47,11 @@ export function debounce<T>(
    // will only print *after no events where fired for 100 ms*
    ```
 
-   ## See Also
-   - {@link debounce}
-   - {@link throttleTime}
-   - https://web.archive.org/web/20220117092326/http://demo.nimius.net/debounce_throttle/
+   @group Stream Operators
+
+   @see {@link debounce}
+   @see {@link throttleTime}
+   @see https://web.archive.org/web/20220117092326/http://demo.nimius.net/debounce_throttle/
  */
 export function debounceTime<T>(
   ms: number, emitFirst: boolean = false,

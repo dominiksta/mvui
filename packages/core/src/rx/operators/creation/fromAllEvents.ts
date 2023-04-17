@@ -21,7 +21,9 @@ function isCustomElement(tagName: string): boolean {
 }
 
 /**
- * TODO
+   TODO
+
+   @group Stream Creation Operators
  */
 export default function fromAllEvents<T extends HTMLElement>(
   el: T

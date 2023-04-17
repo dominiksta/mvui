@@ -7,6 +7,8 @@ export function from<ValuesT>(promise: Promise<ValuesT>): Stream<ValuesT>;
 
 /**
    Convert an Arrray or a Promise to a Stream.
+
+   @group Stream Creation Operators
  */
 export default function from<ValuesT>(
   input: Iterable<ValuesT> | Promise<ValuesT>
