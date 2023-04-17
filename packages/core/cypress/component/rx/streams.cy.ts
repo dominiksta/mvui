@@ -40,14 +40,20 @@ context('Reactivity', () => {
 
     it('unsubscribe cancels further emissions', attempt(async () => {
       let values: number[] = [];
+      let complete = false;
       const unsub = new rx.Stream<number>(observer => {
         observer.next(1);
         sleep(300).then(() => observer.next(2));
-      }).subscribe(v => values.push(v));
+      }).subscribe({
+        next(v) { values.push(v) },
+        complete() { complete = true; },
+      });
 
       expect(values).to.deep.eq([1]);
+      expect(complete).to.be.false;
       unsub();
       await sleep(400);
+      expect(complete).to.be.false;
       expect(values).to.deep.eq([1]);
     }))
 

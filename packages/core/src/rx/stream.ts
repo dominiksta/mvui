@@ -44,13 +44,14 @@ export default class Stream<T> implements Subscribable<T> {
   /** @ignore */
   protected _subscribe(observer: Observer<T>): TeardownLogic {
     let completed = false;
+    let unsubscribed = false;
     try {
       const subscriber: Observer<T> = {
         next: v => {
-          if (!completed) observer.next(v);
+          if (!completed && !unsubscribed) observer.next(v);
         },
         error: e => {
-          if (!completed) observer.error(e);
+          if (!completed && !unsubscribed) observer.error(e);
         },
         complete: () => {
           observer.complete();
@@ -60,7 +61,7 @@ export default class Stream<T> implements Subscribable<T> {
       const teardown = this.definition(subscriber);
       return () => {
         if (teardown) teardown();
-        subscriber.complete();
+        unsubscribed = true;
       };
     } catch (e) {
       observer.error(e);
