@@ -1,5 +1,5 @@
 import { MvuiCSSSheet } from "./style";
-import { isSubscribable } from "./rx/subscribable";
+import { isSubscribable } from "./rx/interface";
 import { MaybeSubscribable } from "./util/types";
 
 type ToStringable = { toString: () => string };

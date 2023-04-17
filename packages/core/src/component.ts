@@ -12,7 +12,7 @@ import { camelToDash } from "./util/strings";
 import { MVUI_GLOBALS } from "./globals";
 import * as style from "./style";
 import { isBinding } from "./rx/bind";
-import { isSubscribable, Subscribable } from "./rx/subscribable";
+import { isSubscribable, Subscribable } from "./rx/interface";
 
 // these symbols are used for properties that should be accessible from anywhere in mvui
 // but should not be part of api surface
@@ -257,12 +257,12 @@ export default abstract class Component<
    * Run a given function when the component is done rendering. A render happens each time
      the component is added to the DOM.
    */
-  protected onRendered(callback: () => any) {
+  onRendered(callback: () => any) {
     this._lifecycleHooks.render.push(callback);
   }
 
   /** Run a given function when the component is removed from the DOM. */
-  protected onRemoved(callback: () => any) {
+  onRemoved(callback: () => any) {
     this._lifecycleHooks.removed.push(callback);
   }
 
@@ -294,7 +294,7 @@ export default abstract class Component<
       this._maybeReflectToProp(attrName);
 
     for (let prop in this.props) {
-      this._subscribe(this.props[prop], value => {
+      this.subscribe(this.props[prop], value => {
         // for better compatibility with other frameworks, we emit a change event
         // everytime we change a prop
         this.dispatchEvent(new CustomEvent('change')); // TODO: use normal Event
@@ -303,7 +303,7 @@ export default abstract class Component<
       });
     }
 
-    this._subscribe(this.styles, styles =>
+    this.subscribe(this.styles, styles =>
       style.util.applySheetAsStyleTag(this, styles, 'mvui-instance-styles')
     );
     this.setupFlash();
@@ -419,11 +419,21 @@ export default abstract class Component<
   // automatic unsubscribing on unmount
   // ----------------------------------------------------------------------
 
-  private _subscribe<T>(obs: Stream<T>, observer: ((value: T) => void)) {
-    this.onRemoved(obs.subscribe(v => {
+  /**
+     Subscribe to a given stream/subscribable and automatically unsubscribe on
+     unmount. Also flash the outline of the component when {@link MVUI_GLOBALS}.APP_DEBUG
+     is set and a new value is emitted.  Returns the original subscribable unmodified for
+     convenience.
+   */
+  protected subscribe<T extends Subscribable<any>>(
+    subscribable: T,
+    observer?: ((value: T extends Subscribable<infer I> ? I : never) => void)
+  ): T {
+    this.onRemoved(subscribable.subscribe(v => {
       if (MVUI_GLOBALS.APP_DEBUG) this.flash.next();
-      return observer(v)
+      if (observer) observer(v);
     }));
+    return subscribable;
   }
 
   // ----------------------------------------------------------------------
@@ -565,7 +575,7 @@ export default abstract class Component<
 
         // dataflow: upwards
         if (!events$) events$ = fromAllEvents(thisEl);
-        this._subscribe(events$.pipe(
+        this.subscribe(events$.pipe(
           map(_ => getter()),
           distinctUntilChanged(),
         ), v => {
@@ -575,7 +585,7 @@ export default abstract class Component<
         });
 
         // dataflow: downwards
-        this._subscribe(bind, (v) => {
+        this.subscribe(bind, (v) => {
           if (ignoreNextDown) { ignoreNextDown = false; return; }
           setter(v);
         });
@@ -637,7 +647,7 @@ export default abstract class Component<
             let ignoreNextDown = false;
             const p: Prop<any> = (thisEl.props as any)[prop];
             // dataflow: upwards
-            this._subscribe(p.pipe(skip(1)), v => {
+            this.subscribe(p.pipe(skip(1)), v => {
               // console.debug(`setting binding ${v}`);
               if (ignoreNextDown) { ignoreNextDown = false; return; }
               else { ignoreNextDown = true; }
@@ -646,7 +656,7 @@ export default abstract class Component<
             });
 
             // dataflow: downwards
-            this._subscribe(bind, (v) => {
+            this.subscribe(bind, (v) => {
               if (ignoreNextDown) { ignoreNextDown = false; return; }
               else { ignoreNextDown = true; }
               thisEl.props[prop].next(v);
@@ -783,7 +793,7 @@ export default abstract class Component<
       }
 
       if (children instanceof Stream)
-        this._subscribe(children, v => addChildren(v, slot));
+        this.subscribe(children, v => addChildren(v, slot));
       else
         addChildren(children, slot);
     }

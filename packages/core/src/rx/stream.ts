@@ -1,4 +1,4 @@
-import { Subscribable } from "./subscribable";
+import { Subscribable } from "./interface";
 import { pipe } from "./util";
 
 type TeardownLogic = (() => void) | void;
