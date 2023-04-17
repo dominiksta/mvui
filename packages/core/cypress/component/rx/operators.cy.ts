@@ -11,16 +11,17 @@ import { testTakeUntil } from './operators/takeUntil';
 import { testThrottle } from './operators/throttle';
 
 describe('operators', () => {
-  it('combineLatest', testFromLatest());
-  it('ifelse', testIfElese());
   it('catchError', testCatchError());
+  it('combineLatest', testFromLatest());
+  it('debounce', testDebounce());
+  it('errorInChain', testSwitchMap());
+  it('ifelse', testIfElese());
+  it('retry', testRetry());
+  it('scan', testScan());
   it('startWith', testStartWith());
+  it('switchMap', testSwitchMap());
   it('take', testTake());
   it('takeUntil', testTakeUntil());
-  it('scan', testScan());
-  it('debounce', testDebounce());
   it('throttle', testThrottle());
-  it('retry', testRetry());
-  it('switchMap', testSwitchMap());
 })
 

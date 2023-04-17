@@ -48,7 +48,11 @@ export default class Stream<T> implements Subscribable<T> {
     try {
       const subscriber: Observer<T> = {
         next: v => {
-          if (!completed && !unsubscribed) observer.next(v);
+          if (!completed && !unsubscribed) try {
+            observer.next(v);
+          } catch(e) {
+            observer.error(e);
+          }
         },
         error: e => {
           if (!completed && !unsubscribed) observer.error(e);
