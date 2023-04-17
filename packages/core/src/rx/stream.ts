@@ -9,7 +9,8 @@ export type Observer<T> = {
   complete(): void,
 }
 
-export type ObserverDefinition<T> = Partial<Observer<T>> | ((value: T) => void);
+export type ObserverDefinition<T> =
+  Partial<Observer<T>> | ((value: T) => void) | void;
 
 export type OperatorFunction<InputT, ResultT> =
   (stream: Stream<InputT>) => Stream<ResultT>;
@@ -29,9 +30,9 @@ export default class Stream<T> implements Subscribable<T> {
 
   private static definitionToObserver<T>(def: ObserverDefinition<T>): Observer<T> {
     let obs: Observer<T> = def as any;
-    if (def instanceof Function) {
-      obs = { next: def } as any;
-    }
+    if (def === undefined) obs = {} as any;
+    if (def instanceof Function) obs = { next: def } as any;
+
     if (!('next' in obs)) (obs as any).next = (v: T) => undefined;
     if (!('error' in obs)) (obs as any).error = (e: any) => { throw e; };
     if (!('complete' in obs)) (obs as any).complete = () => undefined;

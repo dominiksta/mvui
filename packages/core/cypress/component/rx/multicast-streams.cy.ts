@@ -13,8 +13,8 @@ describe('MulticastStream', () => {
     const subj$ = new rx.MulticastStream<number>();
     // console.log(subj$);
 
-    subj$.subscribe(_ => null);
-    subj$.subscribe(_ => null);
+    subj$.subscribe();
+    subj$.subscribe();
 
     obs$.subscribe(subj$);
 

@@ -113,8 +113,8 @@ context('Reactivity', () => {
         observer.next(1); observer.next(2); observer.next(3);
       })
 
-      obs$.subscribe(_ => null);
-      obs$.subscribe(_ => null);
+      obs$.subscribe();
+      obs$.subscribe();
 
       expect(resource).to.eq(2);
     }))

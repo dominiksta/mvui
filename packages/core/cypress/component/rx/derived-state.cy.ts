@@ -181,8 +181,8 @@ describe('derived state', () => {
       }
     );
 
-    derived.subscribe(_ => null);
-    derived.subscribe(_ => null);
+    derived.subscribe();
+    derived.subscribe();
 
     expect(count).to.be.eq(1);
 
