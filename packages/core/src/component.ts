@@ -3,7 +3,7 @@ import {
   ParamSpec as _ParamSpec,
   TemplateElementChild, TemplateElementChildren
 } from "./template-element";
-import { Constructor, MaybeStream } from "./util/types";
+import { Constructor, MaybeSubscribable, ToStringable } from "./util/types";
 import {
   Stream, State, Prop, Context, fromAllEvents, fromEvent, map,
   distinctUntilChanged, skip, MulticastStream, throttleTime, debounceTime
@@ -12,6 +12,7 @@ import { camelToDash } from "./util/strings";
 import { MVUI_GLOBALS } from "./globals";
 import * as style from "./style";
 import { isBinding } from "./rx/bind";
+import { isSubscribable, Subscribable } from "./rx/subscribable";
 
 // these symbols are used for properties that should be accessible from anywhere in mvui
 // but should not be part of api surface
@@ -581,15 +582,15 @@ export default abstract class Component<
       }
 
       const maybeBindAttrOrField = <T>(
-        value: MaybeStream<T>,
+        value: MaybeSubscribable<T>,
         getter: () => T,
         setter: (value: T) => void,
       ) => {
         let bind: State<any> | undefined;
         if (bind = isBinding(value)) {
           bindAttrOrField(bind, getter, setter);
-        } else if (value instanceof Stream) {
-          this._subscribe(value, (v) => setter(v));
+        } else if (isSubscribable(value)) {
+          this.subscribe(value, (v) => setter(v));
         } else { setter(value); }
       }
 
@@ -650,8 +651,8 @@ export default abstract class Component<
               else { ignoreNextDown = true; }
               thisEl.props[prop].next(v);
             });
-          } else if (val instanceof Stream) {
-            this._subscribe(val, (v) => thisEl.props[prop].next(v));
+          } else if (isSubscribable(val)) {
+            this.subscribe(val, (v) => thisEl.props[prop].next(v));
           } else {
             thisEl.props[prop].next(val);
           }
@@ -669,8 +670,8 @@ export default abstract class Component<
       if (el.params.style) {
         for (let key in el.params.style) {
           const val = el.params.style[key]!;
-          if (val instanceof Stream) {
-            this._subscribe(val, v => {
+          if (isSubscribable<ToStringable>(val)) {
+            this.subscribe(val, v => {
               thisEl.style[key] = v.toString();
             });
           } else {
@@ -693,8 +694,8 @@ export default abstract class Component<
       if (classes) {
         for (let key in classes) {
           const val = classes[key]!;
-          if (val instanceof Stream) {
-            this._subscribe(val, v => {
+          if (isSubscribable(val)) {
+            this.subscribe(val, v => {
               thisEl.classList.toggle(key, v);
             });
           } else {

@@ -1,3 +1,4 @@
+import { Subscribable } from "./subscribable";
 import { pipe } from "./util";
 
 type TeardownLogic = (() => void) | void;
@@ -17,7 +18,7 @@ export type OperatorFunction<InputT, ResultT> =
  * A potentially asynchronous series of values which can be subscribed to for reactive
  * programming.
  */
-export default class Stream<T> {
+export default class Stream<T> implements Subscribable<T> {
 
   constructor(
     private definition: (observer: Observer<T>) => TeardownLogic

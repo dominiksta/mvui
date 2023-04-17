@@ -1,8 +1,8 @@
 import { MvuiCSSSheet } from "./style";
-import { Stream } from "./rx";
+import { isSubscribable } from "./rx/subscribable";
+import { MaybeSubscribable } from "./util/types";
 
 type ToStringable = { toString: () => string };
-type MaybeStream<T> = Stream<T> | T;
 
 export interface EventWithTarget<T extends HTMLElement> extends Event {
   target: T;
@@ -43,7 +43,7 @@ export class TemplateElement<
     if (
       typeof childrenOrParams === 'string'
       || childrenOrParams instanceof Array
-      || childrenOrParams instanceof Stream
+      || isSubscribable(childrenOrParams)
       || childrenOrParams instanceof TemplateElement
       || childrenOrParams instanceof HTMLElement
     ) {
@@ -113,7 +113,7 @@ export type TemplateElementChild<T extends HTMLElement = any> =
   undefined;
 
 export type TemplateElementChildren<T extends HTMLElement = any> =
-  MaybeStream<TemplateElementChild<T> | (TemplateElementChild<T>)[]>;
+  MaybeSubscribable<TemplateElementChild<T> | (TemplateElementChild<T>)[]>;
 
 export type ParamSpec = {
   events?: { [key: string]: any },
@@ -128,16 +128,16 @@ export type TemplateElementParams<
   Params extends ParamSpec = {},
   Props extends { [key: string]: any } = {}
 > = {
-  style?: Partial<{ [key in keyof CSSStyleDeclaration]: MaybeStream<ToStringable> }>,
+  style?: Partial<{ [key in keyof CSSStyleDeclaration]: MaybeSubscribable<ToStringable> }>,
   styleOverrides?: MvuiCSSSheet,
 
-  classes?: { [key: string]: MaybeStream<boolean> },
+  classes?: { [key: string]: MaybeSubscribable<boolean> },
 
   attrs?: Partial<{
     [Property in keyof Params['attributes']]:
-    MaybeStream<Params['attributes'][Property]> | MaybeStream<ToStringable>
-  } & { class: MaybeStream<ToStringable> } &
-  { [key: string]: MaybeStream<ToStringable> }>,
+    MaybeSubscribable<Params['attributes'][Property]> | MaybeSubscribable<ToStringable>
+  } & { class: MaybeSubscribable<ToStringable> } &
+  { [key: string]: MaybeSubscribable<ToStringable> }>,
 
   events?: Partial<{
     [Property in Exclude<
@@ -156,7 +156,7 @@ export type TemplateElementParams<
   }>,
 
   fields?: Partial<{
-    [Property in keyof T]: MaybeStream<T[Property]>
+    [Property in keyof T]: MaybeSubscribable<T[Property]>
   }>,
 
   // Props are always optional for a technical reason: A webcomponent may be
@@ -165,7 +165,7 @@ export type TemplateElementParams<
   // valid initial state and props must always be optional.
   props?: Partial<{
     [Property in keyof Props]:
-    MaybeStream<Props[Property]>
+    MaybeSubscribable<Props[Property]>
   }>
 
   ref?: { current: HTMLElement },
