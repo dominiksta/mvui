@@ -45,6 +45,7 @@ export * from './util';
 export * from './operators';
 export { default as Stream } from "./stream";
 export { default as MulticastStream } from "./multicast-stream";
+export { default as ReplayStream } from "./replay-stream";
 export { default as State, LinkedState } from "./state";
 export { derive, DerivedState } from "./derived-state";
 export { default as Prop } from "./prop";

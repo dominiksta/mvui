@@ -4,6 +4,7 @@ import './rx/multicast-streams.cy';
 import './rx/operators.cy';
 import './rx/state.cy';
 import './rx/store.cy';
+import './rx/share.cy';
 import './rx/streams.cy';
 import './http.cy';
 
