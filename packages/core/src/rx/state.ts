@@ -93,7 +93,8 @@ export default class State<T> extends MulticastStream<T> {
      ```
    */
   createLinked<ReturnT>(
-    getter: (value: T) => ReturnT, setter: (value: ReturnT) => T
+    getter: (value: T) => ReturnT,
+    setter: (value: ReturnT, parentNext: State<T>['next']) => void
   ): LinkedState<T, ReturnT> {
     return new LinkedState(this, getter, setter);
   }
@@ -159,11 +160,11 @@ export default class State<T> extends MulticastStream<T> {
         for (const a of args) current = current[a];
         return current;
       },
-      val => {
+      (val, parentNext) => {
         let current: any = this.value;
         for (const a of args.slice(0, -1)) current = current[a];
         current[args[args.length - 1]] = val;
-        return this.value;
+        parentNext(this.value);
       },
     )
   }
@@ -192,7 +193,9 @@ export class LinkedState<FromT, T> extends State<T> {
   constructor(
     private parent: State<FromT>,
     private derivationFunction: (value: FromT) => T,
-    private setterFunction: (value: T) => FromT,
+    private setterFunction: (
+      value: T, parentNext: typeof parent['next']
+    ) => void,
   ) {
     super(derivationFunction(parent.value));
   }
@@ -230,6 +233,6 @@ export class LinkedState<FromT, T> extends State<T> {
     if (this.parentIgnoreNext) { this.parentIgnoreNext = false; return; }
     else { this.parentIgnoreNext = true; }
 
-    this.parent.next(this.setterFunction(newVal));
+    this.setterFunction(newVal, this.parent.next.bind(this.parent));
   }
 }

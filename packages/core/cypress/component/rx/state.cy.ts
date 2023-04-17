@@ -196,7 +196,7 @@ describe('state', () => {
     const state = new rx.State(1);
     const linked = state.createLinked(
       v => v + 1,
-      v => v - 1,
+      (v, next) => next(v - 1),
     );
 
     linked.next(3);

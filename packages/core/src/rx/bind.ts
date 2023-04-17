@@ -93,29 +93,29 @@ function serialize<T>(
     case 'number':
       return state.createLinked(
         JSON.stringify,
-        v => {
-          return parseFloat(v) as any;
+        (v, next) => {
+          next(parseFloat(v) as any);
         },
       );
     case 'string':
       return state.createLinked(
         identity as any,
-        identity as any,
+        (v, next) => next(v as any),
       );
     case 'boolean':
       return state.createLinked(
         JSON.stringify,
-        v => (v === 'true') as any
+        (v, next) => next((v === 'true') as any)
       );
     case 'object':
       return state.createLinked(
         JSON.stringify,
-        JSON.parse
+        (v, next) => next(JSON.parse(v))
       );
     case 'undefined':
       return state.createLinked(
         _ => 'undefined',
-        _ => undefined as any,
+        (_, next) => next(undefined as any),
       );
     default:
       throw new Error(`Unsupported type to serialize: ${t}`)
