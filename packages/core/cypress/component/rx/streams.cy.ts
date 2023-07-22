@@ -211,6 +211,25 @@ context('Reactivity', () => {
 
     }))
 
+    it('async/await', attempt(async () => {
+      const s = new rx.Stream<number>(observer => {
+        observer.next(0);
+        setTimeout(() => {
+          observer.next(1);
+          observer.complete()
+        }, 200);
+      });
+
+      const before = Date.now();
+
+      const awaited = await s;
+      expect(awaited).to.eq(1);
+
+      const after = Date.now();
+      expect(after - before).to.be.above(190);
+    }))
+
+
     it('async subscribe & cleanup', attempt(async () => {
       const values: {
         one: number[], two: number[]

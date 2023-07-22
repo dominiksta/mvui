@@ -59,6 +59,10 @@ context('Reactivity', () => {
 
     }))
 
+    it('async/await with http.get', attempt(async () => {
+      const resp = await http.get<number[]>('/test');
+      expect(resp.body).to.deep.eq([1, 2, 3]);
+    }))
 
   })
 })

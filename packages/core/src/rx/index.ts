@@ -53,5 +53,6 @@ export { default as bind } from "./bind";
 export { default as Context } from "./context";
 export { default as Store } from "./store";
 export { default as EMPTY } from "./empty";
+export { default as EmptyError } from "./empty-error";
 export * as types from "./types";
 

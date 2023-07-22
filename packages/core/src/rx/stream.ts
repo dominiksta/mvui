@@ -1,3 +1,4 @@
+import EmptyError from "./empty-error";
 import { Observer, ObserverDefinition, Subscribable, TeardownLogic } from "./interface";
 import { pipe } from "./util";
 
@@ -166,6 +167,38 @@ export default class Stream<T> implements Subscribable<T> {
   filter(filter: (value: T) => boolean): Stream<T> {
     return _BasicOperators.filter(filter)(this);
   }
+
+
+  // async/await
+  // ----------------------------------------------------------------------
+
+  /**
+     You can `await` the last value of a Stream. This of course requires the Stream to
+     complete. If no value was emitted, an {@link EmptyError} will be thrown.
+
+     This is useful for consuming a Stream based API in a Promise based environment. For
+     example, mvui's HTTP client can be used like this:
+
+     ```typescript
+     const response = await http.get<number>('/my-route');
+     // response will be of type number
+     ```
+   */
+  then(callback: (value: T) => any) {
+    let lastValue: T;
+    let hasEmitted = false;
+    this.subscribe({
+      next(v) {
+        lastValue = v;
+        hasEmitted = true;
+      },
+      complete() {
+        if (hasEmitted) callback(lastValue);
+        else throw new EmptyError();
+      },
+    })
+  }
+
 }
 
 /**
