@@ -1,6 +1,7 @@
-import { Component, h, define } from "$thispkg";
+import { Component, h } from "$thispkg";
 import { attempt, mount } from "../support/helpers";
 
+@Component.register
 class MyLayout extends Component<{
   slots: {
     'after-footer': any,
@@ -16,13 +17,13 @@ class MyLayout extends Component<{
     h.slot({ attrs: { id: 'only-divs', name: "only-divs" } }),
   ]
 }
-const [myLayout] = define(MyLayout);
 
+@Component.register
 export class SlotsTest extends Component {
   render = () => [
     h.fieldset([
       h.legend('Slots'),
-      myLayout({
+      MyLayout.t({
         slots: { 'after-footer': 'After Footer', 'only-divs': h.div() }
       }, [
         h.div('Content Children'),
@@ -31,7 +32,6 @@ export class SlotsTest extends Component {
     ])
   ]
 }
-SlotsTest.register();
 
 describe('Slots', function() {
   it('kinda work', attempt(async () => {
@@ -51,14 +51,14 @@ describe('Slots', function() {
   }))
 
   it('multiple children in default slot', attempt(async () => {
+    @Component.register
     class TestSlotDefaultMultipleMixed extends Component {
       render() {
         return [
-          myLayout([h.div('yes'), 'very much']),
+          MyLayout.t([h.div('yes'), 'very much']),
         ]
       }
     }
-    TestSlotDefaultMultipleMixed.register();
 
     const comp = mount(TestSlotDefaultMultipleMixed);
     const layout = await comp.query<MyLayout>('app-my-layout');
@@ -71,14 +71,14 @@ describe('Slots', function() {
   }))
 
   it('multiple string children in default slot', attempt(async () => {
+    @Component.register
     class TestSlotDefaultMultipleString extends Component {
       render() {
         return [
-          myLayout(['yes', 'very much']),
+          MyLayout.t(['yes', 'very much']),
         ]
       }
     }
-    TestSlotDefaultMultipleString.register();
 
     const comp = mount(TestSlotDefaultMultipleString);
     const layout = await comp.query<MyLayout>('app-my-layout');
@@ -91,14 +91,14 @@ describe('Slots', function() {
   }))
 
   it('multiple element children in default slot', attempt(async () => {
+    @Component.register
     class TestSlotDefaultMultipleElement extends Component {
       render() {
         return [
-          myLayout([h.div('yes'), h.span('very much')]),
+          MyLayout.t([h.div('yes'), h.span('very much')]),
         ]
       }
     }
-    TestSlotDefaultMultipleElement.register();
 
     const comp = mount(TestSlotDefaultMultipleElement);
     const layout = await comp.query<MyLayout>('app-my-layout');
@@ -111,16 +111,16 @@ describe('Slots', function() {
   }))
 
   it('multiple children in named slot', attempt(async () => {
+    @Component.register
     class TestSlotNamedMultipleMixed extends Component {
       render() {
         return [
-          myLayout({
+          MyLayout.t({
             slots: { 'after-footer': [h.div('yes'), 'very much'] }
           }),
         ]
       }
     }
-    TestSlotNamedMultipleMixed.register();
 
     const comp = mount(TestSlotNamedMultipleMixed);
     const layout = await comp.query<MyLayout>('app-my-layout');
@@ -133,16 +133,16 @@ describe('Slots', function() {
   }))
 
   it('multiple string only children in named slot', attempt(async () => {
+    @Component.register
     class TestSlotNamedMultipleString extends Component {
       render() {
         return [
-          myLayout({
+          MyLayout.t({
             slots: { 'after-footer': ['yes', 'very much'] }
           }),
         ]
       }
     }
-    TestSlotNamedMultipleString.register();
 
     const comp = mount(TestSlotNamedMultipleString);
     const layout = await comp.query<MyLayout>('app-my-layout');
@@ -155,16 +155,16 @@ describe('Slots', function() {
   }))
 
   it('multiple element only children in named slot', attempt(async () => {
+    @Component.register
     class TestSlotNamedMultipleElement extends Component {
       render() {
         return [
-          myLayout({
+          MyLayout.t({
             slots: { 'after-footer': [h.div('yes'), h.span('very much')] }
           }),
         ]
       }
     }
-    TestSlotNamedMultipleElement.register();
 
     const comp = mount(TestSlotNamedMultipleElement);
     const layout = await comp.query<MyLayout>('app-my-layout');

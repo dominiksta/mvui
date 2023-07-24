@@ -1,4 +1,4 @@
-import { Component, h, rx, define, style } from '@mvui/core';
+import { Component, h, rx, style } from '@mvui/core';
 // import 'https://unpkg.com/@babel/standalone/babel.min.js'; // TODO
 import Babel from 'https://esm.sh/@babel/standalone@7.21.4/babel.min.js';
 
@@ -69,7 +69,16 @@ export class Sandbox extends Component {
 
       try {
         code = Babel.transform(
-          code, { filename: 'hi.ts', presets: ["typescript"] }
+          code, {
+            filename: 'hi.ts',
+            presets: ["typescript"],
+            plugins: [
+              [
+                Babel.availablePlugins["proposal-decorators"],
+                { version: "2023-01" },
+              ],
+            ],
+          }
         ).code;
       } catch (e) {
         win.displayError(e);
@@ -123,4 +132,4 @@ export class Sandbox extends Component {
   
 }
 
-export const [ sandbox ] = define(Sandbox);
+Sandbox.register();

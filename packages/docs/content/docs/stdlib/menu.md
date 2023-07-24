@@ -13,18 +13,18 @@ import * as std from "@mvui/stdlib";
 export default class Example extends Component {
   render() {
     return [
-      std.menu([
-        std.menuitem('Menu 1 Item 1'),
-        std.menuitem('Menu 1 Item 2'),
-        std.menu({ props: { text: 'Submenu 1' }}, [
-          std.menuitem('Submenu 1 Item 1'),
-          std.menuitem('Submenu 1 Item 2'),
-          std.menu({ props: { text: 'SubSubmenu 1' } }, [
-            std.menuitem('SubSubmenu 1 Item 1'),
-            std.menuitem('SubSubmenu 1 Item 2'),
+      std.Menu.t([
+        std.MenuItem.t('Menu 1 Item 1'),
+        std.MenuItem.t('Menu 1 Item 2'),
+        std.Menu.t({ props: { text: 'Submenu 1' }}, [
+          std.MenuItem.t('Submenu 1 Item 1'),
+          std.MenuItem.t('Submenu 1 Item 2'),
+          std.Menu.t({ props: { text: 'SubSubmenu 1' } }, [
+            std.MenuItem.t('SubSubmenu 1 Item 1'),
+            std.MenuItem.t('SubSubmenu 1 Item 2'),
           ]),
         ]),
-        std.menuitem('Menu 1 Item 3'),
+        std.MenuItem.t('Menu 1 Item 3'),
       ]),
     ];
   }

@@ -1,3 +1,6 @@
+// typedef
+// ----------------------------------------------------------------------
+
 export type MvuiConfig = {
   /**
      Wether the app should run in debug mode. Currently the only effect of setting this to
@@ -19,6 +22,9 @@ export type MvuiConfig = {
   PREFIXES: Map<string, string>,
 }
 
+// defaults
+// ----------------------------------------------------------------------
+
 const globals: MvuiConfig = {
   APP_DEBUG: false,
   STYLE_SHEET_NONCE: 'mvui-component',
@@ -27,7 +33,19 @@ const globals: MvuiConfig = {
 
 globals.PREFIXES.set('default', 'app');
 
-(window as any).__MVUI_GLOBALS = globals;
+// set up
+// ----------------------------------------------------------------------
+
+function maybeSetGlobal() {
+  const w = (window as any);
+  if (!('__MVUI_GLOBALS' in w)) w.__MVUI_GLOBALS = globals;
+}
+
+maybeSetGlobal();
+
+// export
+// ----------------------------------------------------------------------
+
 /**
    A global configuration object. You can change its properties by importing or
    alternatively using the `__MVUI_GLOBALS` window scoped object.

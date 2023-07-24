@@ -14,8 +14,8 @@ export default class Example extends Component {
   render() {
     const value = new rx.State('hi');
     return [
-      std.input({props: { value: rx.bind(value) }}),
-      std.input({props: { value: rx.bind(value) }}),
+      std.Input.t({props: { value: rx.bind(value) }}),
+      std.Input.t({props: { value: rx.bind(value) }}),
       h.span(value),
     ];
   }

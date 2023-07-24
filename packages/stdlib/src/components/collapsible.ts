@@ -1,5 +1,5 @@
-import { Component, define, h, rx, style } from "@mvui/core";
-import { button } from "./button";
+import { Component, h, rx, style } from "@mvui/core";
+import { Button } from "./button";
 import { theme } from '../theme';
 
 /**
@@ -22,6 +22,7 @@ import { theme } from '../theme';
    This will be shown as the clickable header that will toggle wether the content is
    collapsed.
  */
+@Component.register
 export class Collapsible extends Component {
   static tagNameLibrary = 'std';
 
@@ -43,7 +44,7 @@ export class Collapsible extends Component {
       h.div(
         { attrs: { id: 'wrapper' } },
         [
-          button({
+          Button.t({
             attrs: { id: 'header' },
             events: { click: _ => collapsed.next(!collapsed.value) },
           }, [
@@ -114,5 +115,3 @@ export class Collapsible extends Component {
     }
   });
 }
-
-export const [ collapsible ] = define(Collapsible);

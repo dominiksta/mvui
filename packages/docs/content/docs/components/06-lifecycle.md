@@ -26,10 +26,11 @@ because you are expected to define them in the `render()` method.
 
 {{<codeview output-height="150px">}}
 ```typescript
-import { Component, rx, h, define } from '@mvui/core';
+import { Component, rx, h } from '@mvui/core';
 
 const lifecycle = new rx.State(['initial']);
 
+@Component.register
 class LifecycleTest extends Component {
   render() {
     lifecycle.next(v => [ ...v, 'added' ]);
@@ -45,8 +46,7 @@ class LifecycleTest extends Component {
   }
 }
 
-const [ lifecycleTest ] = define(LifecycleTest);
-
+@Component.register
 export default class Wrapper extends Component {
   render() {
     const displayChild = new rx.State(false);
@@ -57,7 +57,7 @@ export default class Wrapper extends Component {
       }, 'Toggle Child Mount'),
       h.div(
         displayChild.ifelse({
-          if: lifecycleTest(),
+          if: LifecycleTest.t(),
           else: undefined,
         })
       )
@@ -76,8 +76,9 @@ for your sanity as a non-expert in reactive programming).
 
 {{<codeview output-height="150px">}}
 ```typescript
-import { Component, rx, h, define } from '@mvui/core';
+import { Component, rx, h } from '@mvui/core';
 
+@Component.register
 export default class Wrapper extends Component {
   render() {
     // imagine this being a websocket connection or something similar
@@ -103,8 +104,9 @@ to be reset on unmount, you can define it as a class field.
 
 {{<codeview output-height="150px">}}
 ```typescript
-import { Component, rx, h, define } from '@mvui/core';
+import { Component, rx, h } from '@mvui/core';
 
+@Component.register
 class LifecycleTest extends Component {
   stickyState = new rx.State(100);
 
@@ -130,8 +132,7 @@ class LifecycleTest extends Component {
   }
 }
 
-LifecycleTest.register();
-
+@Component.register
 export default class Wrapper extends Component {
   render() {
     const displayChild = new rx.State(false);

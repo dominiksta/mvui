@@ -31,12 +31,6 @@ async function displayComponent() {
   try {
     const module = await evalEsm(code);
 
-    if (module.default.prototype instanceof Component) {
-      module.default.register();
-    } else {
-      customElements.define('playground-component', module.default);
-    }
-
     document.body.innerHTML = '';
     setDefaultStyles();
     document.body.appendChild(new module.default());

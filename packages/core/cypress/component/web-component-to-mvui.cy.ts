@@ -52,6 +52,7 @@ describe('web component to mvui', () => {
 
     let state = 'initial';
 
+    @Component.register
     class ComponentUsingWrapper extends Component {
       render = () => [
         h.fieldset([
@@ -65,7 +66,6 @@ describe('web component to mvui', () => {
         ]),
       ]
     }
-    ComponentUsingWrapper.register();
 
     const comp = mount(ComponentUsingWrapper);
     const wrapped = await comp.query<SomeWebComponent>('#wrapped-comp');

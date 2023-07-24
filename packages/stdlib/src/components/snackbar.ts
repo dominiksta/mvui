@@ -1,4 +1,4 @@
-import { Component, define, h, rx, style } from "@mvui/core";
+import { Component, h, rx, style } from "@mvui/core";
 import { TemplateElementChild } from "@mvui/core";
 import { theme } from "theme";
 
@@ -28,7 +28,7 @@ export function openSnackbar(
    class Main extends Component {
      render = () => [
        // put this anywhere, position really does not matter
-       std.snackbar(),
+       std.Snackbar.t(),
      ]
    }
 
@@ -39,6 +39,7 @@ export function openSnackbar(
 
    @class Snackbar
  */
+@Component.register
 export class Snackbar extends Component {
 
   render() {
@@ -81,5 +82,3 @@ export class Snackbar extends Component {
     },
   });
 };
-
-export const [snackbar] = define(Snackbar);

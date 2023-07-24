@@ -23,7 +23,7 @@ export type Binding<T> = { marker: typeof BIND_MARKER, value: State<T> };
      #state = new rx.State('initial');
 
      render = () => [
-       MyBoundInput.new({ props: { value: rx.bind(this.#state) }}),
+       MyBoundInput.t({ props: { value: rx.bind(this.#state) }}),
        h.input({ fields: { value: rx.bind(this.#state) }}),
        h.div(this.#state),
        h.button({ events: { click: _ => this.#state.next('intial') }}, 'reset')

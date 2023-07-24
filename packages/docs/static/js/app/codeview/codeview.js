@@ -1,6 +1,6 @@
 import { Component, h, rx, style } from '@mvui/core';
 import { theme } from '@mvui/stdlib';
-import { sandbox } from './sandbox.js';
+import { Sandbox } from './sandbox.js';
 import '/js/ace-builds/src-noconflict/ace.js';
 
 
@@ -85,7 +85,7 @@ export default class Codeview extends Component {
         h.div({ attrs: { id: 'editor' }}),
       ]),
       h.div({ attrs: { id: 'sep' }}),
-      sandbox({
+      Sandbox.t({
         props: {
           code: editorChange,
           height: this.props.outputHeight.derive(h => h === '' ? '80px' : h),

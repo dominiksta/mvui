@@ -1,4 +1,4 @@
-import { Component, define, h, rx, style } from "@mvui/core";
+import { Component, h, rx, style } from "@mvui/core";
 import { theme } from "theme";
 
 export const menuContext = new rx.Context(() => new rx.State<{
@@ -51,18 +51,18 @@ export const STYLE_MENU_ITEM = {
    // ...
    render() {
      return [
-       std.menu([
-         std.menuitem('Menu 1 Item 1'),
-         std.menuitem('Menu 1 Item 2'),
-         std.menu({ props: { text: 'Submenu 1' }}, [
-           std.menuitem('Submenu 1 Item 1'),
-           std.menu({ props: { text: 'SubSubmenu 1' } }, [
-             std.menuitem('SubSubmenu 1 Item 1'),
-             std.menuitem('SubSubmenu 1 Item 2'),
+       std.Menu.t([
+         std.MenuItem.t('Menu 1 Item 1'),
+         std.MenuItem.t('Menu 1 Item 2'),
+         std.Menu.t({ props: { text: 'Submenu 1' }}, [
+           std.MenuItem.t('Submenu 1 Item 1'),
+           std.Menu.t({ props: { text: 'SubSubmenu 1' } }, [
+             std.MenuItem.t('SubSubmenu 1 Item 1'),
+             std.MenuItem.t('SubSubmenu 1 Item 2'),
            ]),
-           std.menuitem('Submenu 1 Item 2'),
+           std.MenuItem.t('Submenu 1 Item 2'),
          ]),
-         std.menuitem('Menu 1 Item 3'),
+         std.MenuItem.t('Menu 1 Item 3'),
        ]),
      ]
    }
@@ -77,6 +77,7 @@ export const STYLE_MENU_ITEM = {
 
    @slot {MenuItem} default
  */
+@Component.register
 export class Menu extends Component {
   static tagNameLibrary = 'std';
 
@@ -162,5 +163,3 @@ export class Menu extends Component {
   });
 
 };
-
-export const [menu] = define(Menu);

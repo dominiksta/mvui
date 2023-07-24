@@ -1,6 +1,7 @@
 import { Component, h, rx } from "$thispkg";
 import { attempt, mount } from "../support/helpers";
 
+@Component.register
 class MyBoundInput extends Component {
   props = { value: new rx.Prop('') };
 
@@ -15,18 +16,17 @@ class MyBoundInput extends Component {
     })
   ]
 }
-MyBoundInput.register();
 
 describe('bindings', () => {
   it('prop binding', attempt(async () => {
+    @Component.register
     class BindingTest extends Component {
       state = new rx.State('initial');
 
       render = () => [
-        MyBoundInput.new({ props: { value: rx.bind(this.state) } }),
+        MyBoundInput.t({ props: { value: rx.bind(this.state) } }),
       ]
     }
-    BindingTest.register();
 
     const comp = mount(BindingTest);
     const myInput = await comp.query<MyBoundInput>('app-my-bound-input');
@@ -64,6 +64,7 @@ describe('bindings', () => {
   }));
 
   it('field binding', attempt(async () => {
+    @Component.register
     class BindingTestField extends Component {
       state = new rx.State('initial');
 
@@ -71,7 +72,6 @@ describe('bindings', () => {
         h.input({ fields: { value: rx.bind(this.state) } }),
       ]
     }
-    BindingTestField.register();
 
     const comp = mount(BindingTestField);
     const input = await comp.query<HTMLInputElement>('input');
@@ -97,6 +97,7 @@ describe('bindings', () => {
   }));
 
   it('attribute binding', attempt(async () => {
+    @Component.register
     class BindingTestAttribute extends Component {
       state = new rx.State('initial');
 
@@ -104,7 +105,6 @@ describe('bindings', () => {
         h.input({ attrs: { value: rx.bind(this.state) } }),
       ]
     }
-    BindingTestAttribute.register();
 
     const comp = mount(BindingTestAttribute);
     const input = await comp.query<HTMLInputElement>('input');
@@ -131,6 +131,7 @@ describe('bindings', () => {
 
 
   it('type coercion/serialization', attempt(async () => {
+    @Component.register
     class BindingsTestSerialization extends Component {
       noCoerce = new rx.State('0');
       coerce = new rx.State(0);
@@ -151,7 +152,6 @@ describe('bindings', () => {
         ]
       }
     }
-    BindingsTestSerialization.register();
 
     const comp = mount(BindingsTestSerialization);
     let inputs: HTMLInputElement[] = [];
@@ -192,17 +192,17 @@ describe('bindings', () => {
   }));
 
   it('two bindings', async () => {
+    @Component.register
     class BindingTestTwo extends Component {
       // #state = new State('nothing');
       state = new rx.State('initial');
 
       render = () => [
-        MyBoundInput.new({ props: { value: rx.bind(this.state) } }),
-        MyBoundInput.new({ props: { value: rx.bind(this.state) } }),
+        MyBoundInput.t({ props: { value: rx.bind(this.state) } }),
+        MyBoundInput.t({ props: { value: rx.bind(this.state) } }),
         h.input({ fields: { value: rx.bind(this.state) } }),
       ]
     }
-    BindingTestTwo.register();
 
     const comp = mount(BindingTestTwo);
     const myInputs = await comp.queryAll<MyBoundInput>('app-my-bound-input');

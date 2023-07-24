@@ -1,11 +1,12 @@
-import { Component, rx, define, MVUI_GLOBALS } from '$thispkg';
+import { Component, rx, MVUI_GLOBALS } from '$thispkg';
 import { attempt, mount, waitFrame } from '../support/helpers';
 
 describe('attribute reflection', () => {
   it('basic attribute reflection', attempt(async () => {
     MVUI_GLOBALS.APP_DEBUG = false;
     
-    const [_, AttrReflectionTest] = define(class AttrReflectionTest extends Component {
+    @Component.register
+    class AttrReflectionTest extends Component {
       static useShadow = false;
       
       props = {
@@ -14,7 +15,7 @@ describe('attribute reflection', () => {
         attrNum: new rx.Prop(5, { reflect: true, converter: Number }),
       }
       render = () => [];
-    });
+    };
     
     const comp = mount(AttrReflectionTest);
     // const [_doc, comp] = testDoc(new AttrReflectionTest());

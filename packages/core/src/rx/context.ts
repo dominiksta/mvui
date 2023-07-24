@@ -14,6 +14,7 @@ import type Component from "../component";
    ```typescript
    const myCtx = new rx.Context(() => new rx.State(0));
 
+   @Component.register
    class CtxProvider extends Component {
      render() {
        const ctx = this.provideContext(myCtx);
@@ -23,8 +24,8 @@ import type Component from "../component";
        ]
      }
    }
-   const [ctxprovider] = define(CtxProvider);
 
+   @Component.register
    class CtxConsumer extends Component {
      props = { value: new rx.Prop('') }
 
@@ -35,14 +36,13 @@ import type Component from "../component";
        ]
      }
    }
-   const [ctxconsumer] = define(CtxConsumer);
 
    class Main extends Component {
      render() {
        return [
-         ctxprovider([
-           ctxconsumer({ props: { value: 'val1' }),
-           ctxconsumer({ props: { value: 'val2' }),
+         CtxProvider.t([
+           CtxConsumer.t({ props: { value: 'val1' }),
+           CtxConsumer.t({ props: { value: 'val2' }),
          ])
        ]
      }

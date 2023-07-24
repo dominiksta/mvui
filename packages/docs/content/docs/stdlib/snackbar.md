@@ -13,8 +13,8 @@ import * as std from "@mvui/stdlib";
 export default class Example extends Component {
   render() {
     return [
-      std.snackbar(), // can be anywhere
-      std.button(
+      std.Snackbar.t(), // can be anywhere
+      std.Button.t(
         { events: { click: _ => std.openSnackbar('hi') }},
         'Trigger Snackbar'
       )

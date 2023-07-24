@@ -37,7 +37,7 @@ export default function catchError<T, O>(
             'Please use the retry operator instead. \n\n' +
             'Example: \n\n' +
             "Don't: `.pipe(rx.catchError((_, caught) => caught))` \n" + 
-            "Do: `.pipe(rx.retriy())` \n"
+            "Do: `.pipe(rx.retry())` \n"
           )
         } else {
           unsubSelected = selected.subscribe(observer);

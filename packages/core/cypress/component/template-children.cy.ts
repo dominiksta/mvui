@@ -5,6 +5,7 @@ describe('template children', () => {
 
   it('HTM(Div)LElement', attempt(() => {
 
+    @Component.register
     class TemplateChildrenHTMLElementTest extends Component {
       render() {
         const div1 = document.createElement('div');
@@ -20,7 +21,6 @@ describe('template children', () => {
         ]
       }
     }
-    TemplateChildrenHTMLElementTest.register();
 
     const comp = mount(TemplateChildrenHTMLElementTest);
 
@@ -32,13 +32,14 @@ describe('template children', () => {
 
   it('custom', attempt(async () => {
 
+    @Component.register
     class TemplateChildrenCustomTestChild extends Component {
       render() {
         return [ h.slot() ]
       }
     }
-    TemplateChildrenCustomTestChild.register();
 
+    @Component.register
     class TemplateChildrenCustomTest extends Component {
       render() {
         return [
@@ -65,7 +66,6 @@ describe('template children', () => {
         ]
       }
     }
-    TemplateChildrenCustomTest.register();
 
     const comp = mount(TemplateChildrenCustomTest);
 

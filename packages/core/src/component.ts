@@ -221,25 +221,28 @@ export default abstract class Component<
     this.lifecycleState = "created";
   }
 
-  static register() {
-    if (!this.tagNameSuffix)
-      this.tagNameSuffix = camelToDash(this.name).substring(1);
+  static register(constructor?: Function) {
+    const cls = constructor ? (constructor as typeof Component) : this;
+    console.log(this, constructor);
+
+    if (!cls.tagNameSuffix)
+      cls.tagNameSuffix = camelToDash(cls.name).substring(1);
 
     // fix bundled names starting with `_`
-    if (this.tagNameSuffix.startsWith("-"))
-      this.tagNameSuffix = this.tagNameSuffix.substring(1);
+    if (cls.tagNameSuffix.startsWith("-"))
+      cls.tagNameSuffix = cls.tagNameSuffix.substring(1);
 
     let prefix;
-    if (this.tagNameLibrary) {
-      prefix = MVUI_GLOBALS.PREFIXES.get(this.tagNameLibrary) ??
-               this.tagNameLibrary;
+    if (cls.tagNameLibrary) {
+      prefix = MVUI_GLOBALS.PREFIXES.get(cls.tagNameLibrary) ??
+               cls.tagNameLibrary;
     } else {
       prefix = MVUI_GLOBALS.PREFIXES.get('default');
     }
 
     customElements.define(
-      `${prefix}-${this.tagNameSuffix}`,
-      this as any
+      `${prefix}-${cls.tagNameSuffix}`,
+      cls as any
     );
   }
 
@@ -343,9 +346,8 @@ export default abstract class Component<
    */
   [GENERIC_TYPE_HIDE]?: ParamSpec;
 
-  // TODO: maybe remove now that `define` is a thing?
   /** Get a new {@link TemplateElement} for use in a {@link render} method. */
-  static new<
+  static t<
     T extends Component<E>,
     E extends _ParamSpec = T extends Component<infer I> ? I : never
   >(

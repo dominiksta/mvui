@@ -1,6 +1,7 @@
 import { Component, rx, h } from "$thispkg";
 import { attempt, mount } from "../support/helpers";
 
+@Component.register
 class DumbComponent extends Component {
 
   props = { value: new rx.Prop('', { reflect: true }) };
@@ -12,8 +13,8 @@ class DumbComponent extends Component {
     ])
   ]
 }
-DumbComponent.register();
 
+@Component.register
 class SmartComponent extends Component {
 
   private state = new rx.State('reactive value');
@@ -24,15 +25,14 @@ class SmartComponent extends Component {
       h.button({ events: {
         click: () => this.state.next('second reactive value')
       }}, 'Change reactive value'),
-      DumbComponent.new({ props: { value: 'test' }}),
-      DumbComponent.new({ props: { value: this.state }}),
-      DumbComponent.new(
+      DumbComponent.t({ props: { value: 'test' }}),
+      DumbComponent.t({ props: { value: this.state }}),
+      DumbComponent.t(
         { attrs: { value: this.state.map(v => v + ' from attribute') }}
       ),
     ])
   ]
 }
-SmartComponent.register();
 
 describe('props', (() => {
   it('basic props', attempt(async () => {

@@ -1,8 +1,9 @@
-import { Component, h, rx, define } from "$thispkg";
+import { Component, h, rx } from "$thispkg";
 import { attempt } from "../support/helpers";
 
 const lifecycle = new rx.State<string>('initial');
 
+@Component.register
 class LifecycleTestComponent extends Component {
 
   stickyCounter = new rx.State(100);
@@ -28,7 +29,6 @@ class LifecycleTestComponent extends Component {
     ];
   }
 }
-define(LifecycleTestComponent);
 
 describe('lifecycle', () => {
   it('general lifecycle', attempt(async () => {

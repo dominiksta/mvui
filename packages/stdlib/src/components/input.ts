@@ -1,4 +1,4 @@
-import { Component, rx, h, style, define } from "@mvui/core";
+import { Component, rx, h, style } from "@mvui/core";
 import { theme } from "theme";
 
 /**
@@ -13,6 +13,7 @@ import { theme } from "theme";
  *
  * TODO: maybe make onlyEmitOnBlur an option for rx.bind ?
  */
+@Component.register
 export class Input extends Component {
   static tagNameLibrary = 'std';
 
@@ -57,5 +58,3 @@ export class Input extends Component {
     }})
   ]
 }
-
-export const [ input ] = define(Input);

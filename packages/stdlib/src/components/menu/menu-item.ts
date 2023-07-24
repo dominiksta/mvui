@@ -1,4 +1,4 @@
-import { Component, define, h, style } from "@mvui/core";
+import { Component, h, style } from "@mvui/core";
 import { menuContext, STYLE_MENU_ITEM } from './menu';
 
 /**
@@ -10,18 +10,18 @@ import { menuContext, STYLE_MENU_ITEM } from './menu';
    // ...
    render() {
      return [
-       std.menu([
-         std.menuitem('Menu 1 Item 1'),
-         std.menuitem('Menu 1 Item 2'),
-         std.menu({ props: { text: 'Submenu 1' }}, [
-           std.menuitem('Submenu 1 Item 1'),
-           std.menu({ props: { text: 'SubSubmenu 1' } }, [
-             std.menuitem('SubSubmenu 1 Item 1'),
-             std.menuitem('SubSubmenu 1 Item 2'),
+       std.Menu.t([
+         std.MenuItem.t('Menu 1 Item 1'),
+         std.MenuItem.t('Menu 1 Item 2'),
+         std.Menu.t({ props: { text: 'Submenu 1' }}, [
+           std.MenuItem.t('Submenu 1 Item 1'),
+           std.Menu.t({ props: { text: 'SubSubmenu 1' } }, [
+             std.MenuItem.t('SubSubmenu 1 Item 1'),
+             std.MenuItem.t('SubSubmenu 1 Item 2'),
            ]),
-           std.menuitem('Submenu 1 Item 2'),
+           std.MenuItem.t('Submenu 1 Item 2'),
          ]),
-         std.menuitem('Menu 1 Item 3'),
+         std.MenuItem.t('Menu 1 Item 3'),
        ]),
      ]
    }
@@ -33,6 +33,7 @@ import { menuContext, STYLE_MENU_ITEM } from './menu';
 
    @slot {any} default
  */
+@Component.register
 export class MenuItem extends Component<{
   slots: {
     right: HTMLDivElement
@@ -68,5 +69,3 @@ export class MenuItem extends Component<{
     }
   });
 };
-
-export const [ menuitem ] = define(MenuItem);

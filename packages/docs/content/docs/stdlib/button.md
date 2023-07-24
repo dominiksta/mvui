@@ -14,9 +14,9 @@ import * as std from "@mvui/stdlib";
 export default class Example extends Component {
   render() {
     return [
-      std.button('Default'),
-      std.button({ props: { kind: 'primary' }}, 'Primary'),
-      std.button({ props: { kind: 'accent' }}, 'Accent'),
+      std.Button.t('Default'),
+      std.Button.t({ props: { kind: 'primary' }}, 'Primary'),
+      std.Button.t({ props: { kind: 'accent' }}, 'Accent'),
     ];
   }
 }

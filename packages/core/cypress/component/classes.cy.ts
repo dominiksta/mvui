@@ -6,6 +6,7 @@ describe('setting css classes', () => {
 
     const klass3 = new rx.State(false);
 
+    @Component.register
     class ClassListTest extends Component {
       render() {
         return [
@@ -19,7 +20,6 @@ describe('setting css classes', () => {
         ]
       }
     }
-    ClassListTest.register();
 
     const comp = mount(ClassListTest);
     const el = await comp.query('div');

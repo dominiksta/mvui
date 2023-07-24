@@ -13,16 +13,16 @@ bookToC: false
 ```typescript
 import { Component, rx, h } from "@mvui/core";
 
+@Component.register
 export default class CounterComponent extends Component {
   render() {
     const count = new rx.State(0);
-    // this will get properly torn down on unmount
-    this.onRemoved(rx.interval(1000).subscribe(_ => {
-      count.next(v => v + 1);
-    }));
     return [
-      // synchronous memoized state derivation
-      h.span(count.derive(v => `You are looking at Mvui for ${v}s`)),
+      h.button(
+        { events: { click: () => count.next(v => v + 1) } },
+        'Click Me'
+      ),
+      h.span(count.derive(v => ` Count: ${v}`)),
     ];
   }
 }

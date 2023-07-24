@@ -1,6 +1,5 @@
 export { default as Component, ComponentTemplateElement } from './component';
 export { MVUI_GLOBALS, MvuiConfig } from './globals';
-export { default as define } from './define';
 export * as rx from './rx';
 export { default as h } from './html';
 export { http, RequestOptions } from "./http";

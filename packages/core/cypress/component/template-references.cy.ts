@@ -2,6 +2,7 @@ import { Component, h } from "$thispkg";
 import { sleep } from "$thispkg/util/time";
 import { attempt, mount, waitFrame } from "../support/helpers";
 
+@Component.register
 class TemplateReferencesTest1 extends Component {
 
   private paragraphEl = this.query<HTMLParagraphElement>('.myClass');
@@ -29,8 +30,8 @@ class TemplateReferencesTest1 extends Component {
     ];
   }
 }
-TemplateReferencesTest1.register();
 
+@Component.register
 class TemplateReferencesTest2 extends Component {
 
   render = () => [
@@ -50,7 +51,6 @@ class TemplateReferencesTest2 extends Component {
     ])
   ]
 }
-TemplateReferencesTest2.register();
 
 describe('Template References', function() {
   it('queries', attempt(async () => {
@@ -71,6 +71,7 @@ describe('Template References', function() {
   }));
 
   it('ref field in template element creator', attempt(async () => {
+    @Component.register
     class TemplateReferencesTestRef extends Component {
 
       render() {
@@ -94,7 +95,6 @@ describe('Template References', function() {
         ]
       }
     }
-    TemplateReferencesTestRef.register();
 
     const comp = mount(TemplateReferencesTestRef);
     await waitFrame();

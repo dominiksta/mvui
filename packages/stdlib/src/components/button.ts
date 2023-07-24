@@ -1,4 +1,4 @@
-import { Component, define, h, rx, style } from "@mvui/core";
+import { Component, h, rx, style } from "@mvui/core";
 import { theme } from "theme";
 
 /**
@@ -10,7 +10,7 @@ import { theme } from "theme";
 
    class Example extends Component {
      render = () => [
-       std.button('Click Me!'),
+       std.Button.t('Click Me!'),
      ]
    }
    ```
@@ -28,6 +28,7 @@ import { theme } from "theme";
 
    @slot {any} default
  */
+@Component.register
 export class Button extends Component<{
   events: {
     click: MouseEvent
@@ -100,5 +101,3 @@ export class Button extends Component<{
     ]
   }
 }
-
-export const [button] = define(Button);

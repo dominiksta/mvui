@@ -13,7 +13,7 @@ import * as std from "@mvui/stdlib";
 export default class Example extends Component {
   render() {
     return [
-      std.collapsible({
+      std.Collapsible.t({
         slots: { header: h.span('Header') },
       }, 'Content'),
     ];

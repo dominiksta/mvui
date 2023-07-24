@@ -4,6 +4,7 @@
     "sourceMap": true,
     "strict": true,
     "moduleResolution": "node",
+    "experimentalDecorators": true,
     "composite": true,
     // "noEmit": true,
     "lib": [

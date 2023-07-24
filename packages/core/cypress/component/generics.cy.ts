@@ -20,11 +20,11 @@ describe('generic components', () => {
         const state1 = new rx.State(0);
         const state2 = new rx.State('hi');
         return [
-          (GenericComp<number>).new({
+          (GenericComp<number>).t({
             props: { value: state1 },
             events: { change: e => state1.next(e) }
           }),
-          (GenericComp<string>).new({
+          (GenericComp<string>).t({
             props: { value: state2 },
             events: { change: e => state2.next(e) }
           })

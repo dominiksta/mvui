@@ -2,6 +2,7 @@ import { Component, rx, h } from "$thispkg";
 import { attempt, mount } from "../support/helpers";
 
 describe('reactive templates', () => {
+  @Component.register
   class CounterComponent extends Component {
     private count = new rx.State(0);
     private multiplier = new rx.State(1);
@@ -30,7 +31,6 @@ describe('reactive templates', () => {
       ])
     ];
   }
-  CounterComponent.register();
 
   it('basic reactivity (counter)', attempt(async () => {
     const comp = mount(CounterComponent);
@@ -49,7 +49,7 @@ describe('reactive templates', () => {
     btnIncCount.click(); expect(state.innerText).to.be.eq('4 * 3 = 12');
   }));
 
-
+  @Component.register
   class ReactiveList extends Component {
     private list = new rx.State(['item 1', 'item 2']);
     private counter = new rx.State(0);
@@ -86,7 +86,6 @@ describe('reactive templates', () => {
       ])
     ];
   }
-  ReactiveList.register();
 
   it('reactive list', attempt(async () => {
     const comp = mount(ReactiveList);
@@ -114,6 +113,7 @@ describe('reactive templates', () => {
     check(3, 5);
   }));
 
+  @Component.register
   class EditableList extends Component {
     private editableList = new rx.State([
       { name: 'name1', value: 'val1' },
@@ -165,7 +165,6 @@ describe('reactive templates', () => {
       ),
     ]
   }
-  EditableList.register();
 
 
   it('editable list', attempt(async () => {

@@ -1,8 +1,9 @@
-import { Component, rx, h, define } from "$thispkg";
+import { Component, rx, h } from "$thispkg";
 import { attempt, mount } from "../support/helpers";
 
 const selectCtx = new rx.Context(() => new rx.State('val1'));
 
+@Component.register
 class MySelect extends Component {
   render() {
     const ctx = this.provideContext(selectCtx);
@@ -16,8 +17,8 @@ class MySelect extends Component {
     ]
   }
 }
-const [ mySelect ] = define(MySelect);
 
+@Component.register
 class MySelectItem extends Component {
   props = {
     value: new rx.Prop(''),
@@ -31,24 +32,23 @@ class MySelectItem extends Component {
     ]
   }
 }
-const [ mySelectItem ] = define(MySelectItem);
 
 describe('context', () => {
 
   it('kind works', attempt(async () => {
 
+    @Component.register
     class ContextTest extends Component {
       render() {
         return [
-          mySelect([
-            mySelectItem({ props: { value: 'val1' } }),
-            mySelectItem({ props: { value: 'val2' } }),
-            mySelectItem({ props: { value: 'val3' } }),
+          MySelect.t([
+            MySelectItem.t({ props: { value: 'val1' } }),
+            MySelectItem.t({ props: { value: 'val2' } }),
+            MySelectItem.t({ props: { value: 'val3' } }),
           ])
         ];
       }
     }
-    define(ContextTest);
 
     const comp = mount(ContextTest);
     const currVal = await (await comp.query<MySelect>('app-my-select')).query(

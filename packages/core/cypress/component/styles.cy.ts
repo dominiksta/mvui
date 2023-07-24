@@ -8,6 +8,7 @@ const SOME_SHARED_STYLES = style.sheet({
   }
 });
 
+@Component.register
 class StyledComponent extends Component {
 
   static styles = [
@@ -45,7 +46,6 @@ class StyledComponent extends Component {
     ])
   ]
 }
-StyledComponent.register();
 
 describe('styling', () => {
   it('basic styling', attempt(async () => {
@@ -65,10 +65,11 @@ describe('styling', () => {
   }));
 
   it('style overrides', async () => {
+    @Component.register
     class StyleOverridingComponent extends Component {
       render() {
         return [
-          StyledComponent.new({
+          StyledComponent.t({
             styleOverrides: style.sheet({
               'button': {
                 // HACK this should ideally work without !important
@@ -79,7 +80,6 @@ describe('styling', () => {
         ]
       }
     }
-    StyleOverridingComponent.register();
 
     const comp = mount(StyleOverridingComponent);
 

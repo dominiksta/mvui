@@ -1,6 +1,7 @@
 import { Component, h, rx } from "$thispkg";
 import { mount } from "../support/helpers";
 
+@Component.register
 export class EventEmitter extends Component<{
   events: {
     'customClick': MouseEvent,
@@ -39,9 +40,9 @@ export class EventEmitter extends Component<{
   ];
   
 }
-EventEmitter.register();
 
 
+@Component.register
 export class EventReceiver extends Component {
   state = new rx.State<Event>(new CustomEvent(''));
 
@@ -50,7 +51,7 @@ export class EventReceiver extends Component {
       h.fieldset([
         h.legend('Event Receiver'),
         h.p({ attrs: { id: 'state' } }, this.state),
-        EventEmitter.new({
+        EventEmitter.t({
           events: {
             // we put the click event in here additionally to test the types
             customClick: (e) => this.state.next(e),
@@ -63,7 +64,6 @@ export class EventReceiver extends Component {
   };
   
 }
-EventReceiver.register();
 
 describe('custom events', () => {
   it('kinda works', async () => {

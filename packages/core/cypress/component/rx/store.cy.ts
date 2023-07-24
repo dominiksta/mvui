@@ -202,6 +202,7 @@ describe('Stores', () => {
   
 
   it('attaching to component lifecycle', async () => {
+    @Component.register
     class StoreComponent extends Component {
       render() {
         // console.log('render');
@@ -243,7 +244,6 @@ describe('Stores', () => {
         ]
       }
     }
-    StoreComponent.register();
 
     const comp = mount(StoreComponent);
     const addEffect = await comp.query<HTMLButtonElement>('#add-effect');
@@ -264,6 +264,7 @@ describe('Stores', () => {
   it('partial bindings in component', async () => {
     let bindVal = '';
 
+    @Component.register
     class PartialBindingsStoreComponent extends Component {
       render() {
         // console.log('render');
@@ -284,7 +285,6 @@ describe('Stores', () => {
         ]
       }
     }
-    PartialBindingsStoreComponent.register();
 
     const comp = mount(PartialBindingsStoreComponent);
     const input = await comp.query<HTMLInputElement>('input');

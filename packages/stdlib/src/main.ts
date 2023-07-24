@@ -1,4 +1,4 @@
-import { Component, define, h, MVUI_GLOBALS, rx, style } from "@mvui/core";
+import { Component, h, MVUI_GLOBALS, rx, style } from "@mvui/core";
 import { theme, darkTheme, lightTheme, MVUI_STDLIB_THEME_NAME } from "theme";
 import * as std from "./index";
 
@@ -10,6 +10,7 @@ style.currentTheme$.subscribe(theme => {
 
 MVUI_GLOBALS.APP_DEBUG = false;
 
+@Component.register
 class Main extends Component {
   #state = new rx.State('initial');
 
@@ -30,44 +31,44 @@ class Main extends Component {
 
   render = () => [
     h.h1('Test Page'),
-    std.snackbar(),
-    std.collapsible([
+    std.Snackbar.t(),
+    std.Collapsible.t([
       h.span({attrs: { slot: 'header' }}, 'Buttons'),
-      std.button('Default'),
-      std.button({ props: { kind: 'primary' } }, 'Primary'),
-      std.button({ props: { kind: 'accent' } }, 'Accent'),
+      std.Button.t('Default'),
+      std.Button.t({ props: { kind: 'primary' } }, 'Primary'),
+      std.Button.t({ props: { kind: 'accent' } }, 'Accent'),
     ]),
-    std.collapsible([
+    std.Collapsible.t([
       h.span({ attrs: { slot: 'header' } }, 'Menus'),
-      std.menu({ props: { text: 'Menu 1 (should not display)' }}, [
-        std.menuitem({ slots: { right: [h.div('')] }}, 'Menu 1 Item 1'),
-        std.menuitem('Menu 1 Item 2'),
-        std.menu({ props: { text: 'Submenu 1' }}, [
-          std.menuitem('Submenu 1 Item 1'),
-          std.menu({ props: { text: 'SubSubmenu 1' } }, [
-            std.menuitem('SubSubmenu 1 Item 1'),
-            std.menuitem('SubSubmenu 1 Item 2'),
+      std.Menu.t({ props: { text: 'Menu 1 (should not display)' }}, [
+        std.MenuItem.t({ slots: { right: [h.div('')] }}, 'Menu 1 Item 1'),
+        std.MenuItem.t('Menu 1 Item 2'),
+        std.Menu.t({ props: { text: 'Submenu 1' }}, [
+          std.MenuItem.t('Submenu 1 Item 1'),
+          std.Menu.t({ props: { text: 'SubSubmenu 1' } }, [
+            std.MenuItem.t('SubSubmenu 1 Item 1'),
+            std.MenuItem.t('SubSubmenu 1 Item 2'),
           ]),
-          std.menuitem('Submenu 1 Item 2'),
+          std.MenuItem.t('Submenu 1 Item 2'),
         ]),
-        std.menuitem('Menu 1 Item 3'),
+        std.MenuItem.t('Menu 1 Item 3'),
       ]),
       h.br(),
     ]),
-    std.collapsible([
+    std.Collapsible.t([
       h.span({ attrs: { slot: 'header' } }, 'Snackbar'),
-      std.button(
+      std.Button.t(
         { events: { click: _ => std.openSnackbar('Text 1') } },
         'Trigger with Text 1'
       ),
-      std.button(
+      std.Button.t(
         { events: { click: _ => std.openSnackbar('Text 2') } },
         'Trigger with Text 2'
       ),
-      std.button(
+      std.Button.t(
         {
           events: {
-            click: _ => std.openSnackbar(std.collapsible([
+            click: _ => std.openSnackbar(std.Collapsible.t([
               h.span({ attrs: { slot: 'header' } }, 'header'),
               h.div('content')
             ]), 5000)
@@ -76,7 +77,7 @@ class Main extends Component {
         'Trigger with Custom Elements'
       ),
     ]),
-    std.collapsible([
+    std.Collapsible.t([
       h.span({ attrs: { slot: 'header' } }, 'Bindings Test'),
       h.p([
         'Cras placerat accumsan nulla.  Nullam tempus.',
@@ -84,8 +85,8 @@ class Main extends Component {
         'Nam vestibulum accumsan nisl.  Nullam tristique diam non turpis.  ',
         'Nullam tristique diam non turpis.  ',
       ]),
-      std.input({ props: { value: rx.bind(this.#state) } }),
-      std.input({
+      std.Input.t({ props: { value: rx.bind(this.#state) } }),
+      std.Input.t({
         styleOverrides: style.sheet({
           'input': {
             fontFamily: 'monospace',
@@ -95,10 +96,9 @@ class Main extends Component {
           value: rx.bind(this.#state),
         }
       }),
-      std.button({ events: { click: _ => this.#state.next('intial') } }, 'reset'),
+      std.Button.t({ events: { click: _ => this.#state.next('intial') } }, 'reset'),
     ]),
   ]
 }
-Main.register();
 
 document.body.appendChild(new Main());

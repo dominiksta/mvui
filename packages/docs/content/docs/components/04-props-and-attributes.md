@@ -24,8 +24,9 @@ your component to be used outside of Mvui.
 
 {{<codeview>}}
 ```typescript
-import { Component, rx, h, define } from "@mvui/core";
+import { Component, rx, h } from "@mvui/core";
 
+@Component.register
 class MyButton extends Component {
   props = {
     kind: new rx.Prop<'primary' | 'default'>(
@@ -45,13 +46,12 @@ class MyButton extends Component {
   }
 }
 
-const [ myButton ] = define(MyButton);
-
+@Component.register
 export default class Main extends Component {
   render() {
     return [
-      myButton(),
-      myButton({props: { kind: 'primary' }}),
+      MyButton.t(),
+      MyButton.t({props: { kind: 'primary' }}),
       h.span(' <-- inspect element to see the attribute'),
     ]
   }
