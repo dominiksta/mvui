@@ -142,7 +142,7 @@ export default class Stream<T> implements Subscribable<T> {
   ): Stream<unknown>;
 
   pipe(...operations: OperatorFunction<any, any>[]): Stream<any> {
-    return pipe(...operations)(this);
+    return (pipe as any)(...operations)(this);
   }
 
   /** Shorthand for `.pipe(rx.map(...))` */
