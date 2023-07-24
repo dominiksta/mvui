@@ -44,6 +44,7 @@ export default class Stream<T> implements Subscribable<T> {
 
   /** @ignore */
   protected _subscribe(observer: Observer<T>): TeardownLogic {
+    // console.log(observer.next, observer.error);
     let completed = false;
     let unsubscribed = false;
     try {

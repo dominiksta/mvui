@@ -223,7 +223,7 @@ export default abstract class Component<
 
   static register(constructor?: Function) {
     const cls = constructor ? (constructor as typeof Component) : this;
-    console.log(this, constructor);
+    // console.log(this, constructor);
 
     if (!cls.tagNameSuffix)
       cls.tagNameSuffix = camelToDash(cls.name).substring(1);

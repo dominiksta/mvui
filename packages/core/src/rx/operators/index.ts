@@ -10,6 +10,7 @@ export { default as take } from "./take";
 export { default as takeUntil } from "./takeUntil";
 export { default as retry } from "./retry";
 export { default as switchMap } from "./switchMap";
+export { default as showStatus, handleStatus } from "./status";
 export {
   default as share, shareReplay, ShareConfig, ShareReplayConfig
 } from "./share";

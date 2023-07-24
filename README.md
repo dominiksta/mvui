@@ -9,6 +9,7 @@ Yes, this is a new frontend framework, and no, I am not joking.
 ```typescript
 import { Component, rx, h } from '@mvui/core';
 
+@Component.register
 export class CounterComponent extends Component {
   render() {
     const count = new rx.State(0);
