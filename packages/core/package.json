@@ -31,6 +31,7 @@
     "cypress": "^12.8.1",
     "esbuild": "0.17.11",
     "msw": "^1.2.1",
+    "rxjs": "^7.8.1",
     "source-map-loader": "^4.0.1",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",

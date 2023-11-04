@@ -6,6 +6,7 @@ import './rx/state.cy';
 import './rx/store.cy';
 import './rx/share.cy';
 import './rx/streams.cy';
+import './rx/rxjs-interop.cy';
 import './http.cy';
 
 import './attribute-reflection.cy';

@@ -2,6 +2,15 @@ import EmptyError from "./empty-error";
 import { Observer, ObserverDefinition, Subscribable, TeardownLogic } from "./interface";
 import { pipe } from "./util";
 
+if (!('observable' in Symbol))
+  (Symbol as any)['observable'] = (Symbol as any).for('@@observable');
+
+declare global {
+  interface SymbolConstructor {
+    readonly observable: symbol;
+  }
+}
+
 export type OperatorFunction<InputT, ResultT> =
   (stream: Stream<InputT>) => Stream<ResultT>;
 
@@ -169,6 +178,16 @@ export default class Stream<T> implements Subscribable<T> {
     return _BasicOperators.filter(filter)(this);
   }
 
+  [Symbol.observable]() {
+    return {
+      subscribe: (observer: ObserverDefinition<T>) => {
+        const unsub = this.subscribe(observer);
+        return {
+          unsubscribe: unsub,
+        }
+      }
+    };
+  }
 
   // async/await
   // ----------------------------------------------------------------------
