@@ -11,6 +11,7 @@ import { testSwitchMap } from './operators/switchMap';
 import { testTake } from './operators/take';
 import { testTakeUntil } from './operators/takeUntil';
 import { testThrottle } from './operators/throttle';
+import { testTimeout } from './operators/timeout';
 
 describe('operators', () => {
   it('showStatus & handleStatus', testShowStatus());
@@ -24,6 +25,7 @@ describe('operators', () => {
   it('startWith', testStartWith());
   it('switchMap', testSwitchMap());
   it('take', testTake());
+  it('timeout', testTimeout());
   it('takeUntil', testTakeUntil());
   it('throttle', testThrottle());
 })

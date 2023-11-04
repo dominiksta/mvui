@@ -1,4 +1,5 @@
 import Stream, { OperatorFunction } from "../stream";
+import from, { StreamInput } from "./creation/from";
 
 /**
    TODO
@@ -6,8 +7,7 @@ import Stream, { OperatorFunction } from "../stream";
    @group Stream Operators
  */
 export default function switchMap<T, O>(
-  // TODO: support promises
-  project: (value: T) => Stream<O>,
+  project: (value: T) => StreamInput<O>,
 ): OperatorFunction<T, O> {
   return orig => new Stream(observer => {
 
@@ -30,7 +30,7 @@ export default function switchMap<T, O>(
           unsubProjected();
         } 
         completedProjected = false;
-        unsubProjected = project(vOrig).subscribe({
+        unsubProjected = from(project(vOrig)).subscribe({
           ...observer,
           next(vProjected) {
             // console.debug('switchMap: projected next: ', vProjected);

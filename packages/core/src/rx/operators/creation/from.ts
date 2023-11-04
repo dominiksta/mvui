@@ -16,7 +16,7 @@ type StreamInteropRxJS<T> = {
   subscribe: (obs: ObserverDefinitionInterop<T>) => { unsubscribe: () => void }
 };
 
-type StreamInput<T> = Stream<T>
+export type StreamInput<T> = Stream<T>
   | Iterable<T>
   | Promise<T>
   | StreamInterop<T>

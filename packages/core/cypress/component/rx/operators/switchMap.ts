@@ -19,10 +19,7 @@ export const testSwitchMap = () => attempt(async () => {
 
   let isFirst = true;
   async function firstTakesLonger(value: number) {
-    if (isFirst) {
-      isFirst = false;
-      await sleep(200);
-    }
+    if (isFirst) { isFirst = false; await sleep(200); }
     return value + 1;
   }
 
