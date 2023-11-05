@@ -13,6 +13,7 @@ import { testTakeUntil } from './operators/takeUntil';
 import { testThrottle } from './operators/throttle';
 import { testTimeout } from './operators/timeout';
 import * as other from './operators/other';
+import { testMergeWith } from './operators/mergeWith';
 
 describe('operators', () => {
   it('showStatus & handleStatus', testShowStatus());
@@ -29,6 +30,7 @@ describe('operators', () => {
   it('timeout', testTimeout());
   it('takeUntil', testTakeUntil());
   it('throttle', testThrottle());
+  it('mergeWith', testMergeWith());
   it('last', other.testLast());
   it('first', other.testFirst());
   it('defaultIfEmpty', other.testDefaultIfEmpty());
