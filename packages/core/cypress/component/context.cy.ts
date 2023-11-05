@@ -21,7 +21,7 @@ class MySelect extends Component {
 @Component.register
 class MySelectItem extends Component {
   props = {
-    value: new rx.Prop(''),
+    value: new rx.Prop<string>(),
   }
 
   render() {

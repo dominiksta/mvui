@@ -160,7 +160,7 @@ export default class Store<
   constructor(
     definition: {
       initialState: StateT,
-      reducers: CustomReducersT,
+      reducers?: CustomReducersT,
       selectors?: SelectorsT,
     },
   ) {

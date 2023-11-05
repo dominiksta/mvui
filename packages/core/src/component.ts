@@ -916,6 +916,5 @@ export type ComponentTemplateElement<
 > = TemplateElement<
   CompT,
   CompT extends Component<infer I> ? I : never,
-  { [key in keyof CompT['props']]:
-    CompT['props'][key] extends State<infer I> ? I : never }
+  CompT['props']
 >;

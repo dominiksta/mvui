@@ -132,6 +132,6 @@ const h: {
   video      : TemplateElement.fromCustom('video'),
   wbr        : TemplateElement.fromCustom('wbr'),
   custom     : TemplateElement.fromCustom,
-}
+} as any;
 
 export default h;

@@ -16,7 +16,6 @@ export default class Prop<T> extends State<T> {
   }
 
   constructor(
-    initial: T,
     options?: {
       reflect?: boolean | string,
       converter?: {
@@ -25,7 +24,9 @@ export default class Prop<T> extends State<T> {
       BooleanConstructor | ObjectConstructor
     },
   ) {
-    super(initial);
+    // we can cast to any here because we will fill the initial value for a required prop
+    // before rendering anyway.
+    super(undefined as any);
 
     if (options) {
       if (options.reflect) this._options.reflect = options.reflect;
@@ -65,3 +66,22 @@ export default class Prop<T> extends State<T> {
     
   }
 }
+
+export class PropWithDefault<T> extends Prop<T> {
+  private __marker = true;
+
+  constructor(
+    initial: T,
+    options?: {
+      reflect?: boolean | string,
+      converter?: {
+      toString: (v: T) => string, fromString: (v: string) => T
+      } | StringConstructor | NumberConstructor |
+      BooleanConstructor | ObjectConstructor
+    },
+  ) {
+    super(options);
+    this.next(initial);
+  }
+}
+

@@ -1,6 +1,7 @@
 import { MvuiCSSSheet } from "./style";
 import { isSubscribable } from "./rx/interface";
-import { MaybeSubscribable, ToStringable } from "./util/types";
+import { MaybeSubscribable, ToStringable, UndefinedToOptional } from "./util/types";
+import { Prop, PropWithDefault } from "./rx";
 
 export interface EventWithTarget<T extends HTMLElement> extends Event {
   target: T;
@@ -30,7 +31,7 @@ export class TemplateElement<
   Props extends { [key: string]: any } = { },
 > {
 
-  public params: TemplateElementParams<T, Params, Props> = {}
+  public params: TemplateElementParams<T, Params, Props>;
   public children: TemplateElementChildren = []
 
   constructor(
@@ -47,6 +48,7 @@ export class TemplateElement<
     ) {
       if (children) throw new Error('Invalid arguments');
       this.children = childrenOrParams as any;
+      this.params = {} as any;
     } else {
       this.params = childrenOrParams as any;
       this.children = children || [];
@@ -124,7 +126,7 @@ export type ParamSpec = {
 export type TemplateElementParams<
   T extends HTMLElement,
   Params extends ParamSpec = {},
-  Props extends { [key: string]: any } = {}
+  Props extends { [key: string]: Prop<any> } = {}
 > = {
   style?: Partial<{ [key in keyof CSSStyleDeclaration]: MaybeSubscribable<ToStringable> }>,
   styleOverrides?: MvuiCSSSheet,
@@ -161,10 +163,16 @@ export type TemplateElementParams<
   // instantiated from a call to document.createElement, which does not have the ability
   // to pass anything to the constructor. Therefore, any webcomponent must have some
   // valid initial state and props must always be optional.
-  props?: Partial<{
-    [Property in keyof Props]:
-    MaybeSubscribable<Props[Property]>
-  }>
+  props: Props extends undefined ? never : {
+    [P in keyof PropsDefaultToOptional<Props>]:
+      MaybeSubscribable<Props[P] extends Prop<infer I> ? I : never>
+  }
 
   ref?: { current: HTMLElement },
 };
+
+type PropsDefaultToOptional<T extends { [key: string]: Prop<any>}> = UndefinedToOptional<{
+  [P in keyof T]:
+    (T[P] extends Prop<infer I> ? I : never)
+    | (T[P] extends PropWithDefault<any> ? undefined : never)
+}>;
