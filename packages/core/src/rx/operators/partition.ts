@@ -1,4 +1,4 @@
-import Stream from "rx/stream";
+import Stream from "../stream";
 import from, { StreamInput } from "./creation/from";
 
 /**
