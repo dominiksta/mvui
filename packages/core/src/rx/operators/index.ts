@@ -18,3 +18,4 @@ export {
 export { default as startWith } from "./startWith";
 export { default as scan } from "./scan";
 export { default as tap } from "./tap";
+export * from "./other";

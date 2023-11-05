@@ -12,6 +12,7 @@ import { testTake } from './operators/take';
 import { testTakeUntil } from './operators/takeUntil';
 import { testThrottle } from './operators/throttle';
 import { testTimeout } from './operators/timeout';
+import * as other from './operators/other';
 
 describe('operators', () => {
   it('showStatus & handleStatus', testShowStatus());
@@ -28,5 +29,15 @@ describe('operators', () => {
   it('timeout', testTimeout());
   it('takeUntil', testTakeUntil());
   it('throttle', testThrottle());
+  it('last', other.testLast());
+  it('first', other.testFirst());
+  it('defaultIfEmpty', other.testDefaultIfEmpty());
+  it('find', other.testFind());
+  it('findIndex', other.testFindIndex());
+  it('toArray', other.testToArray());
+  it('every', other.testEvery());
+  it('count', other.testCount());
+  it('isEmpty', other.testIsEmpty());
+  it('isEmpty', other.testIsEmpty());
 })
 

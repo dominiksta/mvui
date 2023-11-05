@@ -40,7 +40,7 @@ export default function scan<From, To>(
     return orig.subscribe({
       ...observer, next: v => {
         if (accumulated === undefined) {
-          accumulated = seed ? accumulator(seed, v, index++) : v;
+          accumulated = (seed !== undefined) ? accumulator(seed, v, index++) : v;
           observer.next(accumulated);
           // console.debug('first: ', accumulated);
         } else {

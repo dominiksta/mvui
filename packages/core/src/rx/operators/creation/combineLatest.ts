@@ -11,8 +11,8 @@ export default function combineLatest<T extends any[]>(
   
    @example
    ```ts
-   const [counter, multiplier] = [new State(2), new State(2)];
-   const sum = combineLatest(counter, multiplier).map([c, m] => c * m);
+   const [counter, multiplier] = [new rx.State(2), new rx.State(2)];
+   const sum = rx.combineLatest(counter, multiplier).map([c, m] => c * m);
    sum.subscribe(console.log); // => 4
    counter.next(3); // => 6
    ```
@@ -29,8 +29,8 @@ export default function combineLatest<T extends any[]>(
   
    @example
    ```ts
-   const [counter, multiplier] = [new State(2), new State(2)];
-   const sum = combineLatest({c: counter, m: multiplier}).map(v => v.c * v.m);
+   const [counter, multiplier] = [new rx.State(2), new rx.State(2)];
+   const sum = rx.combineLatest({c: counter, m: multiplier}).map(v => v.c * v.m);
    sum.subscribe(console.log); // => 4
    counter.next(3); // => 6
    ```
