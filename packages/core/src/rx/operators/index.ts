@@ -20,4 +20,5 @@ export { default as scan } from "./scan";
 export { default as tap } from "./tap";
 export { default as mergeWith } from "./mergeWith";
 export { default as concatWith } from "./concatWith";
+export { default as partition } from "./partition";
 export * from "./other";
