@@ -15,7 +15,6 @@ export default function mergeWith<T, A, B, C, D>(
 /**
    Combine the input stream with the given streams, emitting a new value every time one of
    the input streams emits a value. Completes when all input streams have completed.
-
    
    @example
    ```typescript
@@ -28,6 +27,8 @@ export default function mergeWith<T, A, B, C, D>(
    ```
  
    @group Stream Operators
+
+   @see {@link concatWith}
  */
 export default function mergeWith<T>(
   ...streams: StreamInput<any>[]

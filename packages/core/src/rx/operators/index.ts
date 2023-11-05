@@ -19,4 +19,5 @@ export { default as startWith } from "./startWith";
 export { default as scan } from "./scan";
 export { default as tap } from "./tap";
 export { default as mergeWith } from "./mergeWith";
+export { default as concatWith } from "./concatWith";
 export * from "./other";
