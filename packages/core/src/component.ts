@@ -5,7 +5,7 @@ import {
 } from "./template-element";
 import { Constructor, MaybeSubscribable, ToStringable } from "./util/types";
 import {
-  Stream, State, Prop, Context, fromAllEvents, fromEvent, map,
+  Stream, State, Context, fromAllEvents, fromEvent, map,
   distinctUntilChanged, skip, MulticastStream, throttleTime, debounceTime
 } from "./rx";
 import { camelToDash } from "./util/strings";
@@ -13,6 +13,7 @@ import { MVUI_GLOBALS } from "./globals";
 import * as style from "./style";
 import { isBinding } from "./rx/bind";
 import { isSubscribable, Subscribable } from "./rx/interface";
+import { Prop } from "./rx/prop";
 
 // these symbols are used for properties that should be accessible from anywhere in mvui
 // but should not be part of api surface
@@ -377,7 +378,7 @@ export default abstract class Component<
    * @example
    * ```typescript
    * class _MyComponent extends Component {
-   *   props = { value: new rx.Prop(0) };
+   *   props = { value: rx.prop<number>() };
    * }
    * const MyComponent _MyComponent.export();
    * export default MyComponent;

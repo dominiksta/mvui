@@ -10,7 +10,7 @@ Props are the primary way of passing data *down* the component tree.
 
 
 Props are declared with the `props` class field as objects of the type
-[`rx.Prop`](/reference/rx/classes/prop/). You can then set them in a template elements
+[`prop`](/reference/rx/functions/prop/). You can then set them in a template elements
 parameters.
 
 {{<hint info>}}
@@ -29,8 +29,8 @@ import { Component, rx, h } from "@mvui/core";
 @Component.register
 class MyButton extends Component {
   props = {
-    kind: new rx.Prop<'primary' | 'default'>(
-      'default', { reflect: true } // false by default
+    kind: new rx.prop<'primary' | 'default'>(
+      { reflect: true, defaultValue: 'default' } // false by default
     ),
   }
 

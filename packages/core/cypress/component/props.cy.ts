@@ -5,17 +5,21 @@ import { attempt, mount } from "../support/helpers";
 class DumbComponent extends Component {
 
   props = {
-    required: new rx.Prop<string>({ reflect: true }),
-    withDefault: new rx.PropWithDefault('default', { reflect: true }),
-    optional: new rx.Prop<string | undefined>({ reflect: true }),
+    required: rx.prop<string>({ reflect: true }),
+    withDefault: rx.prop({ reflect: true, defaultValue: 'default' }),
+    optional: rx.prop<string>({ reflect: true, optional: true }),
   };
 
-  render = () => [
-    h.fieldset([
-      h.legend('I am a dumb Component'),
-      h.p(this.props.withDefault.map(v => `I render this value: ${v}`))
-    ])
-  ]
+  render() {
+    return [
+      h.fieldset([
+        h.legend('I am a dumb Component'),
+        h.p(this.props.required.map(v => `required: ${v}`)),
+        h.p(this.props.withDefault.map(v => `withDefault: ${v}`)),
+        h.p(this.props.optional.map(v => `optional: ${v}`)),
+      ])
+    ]
+  }
 }
 
 @Component.register
@@ -83,4 +87,3 @@ describe('props', (() => {
     expect(attr(2, 'optional')).to.eq('second reactive value from attribute');
   }))
 }))
-

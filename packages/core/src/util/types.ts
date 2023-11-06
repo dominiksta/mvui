@@ -21,3 +21,6 @@ type GetMandatoryKeys<T> = {
 }[keyof T];
 
 export type UndefinedToOptional<T> = Partial<T> & Pick<T, GetMandatoryKeys<T>>;
+
+// can sometimes help clean up types
+export type Expand<T> = { [P in keyof T]: T[P] };

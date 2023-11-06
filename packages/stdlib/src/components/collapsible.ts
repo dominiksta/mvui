@@ -27,12 +27,8 @@ export class Collapsible extends Component {
   static tagNameLibrary = 'std';
 
   props = {
-    initialCollapsed: new rx.Prop<boolean>(
-      false, { reflect: true, converter: Boolean }
-    ),
-    collapsed: new rx.Prop<boolean>(
-      false, { reflect: true, converter: Boolean }
-    ),
+    initialCollapsed: rx.prop<boolean>({ reflect: true, defaultValue: true }),
+    collapsed: rx.prop<boolean>({ reflect: true, defaultValue: false }),
   }
 
   render() {

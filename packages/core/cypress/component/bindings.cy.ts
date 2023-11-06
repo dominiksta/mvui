@@ -3,7 +3,7 @@ import { attempt, mount } from "../support/helpers";
 
 @Component.register
 class MyBoundInput extends Component {
-  props = { value: new rx.Prop<string>() };
+  props = { value: rx.prop<string>() };
 
   render = () => [
     h.input({

@@ -27,7 +27,7 @@ import type Component from "../component";
 
    @Component.register
    class CtxConsumer extends Component {
-     props = { value: new rx.Prop('') }
+     props = { value: rx.prop<string>() }
 
      render() {
        const ctx = this.getContext(myCtx);

@@ -41,8 +41,8 @@ export class Input extends Component {
   });
 
   props = {
-    value: new rx.Prop('', { reflect: true }),
-    onlyEmitOnBlur: new rx.Prop(false, { reflect: true, converter: Boolean }),
+    value: rx.prop<string>({ reflect: true }),
+    onlyEmitOnBlur: rx.prop({ reflect: true, defaultValue: false }),
   };
 
   render = () => [

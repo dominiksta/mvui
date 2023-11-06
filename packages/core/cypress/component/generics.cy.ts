@@ -10,7 +10,7 @@ describe('generic components', () => {
       }
     }> {
       props = {
-        value: new rx.Prop<T | undefined>(undefined)
+        value: rx.prop<T>({optional: true})
       }
       render = () => [];
     }

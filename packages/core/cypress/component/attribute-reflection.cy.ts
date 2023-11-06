@@ -10,13 +10,9 @@ describe('attribute reflection', () => {
       static useShadow = false;
       
       props = {
-        attrBool: new rx.PropWithDefault<boolean>(
-          false, { reflect: true, converter: Boolean }
-        ),
-        attrString: new rx.PropWithDefault<string>('hi', { reflect: true }),
-        attrNum: new rx.PropWithDefault<number>(
-          5, { reflect: true, converter: Number }
-        ),
+        attrBool: rx.prop<boolean>({ reflect: true, defaultValue: false }),
+        attrString: rx.prop<string>({ reflect: true, converter: String, defaultValue: 'hi' }),
+        attrNum: rx.prop<number>({ reflect: true, defaultValue: 5 }),
       }
       render = () => [];
     };

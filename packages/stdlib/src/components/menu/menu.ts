@@ -82,7 +82,7 @@ export class Menu extends Component {
   static tagNameLibrary = 'std';
 
   props = {
-    text: new rx.Prop('', { reflect: true }),
+    text: rx.prop<string>({ reflect: true }),
   }
 
   

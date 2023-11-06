@@ -25,10 +25,10 @@ export default class Codeview extends Component {
 
   props = {
     // 'both' or 'tabs'
-    display: new rx.Prop('both'),
+    display: rx.prop({ defaultValue: 'both' }),
     // 'output' or 'code', only makes sense when `display` is 'tabs'
-    initialTab: new rx.Prop('output'),
-    outputHeight: new rx.Prop('80px', { reflect: true }),
+    initialTab: rx.prop({ defaultValue: 'output'}),
+    outputHeight: rx.prop({ reflect: true, defaultValue: '80px' }),
   }
 
   #runCode(text) {

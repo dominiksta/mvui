@@ -92,7 +92,7 @@ type MyEvents<T> = {
 
 class GenericComp<T> extends Component<MyEvents<T>> {
   props = {
-    value: new rx.Prop<T | undefined>(undefined)
+    value: rx.prop<T>({ optional: true })
   }
   render = () => [];
 }

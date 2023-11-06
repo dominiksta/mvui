@@ -1,7 +1,7 @@
 import { MvuiCSSSheet } from "./style";
 import { isSubscribable } from "./rx/interface";
-import { MaybeSubscribable, ToStringable, UndefinedToOptional } from "./util/types";
-import { Prop, PropWithDefault } from "./rx";
+import { MaybeSubscribable, ToStringable } from "./util/types";
+import { Prop, OptionalProp } from "./rx/prop";
 
 export interface EventWithTarget<T extends HTMLElement> extends Event {
   target: T;
@@ -159,20 +159,20 @@ export type TemplateElementParams<
     [Property in keyof T]: MaybeSubscribable<T[Property]>
   }>,
 
-  // Props are always optional for a technical reason: A webcomponent may be
-  // instantiated from a call to document.createElement, which does not have the ability
-  // to pass anything to the constructor. Therefore, any webcomponent must have some
-  // valid initial state and props must always be optional.
-  props: Props extends undefined ? never : {
-    [P in keyof PropsDefaultToOptional<Props>]:
-      MaybeSubscribable<Props[P] extends Prop<infer I> ? I : never>
-  }
+  props: Props extends undefined ? never : PropsDefToTemplate<Props>
 
   ref?: { current: HTMLElement },
 };
 
-type PropsDefaultToOptional<T extends { [key: string]: Prop<any>}> = UndefinedToOptional<{
-  [P in keyof T]:
-    (T[P] extends Prop<infer I> ? I : never)
-    | (T[P] extends PropWithDefault<any> ? undefined : never)
-}>;
+type GetMandatoryPropKeys<T> = {
+  [P in keyof T]: T[P] extends OptionalProp<any> ? never : P
+}[keyof T];
+
+type MakeOptionalProps<T> = Partial<T> & Pick<T, GetMandatoryPropKeys<T>>;
+
+type PropsExtractGeneric<T> = {
+  [P in keyof T]: Exclude<T[P], undefined> extends Prop<infer I>
+  ? MaybeSubscribable<I> : never
+};
+
+type PropsDefToTemplate<T extends { [key: string]: Prop<any>}> = PropsExtractGeneric<MakeOptionalProps<T>>;

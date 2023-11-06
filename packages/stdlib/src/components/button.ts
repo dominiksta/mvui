@@ -77,9 +77,9 @@ export class Button extends Component<{
   })
 
   props = {
-    kind: new rx.Prop<
-      'default' | 'primary' | 'accent'
-    >('default', { reflect: true }),
+    kind: rx.prop<'default' | 'primary' | 'accent'>(
+      { reflect: true, defaultValue: 'default' }
+    ),
   }
 
   render() {

@@ -2,7 +2,36 @@ import State from "./state";
 
 function identity<T>(v: T) { return v; };
 
-export default class Prop<T> extends State<T> {
+type PropOptions<T> = {
+  reflect?: boolean | string,
+  converter?: {
+    toString: (v: T) => string, fromString: (v: string) => T
+  } | StringConstructor | NumberConstructor |
+  BooleanConstructor | ObjectConstructor
+};
+
+export default function prop<T>(
+  options?: PropOptions<T>
+): Prop<T>;
+export default function prop<T>(
+  options?: PropOptions<T> & { optional: true }
+): OptionalProp<T>;
+export default function prop<T>(
+  options?: PropOptions<T> & { defaultValue: T }
+): OptionalProp<T>;
+
+export default function prop<T>(
+    options?: PropOptions<T> & { optional?: true, defaultValue?: T}
+): Prop<T> | OptionalProp<T> {
+  if (options !== undefined) {
+    if ('optional' in options) return new OptionalProp<T>(undefined, options);
+    if ('defaultValue' in options) return new OptionalProp<T>(options.defaultValue, options);
+  }
+  return new Prop<T>(undefined, options);
+}
+
+
+export class Prop<T> extends State<T> {
 
   /** @ignore */
   _options: {
@@ -16,17 +45,13 @@ export default class Prop<T> extends State<T> {
   }
 
   constructor(
-    options?: {
-      reflect?: boolean | string,
-      converter?: {
-      toString: (v: T) => string, fromString: (v: string) => T
-      } | StringConstructor | NumberConstructor |
-      BooleanConstructor | ObjectConstructor
-    },
+    initial?: T,
+    options?: PropOptions<T>,
   ) {
     // we can cast to any here because we will fill the initial value for a required prop
     // before rendering anyway.
     super(undefined as any);
+    if (initial !== undefined) this.next(initial);
 
     if (options) {
       if (options.reflect) this._options.reflect = options.reflect;
@@ -61,27 +86,16 @@ export default class Prop<T> extends State<T> {
             toString: JSON.stringify,
           }
         }
+      } else {
+        this._options.converter = {
+          fromString: JSON.parse,
+          toString: JSON.stringify,
+        }
       }
     }
     
   }
 }
 
-export class PropWithDefault<T> extends Prop<T> {
-  private __marker = true;
-
-  constructor(
-    initial: T,
-    options?: {
-      reflect?: boolean | string,
-      converter?: {
-      toString: (v: T) => string, fromString: (v: string) => T
-      } | StringConstructor | NumberConstructor |
-      BooleanConstructor | ObjectConstructor
-    },
-  ) {
-    super(options);
-    this.next(initial);
-  }
-}
+export class OptionalProp<T> extends Prop<T> { private __optionalPropMarker = Symbol(); }
 

@@ -38,9 +38,9 @@ async function getToInject() {
 export class Sandbox extends Component {
 
   props = {
-    code: new rx.Prop(''),
-    height: new rx.Prop('80px'),
-    autoBackground: new rx.Prop(true),
+    code: rx.prop(),
+    height: rx.prop({ defaultValue: '80px' }),
+    autoBackground: rx.prop({ defaultValue: true }),
   }
 
   render() {
