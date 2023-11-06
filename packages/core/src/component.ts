@@ -276,10 +276,15 @@ export default abstract class Component<
     (this.shadowRoot || this).innerHTML = '';
 
     this._lifecycleHooks = { removed: [], render: [] };
-    this._template = this.render();
-    this.lifecycleState = "added";
-    for (let el of this._template) {
-      (this.shadowRoot || this).appendChild(this._renderTemplate(el));
+    try {
+      this._template = this.render();
+      this.lifecycleState = "added";
+      for (let el of this._template) {
+        (this.shadowRoot || this).appendChild(this._renderTemplate(el));
+      }
+    } catch(e) {
+      console.warn(`Mvui: Error while rendering ${this.tagName}`);
+      throw e;
     }
 
     if ((this.constructor as any).styles)
@@ -683,9 +688,11 @@ export default abstract class Component<
           const val = el.params.style[key]!;
           if (isSubscribable<ToStringable>(val)) {
             this.subscribe(val, v => {
+              if (v === undefined) return;
               thisEl.style[key] = v.toString();
             });
           } else {
+            if (val === undefined) return;
             thisEl.style[key] = val.toString();
           }
         }
