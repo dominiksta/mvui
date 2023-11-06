@@ -5,9 +5,9 @@ import { attempt, mount } from "../support/helpers";
 class DumbComponent extends Component {
 
   props = {
-    required: rx.prop<string>({ reflect: true }),
-    withDefault: rx.prop({ reflect: true, defaultValue: 'default' }),
-    optional: rx.prop<string>({ reflect: true, optional: true }),
+    required: rx.prop<string>({ reflect: true, converter: String }),
+    withDefault: rx.prop({ reflect: true, defaultValue: 'default', converter: String }),
+    optional: rx.prop<string>({ reflect: true, optional: true, converter: String }),
   };
 
   render() {
