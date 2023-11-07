@@ -12,8 +12,21 @@ export { calendar, calendarDate } from './calendar';
 export { card, cardHeader } from './card';
 export { carousel } from './carousel';
 export { checkbox } from './checkbox';
-export { colorPalette, colorPaletteItem } from './color-palette';
+export { colorPalette, colorPaletteItem, colorPalettePopover } from './color-palette';
+export { colorPicker } from './color-picker';
+export { comboBox, comboBoxItem, comboBoxGroupItem } from './combo-box';
+export { datePicker, dateTimePicker, dateRangePicker } from './date-picker';
+export { dialog } from './dialog';
+export { icon } from './icon';
+export { input, suggestionItem, suggestionGroupItem } from './input';
+export { label } from './label';
+export { link } from './link';
+export { list, li, liGroupHeader, liCustom } from './list';
+export { menu, menuItem } from './menu';
+export { messageStrip } from './message-strip';
+export { multiComboBox, multiComboBoxItem, multiComboBoxGroupItem } from './multi-combo-box';
 export { toast } from './toast';
-export { input } from './input';
 export { panel } from './panel';
 
+
+// TODO: FileUploader

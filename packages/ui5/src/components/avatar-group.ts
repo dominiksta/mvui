@@ -1,15 +1,7 @@
 import { TemplateElement } from "@mvui/core";
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
 import Avatar from "@ui5/webcomponents/dist/Avatar";
+import AvatarGroup from "@ui5/webcomponents/dist/AvatarGroup";
 import "@ui5/webcomponents/dist/AvatarGroup.js";
-import AvatarColorScheme from "@ui5/webcomponents/dist/types/AvatarColorScheme";
-import AvatarGroupType from "@ui5/webcomponents/dist/types/AvatarGroupType";
-
-export declare class AvatarGroup extends UI5Element {
-  get colorScheme(): AvatarColorScheme[];
-  get hiddenItems(): Avatar[];
-  type: AvatarGroupType;
-}
 
 /**
  @see [Official Docs](

@@ -19,7 +19,10 @@
   "homepage": "https://github.com/dominiksta/mvui#readme",
   "dependencies": {
     "@mvui/core": "^0.0.1",
-    "@ui5/webcomponents": "^1.19.0"
+    "@ui5/webcomponents": "^1.19.0",
+    "@ui5/webcomponents-icons": "^1.19.0",
+    "@ui5/webcomponents-icons-business-suite": "^1.19.0",
+    "@ui5/webcomponents-icons-tnt": "^1.19.0"
   },
   "devDependencies": {
     "css-loader": "^6.8.1",

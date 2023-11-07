@@ -9,7 +9,7 @@ import "@ui5/webcomponents/dist/Button.js";
  */
 export const button = TemplateElement.fromCustom<Ui5Button, {
   events: {
-    click: void
+    click: MouseEvent,
   }
 }
 >(() => document.createElement('ui5-button') as any);
