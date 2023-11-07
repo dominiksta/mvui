@@ -3,6 +3,7 @@
     "incremental": true,
     "sourceMap": true,
     "strict": true,
+    "experimentalDecorators": true,
     "moduleResolution": "node",
     "lib": [
       "esnext",

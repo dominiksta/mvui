@@ -4,11 +4,8 @@ import "@ui5/webcomponents/dist/Breadcrumbs.js";
 
 /**
  @see [Official Docs](
-   https://sap.github.io/ui5-webcomponents/playground/components/Breadcrumbs/
+   https://sap.github.io/ui5-webcomponents/playground/?path=/docs/main-breadcrumbs--docs
  )
- <iframe class="ui5"
- src="https://sap.github.io/ui5-webcomponents/playground/components/Breadcrumbs/">
- </iframe>
  */
 export const breadcrumbs = TemplateElement.fromCustom<Ui5Breadcrumbs, {
   events: {

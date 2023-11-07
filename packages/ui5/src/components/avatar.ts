@@ -4,11 +4,8 @@ import "@ui5/webcomponents/dist/Avatar.js";
 
 /**
  @see [Official Docs](
-   https://sap.github.io/ui5-webcomponents/playground/components/Avatar/
+   https://sap.github.io/ui5-webcomponents/playground/?path=/docs/main-avatar--docs
  )
- <iframe class="ui5"
- src="https://sap.github.io/ui5-webcomponents/playground/components/Avatar/">
- </iframe>
  */
 export const avatar = TemplateElement.fromCustom<Ui5Avatar, {
 }>(() => document.createElement('ui5-avatar') as any);

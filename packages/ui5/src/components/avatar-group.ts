@@ -13,11 +13,8 @@ export declare class AvatarGroup extends UI5Element {
 
 /**
  @see [Official Docs](
-   https://sap.github.io/ui5-webcomponents/playground/components/AvatarGroup/
+   https://sap.github.io/ui5-webcomponents/playground/?path=/docs/main-avatargroup--docs
  )
- <iframe class="ui5"
- src="https://sap.github.io/ui5-webcomponents/playground/components/AvatarGroup/">
- </iframe>
  */
 export const avatarGroup = TemplateElement.fromCustom<AvatarGroup, {
   events: {

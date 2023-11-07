@@ -4,11 +4,8 @@ import "@ui5/webcomponents/dist/BusyIndicator.js";
 
 /**
  @see [Official Docs](
-   https://sap.github.io/ui5-webcomponents/playground/components/BusyIndicator/
+   https://sap.github.io/ui5-webcomponents/playground/?path=/docs/main-busy-indicator--docs
  )
- <iframe class="ui5"
- src="https://sap.github.io/ui5-webcomponents/playground/components/BusyIndicator/">
- </iframe>
  */
 export const busyIndicator = TemplateElement.fromCustom<Ui5BusyIndicator,
   {}
