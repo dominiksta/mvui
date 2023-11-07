@@ -2,7 +2,7 @@ import { Component, h, rx } from "@mvui/core";
 import AvatarColorScheme from "@ui5/webcomponents/dist/types/AvatarColorScheme";
 import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign";
 import ToastPlacement from "@ui5/webcomponents/dist/types/ToastPlacement";
-import * as ui5 from "./index";
+import * as ui5 from ".";
 
 ui5.config.setTheme('sap_horizon');
 ui5.config.setGlobalCompact(false);
