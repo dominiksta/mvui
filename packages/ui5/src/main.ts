@@ -4,6 +4,9 @@ import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign";
 import ToastPlacement from "@ui5/webcomponents/dist/types/ToastPlacement";
 import * as ui5 from "./index";
 
+ui5.config.setTheme('sap_horizon');
+ui5.config.setGlobalCompact(false);
+
 class Main extends Component {
   #toasty = this.query<ui5.types.Toast>('#toasty');
 

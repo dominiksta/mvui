@@ -1,4 +1,8 @@
+import 'fonts/index';
+
 export * as types from './types';
+
+export * as config from './config';
 
 export { avatar } from './avatar';
 export { avatarGroup } from './avatar-group';
