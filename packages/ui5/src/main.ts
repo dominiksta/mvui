@@ -21,6 +21,7 @@ class Main extends Component {
     const dialogOpen = new rx.State(false);
 
     return [
+      ui5.title({ fields: { level: 'H1'}}, 'Ui5 in Mvui Test Page'),
       ui5.panel({ fields: { headerText: 'data binding', collapsed: true } }, [
         ui5.input({ fields: { value: rx.bind(this.#bound) } }),
         h.input({ fields: { value: rx.bind(this.#bound) } }),
@@ -53,6 +54,12 @@ class Main extends Component {
           'Hi from Toast'
         )]
       ),
+
+      ui5.panel({ fields: { headerText: 'buttons', collapsed: true } }, [
+        ui5.splitButton('Hi'),
+        ui5.toggleButton({ fields: { design: 'Transparent' }}, 'Hi'),
+      ]),
+
       ui5.panel({ fields: { headerText: 'busy indicator', collapsed: true } }, [
         h.div(
           ui5.button({
@@ -148,6 +155,7 @@ class Main extends Component {
         h.span(date),
         ui5.dateTimePicker(),
         ui5.dateRangePicker(),
+        ui5.timePicker(),
       ]),
 
       ui5.panel({ fields: { headerText: 'dialog', collapsed: true } }, [
@@ -212,6 +220,110 @@ class Main extends Component {
       ui5.panel({ fields: { headerText: 'message strip', collapsed: true } }, [
         ui5.messageStrip('message')
       ]),
+
+      ui5.panel({ fields: { headerText: 'popover', collapsed: true } }, [
+        ui5.button({ events: { click: async e => {
+          (await this.query<ui5.types.Popover>('#popover')).showAt(
+            e.target as HTMLElement
+          )
+        }}}, 'Open Popover'),
+        ui5.popover({ fields: { id: 'popover' }}, ['hi']),
+
+        ui5.button({ events: { click: async e => {
+          (await this.query<ui5.types.Popover>('#responsive-popover')).showAt(
+            e.target as HTMLElement
+          )
+        }}}, 'Open Responsive Popover'),
+        ui5.responsivePopover({ fields: { id: 'responsive-popover' }}, ['hi'])
+      ]),
+
+      ui5.panel({ fields: { headerText: 'progress indicator', collapsed: true } }, [
+        ui5.progressIndicator({ fields: { value: 25 }})
+      ]),
+
+      ui5.panel({ fields: { headerText: 'radio button', collapsed: true } }, [
+        ui5.radioButton({ fields: { name: 'GroupA', text: 'Value 1'}}),
+        ui5.radioButton({ fields: { name: 'GroupA', text: 'Value 2'}}),
+        ui5.radioButton({ fields: { name: 'GroupA', text: 'Value 3'}}),
+      ]),
+
+      ui5.panel({ fields: { headerText: 'range slider', collapsed: true } }, [
+        ui5.rangeSlider()
+      ]),
+
+      ui5.panel({ fields: { headerText: 'rating indicator', collapsed: true } }, [
+        ui5.ratingIndicator(),
+      ]),
+
+      ui5.panel({ fields: { headerText: 'segmented button', collapsed: true } }, [
+        ui5.segmentedButton([
+          ui5.segmentedButtonItem('B1'),
+          ui5.segmentedButtonItem('B2'),
+          ui5.segmentedButtonItem('B3'),
+        ])
+      ]),
+
+      ui5.panel({ fields: { headerText: 'select', collapsed: true } }, [
+        ui5.select([
+          ui5.option({ fields: { value: 'O1', selected: true }}, 'O1'),
+          ui5.option({ fields: { value: 'O1' }}, 'O2'),
+          ui5.option({ fields: { value: 'O1' }}, 'O3'),
+        ])
+      ]),
+
+      ui5.panel({ fields: { headerText: 'slider', collapsed: true } }, [
+        ui5.slider()
+      ]),
+
+      ui5.panel({ fields: { headerText: 'step input', collapsed: true } }, [
+        ui5.stepInput()
+      ]),
+
+      ui5.panel({ fields: { headerText: 'tabs', collapsed: true } }, [
+        ui5.tabContainer([
+          ui5.tab({ fields: { text: 'Tab 1' }}, 'Tab 1 Content'),
+          ui5.tab({ fields: { text: 'Tab 2' }}, 'Tab 2 Content'),
+        ])
+      ]),
+
+      ui5.panel({ fields: { headerText: 'table', collapsed: true } }, [
+        ui5.table([
+          ui5.tableColumn({ fields: { slot: 'columns', minWidth: 300 }}, 'Column 1'),
+          ui5.tableColumn({ fields: { slot: 'columns', minWidth: 300 }}, 'Column 2'),
+          ui5.tableColumn({ fields: { slot: 'columns', minWidth: 300 }}, 'Column 3'),
+          ui5.tableRow([
+            ui5.tableCell('Cell 1'), ui5.tableCell('Cell 2'), ui5.tableCell('Cell 3'),
+          ]),
+          ui5.tableRow([
+            ui5.tableCell('Cell 1'), ui5.tableCell('Cell 2'), ui5.tableCell('Cell 3'),
+          ]),
+        ])
+      ]),
+
+      ui5.panel({ fields: { headerText: 'toolbar', collapsed: true } }, [
+        ui5.toolbar([
+          ui5.toolbarButton({ fields: { icon: 'decline', text: 'Mid 2' }}),
+          ui5.toolbarButton({ fields: { icon: 'add', text: 'Right 1' }}),
+          ui5.toolbarButton({ fields: { icon: 'employee', text: 'Right 2' }}),
+          ui5.toolbarButton({ fields: { icon: 'employee', text: 'Right 4' }}),
+        ])
+      ]),
+
+      ui5.panel({ fields: { headerText: 'tree', collapsed: true } }, [
+        ui5.tree([
+          ui5.treeItem({ fields: { icon: 'decline', text: 'Tree 1' }}, [
+            ui5.treeItem({ fields: { icon: 'add', text: 'Tree 1.1' } }),
+            ui5.treeItem({ fields: { icon: 'employee', text: 'Tree 1.2' } }),
+            ui5.treeItem({ fields: { icon: 'employee', text: 'Tree 1.3' } }),
+          ]),
+          ui5.treeItem({ fields: { icon: 'decline', text: 'Tree 2' }}, [
+            ui5.treeItem({ fields: { icon: 'add', text: 'Tree 2.1' } }),
+            ui5.treeItem({ fields: { icon: 'employee', text: 'Tree 2.2' } }),
+            ui5.treeItem({ fields: { icon: 'employee', text: 'Tree 2.3' } }),
+          ]),
+        ])
+      ]),
+
 
     ]
   } 

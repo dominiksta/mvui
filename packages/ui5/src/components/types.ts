@@ -34,7 +34,45 @@ import type MessageStrip from '@ui5/webcomponents/dist/MessageStrip';
 import type MultiComboBox from "@ui5/webcomponents/dist/MultiComboBox";
 import type MultiComboBoxItem from "@ui5/webcomponents/dist/MultiComboBoxItem";
 import type MultiComboBoxGroupItem from "@ui5/webcomponents/dist/MultiComboBoxGroupItem";
+import type Panel from "@ui5/webcomponents/dist/Panel";
+import type Popover from "@ui5/webcomponents/dist/Popover";
+import type ProgressIndicator from "@ui5/webcomponents/dist/ProgressIndicator";
+import type RadioButton from "@ui5/webcomponents/dist/RadioButton";
+import type RangeSlider from "@ui5/webcomponents/dist/RangeSlider";
+import type RatingIndicator from "@ui5/webcomponents/dist/RatingIndicator";
+import type ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover";
+import type SegmentedButton from "@ui5/webcomponents/dist/SegmentedButton";
+import type SegmentedButtonItem from "@ui5/webcomponents/dist/SegmentedButtonItem";
+import type Select from "@ui5/webcomponents/dist/Select";
+import type Option from "@ui5/webcomponents/dist/Option";
+import type SelectMenu from "@ui5/webcomponents/dist/SelectMenu";
+import type SelectMenuOption from "@ui5/webcomponents/dist/SelectMenuOption";
+import type Slider from "@ui5/webcomponents/dist/Slider";
+import type SplitButton from "@ui5/webcomponents/dist/SplitButton";
+import type StepInput from "@ui5/webcomponents/dist/StepInput";
+import type Switch from "@ui5/webcomponents/dist/Switch";
+import type Tab from "@ui5/webcomponents/dist/Tab";
+import type TabContainer from "@ui5/webcomponents/dist/TabContainer";
+import type TabSeparator from "@ui5/webcomponents/dist/TabSeparator";
+import type Table from "@ui5/webcomponents/dist/Table";
+import type TableCell from "@ui5/webcomponents/dist/TableCell";
+import type TableRow from "@ui5/webcomponents/dist/TableRow";
+import type TableColumn from "@ui5/webcomponents/dist/TableColumn";
+import type TableGroupRow from "@ui5/webcomponents/dist/TableGroupRow";
+import type TextArea from "@ui5/webcomponents/dist/TextArea";
+import type TimePicker from "@ui5/webcomponents/dist/TimePicker";
+import type Title from "@ui5/webcomponents/dist/Title";
 import type Toast from "@ui5/webcomponents/dist/Toast";
+import type ToggleButton from "@ui5/webcomponents/dist/ToggleButton";
+import type Toolbar from "@ui5/webcomponents/dist/Toolbar";
+import type ToolbarButton from "@ui5/webcomponents/dist/ToolbarButton";
+import type ToolbarSelect from "@ui5/webcomponents/dist/ToolbarSelect";
+import type ToolbarSelectOption from "@ui5/webcomponents/dist/ToolbarSelectOption";
+import type ToolbarSeparator from "@ui5/webcomponents/dist/ToolbarSeparator";
+import type ToolbarSpacer from "@ui5/webcomponents/dist/ToolbarSpacer";
+import type Tree from "@ui5/webcomponents/dist/Tree";
+import type TreeItem from "@ui5/webcomponents/dist/TreeItem";
+
 export {
   Avatar, AvatarGroup,
   Badge, Breadcrumbs, BusyIndicator, Button,
@@ -48,6 +86,15 @@ export {
   Menu, MenuItem,
   MessageStrip,
   MultiComboBox, MultiComboBoxItem, MultiComboBoxGroupItem,
-  // SuggestionGroupItem
-  Toast,
+  Panel, Popover, ProgressIndicator, 
+  RadioButton, RangeSlider, RatingIndicator, ResponsivePopover,
+  SegmentedButton, SegmentedButtonItem,
+  Select, Option, SelectMenu, SelectMenuOption,
+  Slider, SplitButton, StepInput, Switch,
+  Tab, TabContainer, TabSeparator,
+  Table, TableCell, TableColumn, TableGroupRow, TableRow,
+  TextArea, TimePicker, Title, Toast, ToggleButton,
+  Toolbar, ToolbarButton, ToolbarSelect, ToolbarSelectOption, ToolbarSeparator,
+  ToolbarSpacer,
+  Tree, TreeItem
 };
