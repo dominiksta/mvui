@@ -2,10 +2,14 @@
   "name": "@mvui/ui5",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "webpack-dev-server"
+    "dev": "webpack-dev-server",
+    "prepare": "npm run compile",
+    "compile": "tsc -b ./tsconfig.compile.json",
+    "clean": "rm -rf dist/"
   },
   "repository": {
     "type": "git",
@@ -19,6 +23,7 @@
   "homepage": "https://github.com/dominiksta/mvui#readme",
   "dependencies": {
     "@mvui/core": "^0.0.1",
+    "@mvui/sap-ui5-fonts": "file:fonts",
     "@ui5/webcomponents": "^1.19.0",
     "@ui5/webcomponents-icons": "^1.19.0",
     "@ui5/webcomponents-icons-business-suite": "^1.19.0",

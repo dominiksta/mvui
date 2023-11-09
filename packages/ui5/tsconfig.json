@@ -11,7 +11,7 @@
     ],
     "target": "es2015",
     "baseUrl": "./src",
-    "outDir": "./dist/esm2015"
+    "outDir": "./dist"
   },
   "include": [
     "src",

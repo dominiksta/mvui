@@ -1,5 +1,3 @@
-import '../fonts/index';
-
 export * as types from './types';
 
 export { avatar } from './avatar';
