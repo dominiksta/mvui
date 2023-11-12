@@ -9,7 +9,8 @@
     // "noEmit": true,
     "lib": [
       "esnext",
-      "dom"
+      "dom",
+      "dom.iterable"
     ],
     "target": "esnext",
     "baseUrl": "./src",

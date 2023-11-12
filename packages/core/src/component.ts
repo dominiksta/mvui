@@ -6,7 +6,8 @@ import {
 import { Constructor, MaybeSubscribable, ToStringable } from "./util/types";
 import {
   Stream, State, Context, fromAllEvents, fromEvent, map,
-  distinctUntilChanged, skip, MulticastStream, throttleTime, debounceTime
+  distinctUntilChanged, skip, MulticastStream, throttleTime, debounceTime,
+  tap, filter
 } from "./rx";
 import { camelToDash } from "./util/strings";
 import { MVUI_GLOBALS } from "./globals";
@@ -14,6 +15,8 @@ import * as style from "./style";
 import { isBinding } from "./rx/bind";
 import { isSubscribable, Subscribable } from "./rx/interface";
 import { Prop } from "./rx/prop";
+import { isParentRoot, customElementConnected } from "./util/dom";
+import { pierceShadow } from "./style/pierce-shadow";
 
 // these symbols are used for properties that should be accessible from anywhere in mvui
 // but should not be part of api surface
@@ -21,6 +24,10 @@ const STYLE_OVERRIDES = Symbol();
 const PROVIDED_CONTEXTS = Symbol();
 
 const GENERIC_TYPE_HIDE = Symbol();
+
+// we need to make sure that customElements is patched *before* we register any (mvui)
+// component
+customElementConnected().subscribe();
 
 /**
  * The heart of mvui. Every mvui component is defined by inheriting from this class.
@@ -139,6 +146,29 @@ export default abstract class Component<
    * ```
    */
   protected styles = new State<style.MvuiCSSSheet>([]);
+
+  /**
+     Works exactly like {@link styles}, except that all styles specified here will be
+     propagated even through shadow roots.
+
+     You should only use this as a last resort. The contents of a (third party) components
+     shadow root are not part of its API and may therefore change at any time. You should
+     prefer using CSS parts or CSS variables instead.
+
+     Be aware that heavy usage of this feature will degrade performance, as we have to do
+     some real gymnastics to get this to work.
+   */
+  protected pierceShadow: style.MvuiCSSSheet = [];
+
+  private setupPierceShadow() {
+    if (this.pierceShadow.length === 0) return;
+    this.subscribe(customElementConnected().pipe(
+      filter(el => el.shadowRoot !== null && isParentRoot(this, el)),
+      tap(el => {
+        pierceShadow(this.pierceShadow, el.shadowRoot!, this.tagName)
+      }),
+    ));
+  }
 
   [STYLE_OVERRIDES]: style.MvuiCSSSheet = [];
 
@@ -277,6 +307,8 @@ export default abstract class Component<
 
     (this.shadowRoot || this).innerHTML = '';
 
+    this.setupPierceShadow();
+
     this._lifecycleHooks = { removed: [], render: [] };
     try {
       this._template = this.render();
@@ -290,11 +322,13 @@ export default abstract class Component<
     }
 
     if ((this.constructor as any).styles)
-      style.util.applyStaticSheet((this.constructor as any).styles, this);
+      style.util.applySheet(
+        (this.constructor as any).styles, this, 'component_static'
+      );
 
     if (this[STYLE_OVERRIDES])
       style.util.applySheetAsStyleTag(
-        this, this[STYLE_OVERRIDES], 'mvui-instance-styles-overrides'
+        this, this[STYLE_OVERRIDES], 'component_instance_overrides'
       );
 
     for (let ref of this.queryRefs) ref.resolve(ref.query());
@@ -315,8 +349,9 @@ export default abstract class Component<
     }
 
     this.subscribe(this.styles, styles =>
-      style.util.applySheetAsStyleTag(this, styles, 'mvui-instance-styles')
+      style.util.applySheetAsStyleTag(this, styles, 'component_instance')
     );
+
     this.setupFlash();
 
     this.lifecycleState = "rendered"; this._lifecycleHooks.render.forEach(f => f());

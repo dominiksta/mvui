@@ -1,5 +1,6 @@
 import { MVUI_GLOBALS } from "../globals";
 import { camelToDash } from "../util/strings";
+import { BROWSER_SUPPORTS_ADOPTED_STYLESHEETS } from "./helper";
 
 const AT_RULE = '__MVUI_AT_RULE__';
 
@@ -116,10 +117,6 @@ const _util = {
 
 }
 
-// not supported in safari (2023-01-11)
-const BROWSER_SUPPORTS_ADOPTED_STYLESHEETS =
-  'adoptedStyleSheets' in Document.prototype;
-
 /**
  * Create a list of CSS rulesets for use with the {@link Component.styles} field.
  * @example
@@ -134,7 +131,7 @@ const BROWSER_SUPPORTS_ADOPTED_STYLESHEETS =
  */
 export function sheet(
   sheet: { [selector: string]: MvuiCSSDeclarations }
-): MvuiCSSRuleset[] {
+): MvuiCSSSheet {
   return Object.keys(sheet).map(key => ({ selector: key, declarations: sheet[key] }));
 }
 
@@ -248,8 +245,9 @@ function applySingleElement(
    as a child of `el`.
  */
 function applySheetAsStyleTag(
-  el: HTMLElement, sheet: MvuiCSSSheet, cssClass: string
+  el: HTMLElement, sheet: MvuiCSSSheet, cssClass: string, noOverwrite = false,
 ) {
+  cssClass = 'mvui-sheet-' + cssClass;
   let styleEl = (el.shadowRoot || el).querySelector<HTMLStyleElement>(
     '.' + cssClass
   );
@@ -259,7 +257,33 @@ function applySheetAsStyleTag(
     styleEl.nonce = MVUI_GLOBALS.STYLE_SHEET_NONCE;
     (el.shadowRoot || el).appendChild(styleEl);
   }
+  if (styleEl.innerHTML !== '' && noOverwrite) return;
   styleEl.innerHTML = sheetToString(sheet);
+}
+
+/**
+   Apply a named stylesheet to a given ShadowRoot using the `adoptedStyleSheets`
+   feature. Will error if not supported. (As of 2023-11-12 only Safari seems to not have
+   support.)
+ */
+function applySheetAsAdopted(
+  sheet: MvuiCSSSheet, sr: ShadowRoot, name: string, noOverwrite = false,
+) {
+  if (!BROWSER_SUPPORTS_ADOPTED_STYLESHEETS)
+    throw new Error('Browser does not support adoptedStyleSheets');
+
+    const found = sr.adoptedStyleSheets.find(
+      sheet => (sheet as any)[`__mvui_sheet_${name}`]
+    );
+    if (!found) {
+      const domSheet = new CSSStyleSheet();
+      domSheet.replaceSync(sheetToString(sheet));
+      (domSheet as any)[`__mvui_sheet_${name}`] = true;
+      sr.adoptedStyleSheets.push(domSheet);
+    } else {
+      if (found.cssRules.length !== 0 && noOverwrite) return;
+      found.replaceSync(sheetToString(sheet));
+    }
 }
 
 /**
@@ -268,24 +292,19 @@ function applySheetAsStyleTag(
  * be added to adoptedStyleSheets. If not, it will be added as a \<style\> tag with the
  * nonce set to window.MVUI_CONFIG.STYLE_SHEET_NONCE.
  */
-function applyStaticSheet(sheet: MvuiCSSSheet, el: HTMLElement) {
+function applySheet(
+  sheet: MvuiCSSSheet, el: HTMLElement, name: string, noOverwrite = false,
+) {
   if (BROWSER_SUPPORTS_ADOPTED_STYLESHEETS && el.shadowRoot) {
-    const found = el.shadowRoot.adoptedStyleSheets.find(
-      sheet => (sheet as any)['MVUI_STATIC_SHEET']
+    applySheetAsAdopted(
+      sheet, el.shadowRoot, name.replaceAll('-', '_'), noOverwrite
     );
-    if (!found) {
-      const domSheet = new CSSStyleSheet();
-      domSheet.replaceSync(sheetToString(sheet));
-      (domSheet as any)['MVUI_STATIC_SHEET'] = true;
-      el.shadowRoot.adoptedStyleSheets.push(domSheet);
-    }
   } else {
-    applySheetAsStyleTag(el, sheet, 'mvui-static-styles');
+    applySheetAsStyleTag(el, sheet, name.replaceAll('_', '-'), noOverwrite);
   }
 }
 
-
 export const util = {
   sheetToString, applySingleElement,
-  applyStaticSheet, applySheetAsStyleTag
+  applySheet, applySheetAsStyleTag, applySheetAsAdopted,
 };
