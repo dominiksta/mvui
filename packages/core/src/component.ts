@@ -222,9 +222,8 @@ export default abstract class Component<
     this.lifecycleState = "created";
   }
 
-  static register(constructor?: Function) {
+  static getTagName(constructor?: Function): string {
     const cls = constructor ? (constructor as typeof Component) : this;
-    // console.log(this, constructor);
 
     if (!cls.tagNameSuffix)
       cls.tagNameSuffix = camelToDash(cls.name).substring(1);
@@ -236,15 +235,18 @@ export default abstract class Component<
     let prefix;
     if (cls.tagNameLibrary) {
       prefix = MVUI_GLOBALS.PREFIXES.get(cls.tagNameLibrary) ??
-               cls.tagNameLibrary;
+        cls.tagNameLibrary;
     } else {
       prefix = MVUI_GLOBALS.PREFIXES.get('default');
     }
+    return `${prefix}-${this.tagNameSuffix}`;
+  }
 
-    customElements.define(
-      `${prefix}-${cls.tagNameSuffix}`,
-      cls as any
-    );
+  static get tagName() { return this.getTagName(); }
+
+  static register(constructor?: Function) {
+    const cls = constructor ? (constructor as typeof Component) : this;
+    customElements.define(cls.getTagName(), cls as any);
   }
 
   // ----------------------------------------------------------------------
