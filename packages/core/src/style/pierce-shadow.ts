@@ -1,6 +1,5 @@
 import { filter, fromDOMMutations, tap, throttleTime } from "../rx";
-import { util } from "./general";
-import { MvuiCSSSheet } from "./general";
+import { util, MvuiCSSSheet } from "./sheet";
 
 /** @internal */
 export function pierceShadow(

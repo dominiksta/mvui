@@ -1,6 +1,6 @@
 import { MVUI_GLOBALS } from "../globals";
 import { camelToDash } from "../util/strings";
-import { BROWSER_SUPPORTS_ADOPTED_STYLESHEETS } from "./helper";
+import { BROWSER_SUPPORTS_ADOPTED_STYLESHEETS } from "./const";
 
 const AT_RULE = '__MVUI_AT_RULE__';
 
@@ -233,13 +233,6 @@ function sheetToString(sheet: MvuiCSSSheet, indent = ''): string {
 }
 
 
-/** Apply `styles` to `el` */
-function applySingleElement(
-  el: HTMLElement, styles: Partial<CSSStyleDeclaration>
-) {
-  for (let key in styles) el.style[key] = styles[key] as any;
-}
-
 /**
    Put the given `sheet` into a `<style>` tag with the given `cssClass`
    as a child of `el`.
@@ -305,6 +298,5 @@ function applySheet(
 }
 
 export const util = {
-  sheetToString, applySingleElement,
-  applySheet, applySheetAsStyleTag, applySheetAsAdopted,
+  sheetToString, applySheet, applySheetAsStyleTag, applySheetAsAdopted,
 };

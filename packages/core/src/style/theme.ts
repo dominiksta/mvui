@@ -1,9 +1,51 @@
 import { State, Stream } from '../rx';
 import { camelToDash } from '../util/strings';
-import { MvuiCSSRuleset, util } from './general';
+import { MvuiCSSRuleset, util } from './sheet';
 
-export type ThemeDef = { [key: string]: string };
+type ThemeDef = { [key: string]: string };
 
+/**
+   Set up some theme variables to be consumed throughout the application.
+
+   @example
+   ```typescript
+
+   // theme.ts
+   // ----------------------------------------------------------------------
+
+   type MyAppTheme = {
+     background: string,
+     color: string,
+   }
+
+   export const lightTheme: MyAppTheme = {
+     background: '#F5F6F7',
+     color: 'black',
+   }
+
+   export const darkTheme: MyAppTheme = {
+     background: '#12171C',
+     color: 'white',
+   }
+
+   export const theme = style.themeVariables('my-app', lightTheme);
+
+   // main.ts (or anywhere else)
+   // ----------------------------------------------------------------------
+   import { Component, style } from '@mvui/core';
+   import { theme, darkTheme } from './theme';
+
+   style.setTheme('my-app', darkTheme);
+
+   @Component.register
+   class MyComponent extends Component {
+     static styles = style.sheet({
+       'background': theme.background,
+     })
+     // ...
+   }
+   ```
+ */
 export function themeVariables<T extends ThemeDef>(
   libName: string, variables: T
 ): T {
@@ -14,6 +56,9 @@ export function themeVariables<T extends ThemeDef>(
   return ret;
 }
 
+/**
+   Set the current theme. See {@link themeVariables} for more details and an example.
+ */
 export function setTheme(
   libName: string, def: ThemeDef
 ) {
@@ -53,6 +98,7 @@ const _currentTheme$ = new Stream<'dark' | 'light'>(observer => {
       .removeEventListener('change', eventHandler);
 });
 
+/** Subscribe to this to get the current browser theme. */
 export const currentTheme$ = new State<'dark' | 'light'>(
   window.matchMedia
     ? (

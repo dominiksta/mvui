@@ -5,5 +5,5 @@
  * @module
  */
 
-export * from './general';
+export * from './sheet';
 export * from './theme';
