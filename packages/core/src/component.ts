@@ -796,7 +796,7 @@ export default abstract class Component<
           const rendered = this._renderTemplate(t);
           if (slot !== 'default') rendered.slot = slot;
           addTo.appendChild(rendered);
-        } else if (t instanceof HTMLElement) { // case (3)
+        } else if (t instanceof Node) { // case (3)
           addTo.append(t);
         } else {
           addTo.append(t.toString());
