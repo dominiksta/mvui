@@ -4,13 +4,13 @@ import { attempt } from "../../../support/helpers";
 export const testCatchError = () => attempt(() => {
   let values: (string | number)[] = [];
 
-  rx.of([1, 2, 3, 4, 5])
+  rx.of(1, 2, 3, 4, 5)
     .pipe(
       rx.map(n => {
         if (n === 4) throw 'four!';
         return n;
       }),
-      rx.catchError(_ => rx.of(['I', 'II', 'III', 'IV', 'V']))
+      rx.catchError(_ => rx.of('I', 'II', 'III', 'IV', 'V'))
     )
     .subscribe(x => values.push(x));
 
@@ -21,19 +21,19 @@ export const testCatchError = () => attempt(() => {
 
   values = [];
 
-  rx.of([1, 2, 3, 4, 5])
+  rx.of(1, 2, 3, 4, 5)
     .pipe(
       rx.map(n => {
         if (n === 4) throw 'four!';
         return n;
       }),
-      rx.catchError(() => rx.of(['I', 'II']).pipe(
+      rx.catchError(() => rx.of('I', 'II').pipe(
         rx.map(n => {
           if (n === 'II') throw 'error in returned stream';
           else return n;
         })
       )),
-      rx.catchError(() => rx.of(['yes']))
+      rx.catchError(() => rx.of('yes'))
     )
     .subscribe(v => values.push(v));
 

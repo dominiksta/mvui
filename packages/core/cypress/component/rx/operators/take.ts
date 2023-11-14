@@ -7,7 +7,7 @@ export const testTake = () => attempt(() => {
   // ----------------------------------------------------------------------
 
   let values: number[] = [];
-  rx.of([2, 3, 4, 5, 6]).pipe(rx.take(2)).subscribe(
+  rx.of(2, 3, 4, 5, 6).pipe(rx.take(2)).subscribe(
     v => values.push(v)
   );
 
@@ -17,7 +17,7 @@ export const testTake = () => attempt(() => {
   // ----------------------------------------------------------------------
 
   values = [];
-  rx.of([2, 3, 4, 5, 6]).pipe(
+  rx.of(2, 3, 4, 5, 6).pipe(
     rx.map(n => { if (n > 3) throw 'three!'; else return n; }),
     rx.take(2),
   ).subscribe(
@@ -27,7 +27,7 @@ export const testTake = () => attempt(() => {
   expect(values).to.deep.eq([2, 3]);
 
   values = [];
-  rx.of([2, 3, 4, 5, 6]).pipe(
+  rx.of(2, 3, 4, 5, 6).pipe(
     rx.take(2),
     rx.map(n => { if (n > 3) throw 'three!'; else return n; }),
   ).subscribe(

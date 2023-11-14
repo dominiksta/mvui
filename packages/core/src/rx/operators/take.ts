@@ -5,7 +5,7 @@ import Stream, { OperatorFunction } from "../stream";
 
    @example
    ```typescript
-   rx.of([2, 3, 4, 5, 6]).pipe(rx.take(2)).subscribe(v => console.log(v);
+   rx.of(2, 3, 4, 5, 6).pipe(rx.take(2)).subscribe(v => console.log(v);
 
    // will print: 2, 3
    ```

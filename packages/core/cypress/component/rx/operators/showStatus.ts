@@ -9,7 +9,7 @@ export const testShowStatus = () => attempt(async () => {
   const s = rx.interval(200).pipe(
     rx.showStatus(
       rx.pipe(
-        rx.switchMap(_ => rx.of([0]).pipe(
+        rx.switchMap(_ => rx.of(0).pipe(
           rx.delay(100),
           rx.tap(_ => { if (error) throw new Error('hi') }),
         )),

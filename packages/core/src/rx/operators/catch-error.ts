@@ -5,13 +5,13 @@ import Stream, { OperatorFunction } from "../stream";
 
    @example
    ```typescript
-   rx.of([1, 2, 3, 4, 5])
+   rx.of(1, 2, 3, 4, 5)
      .pipe(
        rx.map(n => {
          if (n === 4) throw 'four!';
          return n;
        }),
-       rx.catchError(_ => rx.of(['I', 'II', 'III', 'IV', 'V']))
+       rx.catchError(_ => rx.of('I', 'II', 'III', 'IV', 'V'))
      )
      .subscribe(x => console.log(x);
 

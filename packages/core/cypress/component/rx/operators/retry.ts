@@ -17,7 +17,7 @@ export const testRetry = () => attempt(async () => {
   let values: number[] = [];
   s.pipe(
     rx.retry(4),
-    rx.catchError(_ => rx.of([ 1337 ]))
+    rx.catchError(_ => rx.of(1337))
   ).subscribe(v => values.push(v));
 
   expect(values).to.deep.eq([
@@ -35,7 +35,7 @@ export const testRetry = () => attempt(async () => {
   values = [];
   s.pipe(
     rx.retry(4, { resetOnSuccess: true }),
-    rx.catchError(_ => rx.of([ 1337 ])),
+    rx.catchError(_ => rx.of(1337)),
     rx.take(18),
   ).subscribe(v => values.push(v));
 
@@ -54,7 +54,7 @@ export const testRetry = () => attempt(async () => {
   values = [];
   s.pipe(
     rx.retry(1, { delay: 100 }),
-    rx.catchError(_ => rx.of([ 1337 ])),
+    rx.catchError(_ => rx.of(1337)),
   ).subscribe(v => values.push(v));
 
   expect(values).to.deep.eq([
@@ -78,7 +78,7 @@ export const testRetry = () => attempt(async () => {
       delay: () =>
         values.length > 7 ? rx.throwError(new Error('yes')) : rx.timer(100),
     }),
-    rx.catchError(_ => rx.of([ 1337 ])),
+    rx.catchError(_ => rx.of(1337)),
   ).subscribe(v => values.push(v));
 
   expect(values).to.deep.eq([

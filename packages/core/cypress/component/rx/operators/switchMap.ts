@@ -8,7 +8,7 @@ export const testSwitchMap = () => attempt(async () => {
   // ----------------------------------------------------------------------
 
   let values: number[] = [];
-  rx.of([2, 3]).pipe(rx.switchMap(v => rx.of([v + 1, v + 2]))).subscribe(
+  rx.of(2, 3).pipe(rx.switchMap(v => rx.of(v + 1, v + 2))).subscribe(
     v => values.push(v)
   );
 

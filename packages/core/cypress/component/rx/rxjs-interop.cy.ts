@@ -7,7 +7,7 @@ describe('rxjs interop', () => {
   it('sync mvui to rxjs', () => {
     let res = 0;
 
-    const hi = rxjs.from(rx.of([0, 1, 2])).pipe(
+    const hi = rxjs.from(rx.of(0, 1, 2)).pipe(
       rxjs.map(v => v + 1),
       rxjs.tap(v => res = v),
     );

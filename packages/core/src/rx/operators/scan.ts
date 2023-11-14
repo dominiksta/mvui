@@ -15,13 +15,13 @@ export default function scan<From, To>(
 
    @example
    ```typescript
-   rx.of([1, 2, 3, 4]).pipe(
+   rx.of(1, 2, 3, 4).pipe(
      rx.scan((acc, curr) => acc + curr)
    ).subscribe(console.log);
 
    // will print: 1, 3, 6, 10
 
-   rx.of([1, 2, 3, 4]).pipe(
+   rx.of(1, 2, 3, 4).pipe(
      rx.scan((acc, curr) => acc + curr, 2)
    ).subscribe(console.log);
 
