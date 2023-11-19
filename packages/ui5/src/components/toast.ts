@@ -1,13 +1,6 @@
 import { TemplateElement } from "@mvui/core";
-import "@ui5/webcomponents/dist/Toast";
-import ToastPlacement from "@ui5/webcomponents/dist/types/ToastPlacement";
-import UI5Element from "@ui5/webcomponents-base/dist/UI5Element.js";
-
-export declare class Toast extends UI5Element {
-  duration: number;
-  placement: ToastPlacement;
-  show(): void;
-}
+import Toast from "@ui5/webcomponents/dist/Toast";
+import "@ui5/webcomponents/dist/Toast.js";
 
 /**
  @see [Official Docs](

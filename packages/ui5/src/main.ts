@@ -1,7 +1,6 @@
 import { Component, h, rx, style } from "@mvui/core";
 import AvatarColorScheme from "@ui5/webcomponents/dist/types/AvatarColorScheme";
 import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign";
-import ToastPlacement from "@ui5/webcomponents/dist/types/ToastPlacement";
 import * as ui5 from ".";
 
 // ui5.config.setTheme('sap_horizon');
@@ -49,7 +48,7 @@ class Main extends Component {
         }, 'Show Toast'),
         ui5.toast({
           attrs: { id: 'toasty' },
-          fields: { placement: ToastPlacement.TopCenter }
+          fields: { placement: 'TopCenter' }
         },
           'Hi from Toast'
         )]
