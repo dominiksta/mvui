@@ -340,10 +340,6 @@ export default abstract class Component<
 
     for (let prop in this.props) {
       this.subscribe(this.props[prop], value => {
-        // for better compatibility with other frameworks, we emit a change event
-        // everytime we change a prop
-        this.dispatchEvent(new CustomEvent('change')); // TODO: use normal Event
-
         this._maybeReflectToAttribute(prop, value);
       });
     }
