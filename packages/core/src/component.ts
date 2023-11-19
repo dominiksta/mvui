@@ -1,7 +1,7 @@
 import {
   TemplateElement,
   ParamSpec as _ParamSpec,
-  TemplateElementChild, TemplateElementChildren
+  TemplateElementChild, TemplateElementChildren, ComponentTemplate
 } from "./template-element";
 import { Constructor, MaybeSubscribable, ToStringable } from "./util/types";
 import {
@@ -17,6 +17,7 @@ import { isSubscribable, Subscribable } from "./rx/interface";
 import { Prop } from "./rx/prop";
 import { isParentRoot, customElementConnected, getParentNode } from "./util/dom";
 import { pierceShadow } from "./style/pierce-shadow";
+import { Fragment } from "./fragment";
 
 // these symbols are used for properties that should be accessible from anywhere in mvui
 // but should not be part of api surface
@@ -53,7 +54,7 @@ export default abstract class Component<
   ParamSpec extends _ParamSpec = { },
 > extends HTMLElement {
 
-  protected abstract render(): TemplateElement<any, any, any>[];
+  protected abstract render(): ComponentTemplate;
 
   protected static useShadow: boolean = true;
   protected static tagNameSuffix?: string;
@@ -313,9 +314,7 @@ export default abstract class Component<
     try {
       this._template = this.render();
       this.lifecycleState = "added";
-      for (let el of this._template) {
-        (this.shadowRoot || this).appendChild(this._renderTemplate(el));
-      }
+      this._renderComponentTemplate(this._template);
     } catch(e) {
       console.warn(`Mvui: Error while rendering ${this.tagName}`);
       throw e;
@@ -595,8 +594,22 @@ export default abstract class Component<
   // rendering
   // ----------------------------------------------------------------------
 
-  private _template?: TemplateElement<any, any, any>[];;
-  private _renderTemplate<T extends HTMLElement>(el: TemplateElement<T>) {
+  private _template?: ComponentTemplate;
+
+  private _renderComponentTemplate(template: ComponentTemplate) {
+    const addTo = (this.shadowRoot || this);
+    for (const el of template) {
+      if (el instanceof TemplateElement)
+        addTo.append(this._renderTemplateElement(el));
+      else if (el instanceof Fragment)
+        this._renderFragment(addTo, el);
+      else throw new Error('Invalid Component Template Element');
+    }
+  }
+
+  private _renderTemplateElement<T extends HTMLElement>(
+    el: TemplateElement<T>
+  ): T {
     const thisEl = el.creator();
 
     // --- setup attributes, events, props, class fields
@@ -724,8 +737,7 @@ export default abstract class Component<
               thisEl.style[key] = v.toString();
             });
           } else {
-            if (val === undefined) return;
-            thisEl.style[key] = val.toString();
+            if (val !== undefined) thisEl.style[key] = val.toString();
           }
         }
       }
@@ -784,15 +796,17 @@ export default abstract class Component<
       // case (3, 5)
       const addSingleChild = (
         t: TemplateElementChild,
-        slot: string, addTo: HTMLElement = thisEl
+        slot: string, addTo: HTMLElement,
       ) => {
         if (t === undefined) return;
         if (t instanceof TemplateElement) { // case (5)
-          const rendered = this._renderTemplate(t);
+          const rendered = this._renderTemplateElement(t);
           if (slot !== 'default') rendered.slot = slot;
-          addTo.appendChild(rendered);
+          addTo.append(rendered);
         } else if (t instanceof Node) { // case (3)
           addTo.append(t);
+        } else if (t instanceof Fragment) {
+          this._renderFragment(addTo, t);
         } else {
           addTo.append(t.toString());
         }
@@ -806,11 +820,11 @@ export default abstract class Component<
         const includesString = t.map(
           child => typeof child === 'string'
         ).includes(true);
-        if (slot !== 'default' && includesString) {
-          const wrapper = createWrapper();
-          for (let child of t) addSingleChild(child, 'default', wrapper);
-        } else {
-          for (let child of t) addSingleChild(child, slot, thisEl);
+        const addTo = (slot !== 'default' && includesString)
+          ? createWrapper()
+          : thisEl;
+        for (let child of t) {
+          addSingleChild(child, slot, addTo);
         }
       }
 
@@ -845,6 +859,38 @@ export default abstract class Component<
     }
 
     return thisEl;
+  }
+
+  private _renderFragment(parent: Node, f: Fragment<any>) {
+    this.subscribe(f.stream, value => {
+      const template = f.template(value);
+      const previousThis =
+        Array.from(parent.childNodes).filter(
+          el => Fragment.MARKER in el &&
+            (el as any)[Fragment.MARKER] === f.id,
+        );
+
+      let add: (node: Node) => void;
+      if (previousThis.length !== 0) {
+        const sibl = previousThis[0].previousSibling
+        if (sibl) {
+          add = sibl.after.bind(sibl);
+        } else {
+          add = (node) => parent.insertBefore(node, parent.firstChild);
+        }
+      } else {
+        add = parent.appendChild.bind(parent);
+      }
+
+      for (const prev of previousThis) parent.removeChild(prev);
+
+      for (const child of template) {
+        const rendered = this._renderTemplateElement(child);
+        (rendered as any)[Fragment.MARKER] = f.id;
+        add(rendered);
+        add = rendered.after.bind(rendered);
+      }
+    })
   }
 
   // ----------------------------------------------------------------------

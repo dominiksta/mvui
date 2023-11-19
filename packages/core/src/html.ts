@@ -1,6 +1,14 @@
+import { Fragment } from "./fragment";
+import { Stream } from "./rx";
 import {
   TemplateElement, TemplateElementCreator
 } from "./template-element";
+
+function fragment<T>(
+  stream: Stream<T>, template: (value: T) => TemplateElement<any>[]
+): Fragment<T> {
+  return new Fragment(stream, template);
+}
 
 /**
  * A collection of functions that create a TemplateElement for all standard html elements.
@@ -18,7 +26,8 @@ const h: {
   [key in keyof HTMLElementTagNameMap]:
   TemplateElementCreator<HTMLElementTagNameMap[key]>
 } & {
-  custom: typeof TemplateElement.fromCustom
+  custom: typeof TemplateElement.fromCustom,
+  fragment: typeof fragment
 } = {
   a          : TemplateElement.fromCustom('a'),
   abbr       : TemplateElement.fromCustom('abbr'),
@@ -131,7 +140,9 @@ const h: {
   var        : TemplateElement.fromCustom('var'),
   video      : TemplateElement.fromCustom('video'),
   wbr        : TemplateElement.fromCustom('wbr'),
+
   custom     : TemplateElement.fromCustom,
+  fragment   : fragment,
 } as any;
 
 export default h;

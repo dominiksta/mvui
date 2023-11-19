@@ -2,6 +2,7 @@ import { MvuiCSSSheet } from "./style";
 import { isSubscribable } from "./rx/interface";
 import { MaybeSubscribable, ToStringable } from "./util/types";
 import { Prop, OptionalProp } from "./rx/prop";
+import { Fragment } from "./fragment";
 
 export interface EventWithTarget<T extends HTMLElement> extends Event {
   target: T;
@@ -45,6 +46,7 @@ export class TemplateElement<
       || isSubscribable(childrenOrParams)
       || childrenOrParams instanceof TemplateElement
       || childrenOrParams instanceof HTMLElement
+      || childrenOrParams instanceof Fragment
     ) {
       if (children) throw new Error('Invalid arguments');
       this.children = childrenOrParams as any;
@@ -106,10 +108,13 @@ export class TemplateElement<
   }
 }
 
+export type ComponentTemplate = (TemplateElement<any, any, any> | Fragment<any>)[];
+
 export type TemplateElementChild<T extends HTMLElement = any> =
   (T extends HTMLElement ? never : ToStringable) |
   TemplateElement<T, any, any> |
   HTMLElement |
+  Fragment<any> |
   undefined;
 
 export type TemplateElementChildren<T extends HTMLElement = any> =
