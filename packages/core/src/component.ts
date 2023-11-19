@@ -15,7 +15,7 @@ import * as style from "./style";
 import { isBinding } from "./rx/bind";
 import { isSubscribable, Subscribable } from "./rx/interface";
 import { Prop } from "./rx/prop";
-import { isParentRoot, customElementConnected } from "./util/dom";
+import { isParentRoot, customElementConnected, getParentNode } from "./util/dom";
 import { pierceShadow } from "./style/pierce-shadow";
 
 // these symbols are used for properties that should be accessible from anywhere in mvui
@@ -563,31 +563,30 @@ export default abstract class Component<
      Provide a given context in this component. See {@link rx.Context} for details and an
      example.
    */
-  protected provideContext<T>(ctx: Context<T>): T {
+  protected provideContext<T>(ctx: Context<T>, value: T): T {
     if (this[PROVIDED_CONTEXTS].has(ctx))
       throw new Error(
         'The same context is alreday provided by this component',
       );
-    const state = ctx.generateInitialValue();
-    this[PROVIDED_CONTEXTS].set(ctx, state);
-    return state;
+    this[PROVIDED_CONTEXTS].set(ctx, value);
+    return value;
   }
 
   protected getContext<T>(ctx: Context<T>, force: false): T | null;
   protected getContext<T>(ctx: Context<T>, force?: true): T;
   /** Get a given context. See {@link rx.Context} for details and an example. */
   protected getContext<T>(ctx: Context<T>, force?: boolean): T | null {
-    let parent = this.parentElement;
+    let parent: Node | null = getParentNode(this);
     while (true) {
       if (parent instanceof Component) {
         if (parent[PROVIDED_CONTEXTS].has(ctx))
           return parent[PROVIDED_CONTEXTS].get(ctx);
-        parent = parent.parentElement;
+        parent = getParentNode(parent);
       } else if (parent instanceof HTMLElement) {
-        parent = parent.parentElement;
+        parent = getParentNode(parent);
       } else {
         if (force) throw new Error('Could not find Context');
-        else return null;
+        else return ctx.generateInitialValue();
       }
     }
   }

@@ -1,8 +1,14 @@
 import { MulticastStream, Stream } from "../rx";
 import { singletonValue } from "./other";
 
-function getParentRoot(node: Node): Node {
+export function getParentRoot(node: Node): Node {
   const gotten = node.getRootNode();
+  if (gotten instanceof ShadowRoot) return gotten.host;
+  return gotten;
+}
+
+export function getParentNode(node: Node): Node | null {
+  const gotten = node.parentNode;
   if (gotten instanceof ShadowRoot) return gotten.host;
   return gotten;
 }

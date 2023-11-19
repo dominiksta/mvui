@@ -1,12 +1,12 @@
 import { Component, rx, h } from "$thispkg";
 import { attempt, mount } from "../support/helpers";
 
-const selectCtx = new rx.Context(() => new rx.State('val1'));
+const selectCtx = new rx.Context(() => new rx.State('default'));
 
 @Component.register
 class MySelect extends Component {
   render() {
-    const ctx = this.provideContext(selectCtx);
+    const ctx = this.provideContext(selectCtx, new rx.State('val1'));
 
     return [
       h.div(
@@ -25,7 +25,7 @@ class MySelectItem extends Component {
   }
 
   render() {
-    const ctx = this.getContext(selectCtx);
+    const ctx = this.getContext(selectCtx, true);
 
     return [
       h.button({ events: { click: _ => ctx.next(this.props.value.value) }})
@@ -35,7 +35,7 @@ class MySelectItem extends Component {
 
 describe('context', () => {
 
-  it('kind works', attempt(async () => {
+  it('kinda works', attempt(async () => {
 
     @Component.register
     class ContextTest extends Component {

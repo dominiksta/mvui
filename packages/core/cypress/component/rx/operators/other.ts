@@ -12,7 +12,7 @@ export const testLast = () => attempt(async () => {
   // default
   {
     let val = 0;
-    rx.of().pipe(rx.last(-2)).subscribe(v => val = v);
+    rx.of<number>().pipe(rx.last(-2)).subscribe(v => val = v);
     expect(val).to.eq(-2);
   }
 
@@ -20,7 +20,6 @@ export const testLast = () => attempt(async () => {
   {
     let val = 0, hasError = false;
     rx.of().pipe(rx.last()).subscribe({
-      next(v) { val = v; },
       error(e) { hasError = true; expect(e).to.be.instanceof(rx.EmptyError) },
     });
     expect(val).to.eq(0);
@@ -39,14 +38,14 @@ export const testFirst = () => attempt(async () => {
   // default
   {
     let val = 0;
-    rx.of().pipe(rx.first(-2)).subscribe(v => val = v);
+    rx.of<number>().pipe(rx.first(-2)).subscribe(v => val = v);
     expect(val).to.eq(-2);
   }
 
   // error
   {
     let val = 0, hasError = false;
-    rx.of().pipe(rx.first()).subscribe({
+    rx.of<number>().pipe(rx.first()).subscribe({
       next(v) { val = v; },
       error(e) { hasError = true; expect(e).to.be.instanceof(rx.EmptyError) },
     });
@@ -59,7 +58,7 @@ export const testDefaultIfEmpty = () => attempt(async () => {
   // empty
   {
     let val = 0;
-    rx.of().pipe(rx.defaultIfEmpty(-2)).subscribe(v => val = v);
+    rx.of<number>().pipe(rx.defaultIfEmpty(-2)).subscribe(v => val = v);
     expect(val).to.eq(-2);
   }
 
