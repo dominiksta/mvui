@@ -64,5 +64,5 @@ import type Component from "../component";
    [4]: https://angular.io/guide/dependency-injection-in-action#multiple-service-instances-sandboxing
  */
 export default class Context<T> {
-  constructor(public generateInitialValue: () => T) {}
+  constructor(public generateInitialValue?: () => T) {}
 }

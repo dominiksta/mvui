@@ -585,6 +585,8 @@ export default abstract class Component<
         parent = getParentNode(parent);
       } else {
         if (force) throw new Error('Could not find Context');
+        if (!ctx.generateInitialValue)
+          throw new Error('No default value for context given')
         else return ctx.generateInitialValue();
       }
     }
