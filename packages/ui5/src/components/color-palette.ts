@@ -13,7 +13,7 @@ import "@ui5/webcomponents/dist/ColorPalettePopover.js";
  */
 export const colorPalette = TemplateElement.fromCustom<Ui5ColorPalette, {
   events: {
-    click: CustomEvent<{
+    'item-click': CustomEvent<{
       color: string,
     }>
   },
