@@ -562,11 +562,17 @@ export default abstract class Component<
      Provide a given context in this component. See {@link rx.Context} for details and an
      example.
    */
-  protected provideContext<T>(ctx: Context<T>, value: T): T {
+  protected provideContext<T>(ctx: Context<T>, value?: T): T {
     if (this[PROVIDED_CONTEXTS].has(ctx))
       throw new Error(
         'The same context is alreday provided by this component',
       );
+    if (value === undefined) {
+      if (ctx.generateInitialValue) value = ctx.generateInitialValue();
+      else throw new Error(
+        'Context has no generator function, value must be provided'
+      );
+    }
     this[PROVIDED_CONTEXTS].set(ctx, value);
     return value;
   }
