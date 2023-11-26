@@ -205,6 +205,8 @@ export class LinkedState<FromT, T> extends State<T> {
   }
 
   protected override _subscribe(observer: Observer<T>) {
+    let lastValue: T;
+
     if (!this.parentUnsubscriber)
       this.parentUnsubscriber = this.parent.subscribe(
         v => {
@@ -217,8 +219,9 @@ export class LinkedState<FromT, T> extends State<T> {
     const teardown = super._subscribe({
       ...observer,
       next: value => {
-        if (this._lastValue === value) return; // "memoize"
         this._lastValue = value;
+        if (lastValue === value) return; // "memoize"
+        lastValue = value;
         observer.next(value);
       }
     });

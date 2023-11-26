@@ -100,6 +100,7 @@ describe('state', () => {
       flatNumber: 0,
       nestedStr: 0,
       nestedNum: 0,
+      nestedNum2: 0,
     }
 
     const unsub = {
@@ -111,6 +112,7 @@ describe('state', () => {
       flatNumber: partials.flatNumber.subscribe(_ => count.flatNumber++),
       nestedStr: partials.nestedStr.subscribe(_ => count.nestedStr++),
       nestedNum: partials.nestedNum.subscribe(_ => count.nestedNum++),
+      nestedNum2: partials.nestedNum.subscribe(_ => count.nestedNum2++),
     }
 
     for (let c in count) expect(count[c as keyof typeof count]).to.be.eq(1);
@@ -169,9 +171,11 @@ describe('state', () => {
     expect(count.flatNumber).to.be.eq(2);
     expect(count.flatString).to.be.eq(2);
     expect(count.nestedNum).to.be.eq(3);
+    expect(count.nestedNum2).to.be.eq(3);
     partials.nestedNum.next(4);
     partials.nestedNum.next(4);
     expect(count.nestedNum).to.be.eq(3); // memoization
+    expect(count.nestedNum2).to.be.eq(3); // memoization
 
     expect(count.state).to.be.eq(8);
 
