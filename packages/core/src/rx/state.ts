@@ -168,7 +168,7 @@ export default class State<T> extends MulticastStream<T> {
         let current: any = this.value;
         for (const a of args.slice(0, -1)) current = current[a];
         current[args[args.length - 1]] = val;
-        parentNext(this.value);
+        parentNext({ ...this.value });
       },
     )
   }
