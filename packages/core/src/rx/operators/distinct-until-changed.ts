@@ -18,7 +18,10 @@ export default function distinctUntilChanged<T, SelectedT>(
     let previousValue: SelectedT | undefined;
     return orig.subscribe(v => {
       const selected = keySelector(v);
-      if (!previousValue || !comparator(selected, previousValue)) {
+      if (
+        previousValue === undefined
+        || !comparator(selected, previousValue)
+      ) {
         observer.next(v);
         previousValue = selected;
       }

@@ -183,7 +183,7 @@ export class LinkedState<FromT, T> extends State<T> {
 
   private _lastValue?: T;
   override get value() {
-    if (this._lastValue && this.observers.length !== 0) {
+    if (this._lastValue !== undefined && this.observers.length !== 0) {
       return this._lastValue
     } else {
       return this.derivationFunction(this.parent.value);
