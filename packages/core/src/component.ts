@@ -581,14 +581,14 @@ export default abstract class Component<
   protected getContext<T>(ctx: Context<T>, force?: true): T;
   /** Get a given context. See {@link rx.Context} for details and an example. */
   protected getContext<T>(ctx: Context<T>, force?: boolean): T | null {
-    let parent: Node | null = getParentNode(this);
+    let currNode: Node | null = this;
     while (true) {
-      if (parent instanceof Component) {
-        if (parent[PROVIDED_CONTEXTS].has(ctx))
-          return parent[PROVIDED_CONTEXTS].get(ctx);
-        parent = getParentNode(parent);
-      } else if (parent instanceof HTMLElement) {
-        parent = getParentNode(parent);
+      if (currNode instanceof Component) {
+        if (currNode[PROVIDED_CONTEXTS].has(ctx))
+          return currNode[PROVIDED_CONTEXTS].get(ctx);
+        currNode = getParentNode(currNode);
+      } else if (currNode instanceof HTMLElement) {
+        currNode = getParentNode(currNode);
       } else {
         if (force) throw new Error('Could not find Context');
         if (!ctx.generateInitialValue)
