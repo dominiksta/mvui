@@ -44,7 +44,7 @@ export { title } from './title';
 export { toast } from './toast';
 export { toggleButton } from './toggle-button';
 export { toolbar, toolbarButton, toolbarSelect, toolbarSelectOption, toolbarSeparator, toolbarSpacer } from './toolbar';
-export { tree, treeItem } from './tree';
+export { tree, treeItem, treeItemCustom } from './tree';
 
 
 // TODO: FileUploader

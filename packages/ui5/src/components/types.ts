@@ -72,6 +72,7 @@ import type ToolbarSeparator from "@ui5/webcomponents/dist/ToolbarSeparator";
 import type ToolbarSpacer from "@ui5/webcomponents/dist/ToolbarSpacer";
 import type Tree from "@ui5/webcomponents/dist/Tree";
 import type TreeItem from "@ui5/webcomponents/dist/TreeItem";
+import type TreeItemCustom from "@ui5/webcomponents/dist/TreeItemCustom";
 
 export {
   Avatar, AvatarGroup,
@@ -96,5 +97,5 @@ export {
   TextArea, TimePicker, Title, Toast, ToggleButton,
   Toolbar, ToolbarButton, ToolbarSelect, ToolbarSelectOption, ToolbarSeparator,
   ToolbarSpacer,
-  Tree, TreeItem
+  Tree, TreeItem, TreeItemCustom,
 };
