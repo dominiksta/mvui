@@ -5,10 +5,9 @@
   "module": "./dist/esm2015/index.js",
   "types": "./dist/types/index.d.ts",
   "scripts": {
-    "compile": "tsc -b ./src/tsconfig.esm2015.json ./src/tsconfig.types.json",
-    "compile:minified": "node esbuild.mjs",
+    "build": "tsc -b ./src/tsconfig.esm2015.json ./src/tsconfig.types.json",
+    "build:minified": "node esbuild.mjs",
     "dev": "tsc -b --watch ./src/tsconfig.esm2015.json ./src/tsconfig.types.json",
-    "prepare": "npm run compile",
     "clean": "rm -rf dist",
     "test": "cypress open --component --browser=electron",
     "test:headless": "cypress run --component"
