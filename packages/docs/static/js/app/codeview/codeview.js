@@ -1,5 +1,4 @@
 import { Component, h, rx, style } from '@mvui/core';
-import { theme } from '@mvui/stdlib';
 import { Sandbox } from './sandbox.js';
 import '/js/ace-builds/src-noconflict/ace.js';
 
@@ -28,7 +27,7 @@ export default class Codeview extends Component {
     display: rx.prop({ defaultValue: 'both' }),
     // 'output' or 'code', only makes sense when `display` is 'tabs'
     initialTab: rx.prop({ defaultValue: 'output'}),
-    outputHeight: rx.prop({ reflect: true, defaultValue: '80px' }),
+    outputHeight: rx.prop({ reflect: true, defaultValue: '80px', converter: String }),
   }
 
   #runCode(text) {
@@ -98,7 +97,7 @@ export default class Codeview extends Component {
     ':host': {
       display: 'block',
       marginTop: '10px',
-      border: `1px solid ${theme.theme.fgContrastMiddle}`,
+      border: `1px solid white`,
       borderRadius: '5px',
     },
     '#sep': {

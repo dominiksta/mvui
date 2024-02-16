@@ -12,7 +12,6 @@ function injectImportMap(window_) {
   scriptEl.innerHTML = JSON.stringify({
     'imports': {
       '@mvui/core': '/js/mvui/core/mvui-core.js',
-      '@mvui/stdlib': '/js/mvui/stdlib/mvui-stdlib.js'
     }
   });
   window_.document.body.appendChild(scriptEl);

@@ -23,9 +23,5 @@ theme = 'hugo-book'
         target="static/js/mvui/core"
 
     [[module.mounts]]
-        source="../stdlib/dist/minified"
-        target="static/js/mvui/stdlib"
-
-    [[module.mounts]]
         source="static"
         target="static"

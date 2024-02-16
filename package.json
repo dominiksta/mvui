@@ -2,10 +2,7 @@
   "name": "mvui",
   "private": true,
   "scripts": {
-    "clean": "rm -rf packages/**/dist",
-    "gendoc:stdlib": "cd packages/stdlib && npm run gendoc",
-    "gendoc:api": "typedoc",
-    "gendoc": "npm run gendoc:stdlib && npm run gendoc:api"
+    "clean": "rm -rf packages/**/dist"
   },
   "devDependencies": {
     "@cypress/mount-utils": "^4.0.0",

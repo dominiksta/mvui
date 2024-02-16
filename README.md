@@ -27,10 +27,10 @@ export class CounterComponent extends Component {
 
 ## Projects Status
 
-There is still some cleanup work to be done and a standard library of components to be
-written. This should be considered pre-alpha for the time being. However, the code should
-be reasonably clean and short, so if you are interested in how to implement a simple
-frontend framework, then you can perhaps find some educational use in this repository.
+There is still some cleanup work to be done. This should be considered pre-alpha for the
+time being. However, the code should be reasonably clean and short, so if you are
+interested in how to implement a simple frontend framework, then you can perhaps find some
+educational use in this repository.
 
 My intention is to write at least one actual application with Mvui before publishing it to
 npm.

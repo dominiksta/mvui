@@ -44,6 +44,15 @@ export class Prop<T> extends State<T> {
     converter: { toString: identity as any, fromString: identity as any }
   }
 
+  private defaultFromString(str: string): T {
+    if (str === '' || str === 'undefined') return undefined as any;
+    return JSON.parse(str) as any;
+  }
+
+  private defaultToString(v: T): string {
+    return JSON.stringify(v);
+  }
+
   constructor(
     initial?: T,
     options?: PropOptions<T>,
@@ -78,18 +87,18 @@ export class Prop<T> extends State<T> {
         } else if (options.converter === Boolean) {
           this._options.converter = {
             fromString: v => (v === 'true') as any,
-            toString: JSON.stringify,
+            toString: this.defaultToString,
           }
         } else if (options.converter === Object) {
           this._options.converter = {
-            fromString: JSON.parse,
-            toString: JSON.stringify,
+            fromString: this.defaultFromString,
+            toString: this.defaultToString,
           }
         }
       } else {
         this._options.converter = {
-          fromString: JSON.parse,
-          toString: JSON.stringify,
+          fromString: this.defaultFromString,
+          toString: this.defaultToString,
         }
       }
     }

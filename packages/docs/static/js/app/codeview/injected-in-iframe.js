@@ -4,14 +4,6 @@
 
 import { Component } from '@mvui/core';
 import { style, MVUI_GLOBALS } from "@mvui/core";
-import { theme } from "@mvui/stdlib";
-
-style.currentTheme$.subscribe(t => {
-  style.setTheme(
-    theme.MVUI_STDLIB_THEME_NAME,
-    t === 'dark' ? theme.darkTheme : theme.lightTheme
-  );
-});
 
 function setDefaultStyles() {
   const styleEl = document.createElement('style');

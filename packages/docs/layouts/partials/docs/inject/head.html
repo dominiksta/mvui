@@ -6,7 +6,6 @@
   {
     "imports": {
       "@mvui/core": "/js/mvui/core/mvui-core.js",
-      "@mvui/stdlib": "/js/mvui/stdlib/mvui-stdlib.js",
       "app/": "/js/app/"
     }
   }
@@ -14,16 +13,8 @@
 
 <script type="module">
  import { style, MVUI_GLOBALS } from "@mvui/core";
- import { theme } from "@mvui/stdlib";
 
  import CodeView from "app/codeview/codeview.js";
-
- style.currentTheme$.subscribe(t => {
-     style.setTheme(
-         theme.MVUI_STDLIB_THEME_NAME,
-         t === 'dark' ? theme.darkTheme : theme.lightTheme
-     );
- });
 
  // not pretty, but gets the job done
  document.getElementById('book-search-input').setAttribute('data-hotkeys', 'ü');

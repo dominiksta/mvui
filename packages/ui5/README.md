@@ -3,9 +3,10 @@ This is a wrapper around the
 
 ### Why Wrap an External Library?
 
-Mvui will get its own standard library in time, however it is highly unlikely that this
-will ever reach the level of a more professionaly made ui library in terms of having a
-consistent design language, accessibility, themes and complex widgets like datepickers.
+Even if Mvui would evetually get its own standard library of components, it is highly
+unlikely that this will ever reach the level of a more professionaly made ui library in
+terms of having a consistent design language, accessibility, themes and complex widgets
+like datepickers.
 
 ### Why UI5?
 
