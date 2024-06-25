@@ -26,7 +26,14 @@ export default class State<T> extends MulticastStream<T> {
   /** The current value/state */
   get value() { return this._value }
 
-  constructor(private initialValue: T) {
+  public static loggingCallback?:
+    (name: string | undefined, previous: any, next: any) => void = undefined;
+
+  constructor(
+    private initialValue: T,
+    private loggingName?: string,
+    private loggingCallback = State.loggingCallback,
+  ) {
     super();
     this._value = initialValue;
   }
@@ -50,6 +57,8 @@ export default class State<T> extends MulticastStream<T> {
     if (this.completed) return;
     const newValue = valueOrSetter instanceof Function ?
       valueOrSetter(this._value) : valueOrSetter;
+    if (this.loggingCallback !== undefined && this.loggingName !== undefined)
+      this.loggingCallback(this.loggingName, this._value, newValue);
     this._value = newValue;
     super.next(newValue);
   }
