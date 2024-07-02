@@ -11,8 +11,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: npm ci
       - name: Cypress run
         uses: cypress-io/github-action@v5
         with:
           working-directory: packages/core
           component: true
+          # we already have run npm ci before in the base directory, 
+          # which should have installed and built everything correctly
+          install-command: npm install
