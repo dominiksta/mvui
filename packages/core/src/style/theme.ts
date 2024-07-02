@@ -56,6 +56,8 @@ export function themeVariables<T extends ThemeDef>(
   return ret;
 }
 
+const themes: { [libName: string]: ThemeDef } = { };
+
 /**
    Set the current theme. See {@link themeVariables} for more details and an example.
  */
@@ -72,7 +74,13 @@ export function setTheme(
   }
 
   util.applySheetAsStyleTag(document.head, wrapperSheet, `${libName}-theme`);
+  themes[libName] = def;
 }
+
+/** Get the current theme (after calling {@link setTheme}). */
+export const getTheme = (libName: string): ThemeDef | false =>
+  (libName in themes) ? themes[libName] : false;
+
 
 // TODO: share with refcount
 const _currentTheme$ = new Stream<'dark' | 'light'>(observer => {
