@@ -1,5 +1,5 @@
 {
-  "name": "mvui",
+  "name": "@mvui",
   "private": true,
   "scripts": {
     "clean": "rm -rf packages/**/dist",
