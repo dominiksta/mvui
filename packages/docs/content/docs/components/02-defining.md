@@ -45,7 +45,9 @@ export default class MyComponent extends Component {
 }
 ```
 
-This will register the component as '`<myapp-fancy-component-name>`'.
+This will register the component as '`<myapp-fancy-component-name>`'. Note that the
+automatic detection of component names to register only works if you do not minify
+classnames.
 
 ## Advanced: Avoiding naming conflicts
 

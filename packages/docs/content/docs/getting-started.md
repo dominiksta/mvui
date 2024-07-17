@@ -6,4 +6,6 @@ weight: 100
 
 # Getting Started
 
-<b> hi </b> yes very
+```bash
+npm install @mvui/core
+```
