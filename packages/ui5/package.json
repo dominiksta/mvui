@@ -9,7 +9,8 @@
     "dev": "webpack-dev-server",
     "build": "tsc",
     "build:minified": "node esbuild.mjs",
-    "clean": "rm -rf dist/"
+    "clean": "rm -rf dist/",
+    "prepare": "npm run build && npm run build:minified"
   },
   "repository": {
     "type": "git",
