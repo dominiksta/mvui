@@ -5,8 +5,7 @@
     "clean": "rm -rf packages/**/dist",
     "build:core": "cd packages/core && npm run build",
     "build:ui5": "cd packages/ui5 && npm run build",
-    "build": "npm run build:core && npm run build:ui5",
-    "postinstall": "npm run build"
+    "build": "npm run build:core && npm run build:ui5"
   },
   "devDependencies": {
     "@cypress/mount-utils": "^4.0.0",
