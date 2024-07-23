@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5ColorPalette from "@ui5/webcomponents/dist/ColorPalette";
 import Ui5ColorPaletteItem from "@ui5/webcomponents/dist/ColorPaletteItem";
 import Ui5ColorPalettePopover from "@ui5/webcomponents/dist/ColorPalettePopover";

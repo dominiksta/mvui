@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5Carousel from "@ui5/webcomponents/dist/Carousel";
 import "@ui5/webcomponents/dist/Carousel.js";
 

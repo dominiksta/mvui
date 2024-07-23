@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Avatar from "@ui5/webcomponents/dist/Avatar";
 import AvatarGroup from "@ui5/webcomponents/dist/AvatarGroup";
 import "@ui5/webcomponents/dist/AvatarGroup.js";

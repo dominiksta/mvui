@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import { default as Ui5MessageStrip } from "@ui5/webcomponents/dist/MessageStrip";
 import "@ui5/webcomponents/dist/MessageStrip.js";
 

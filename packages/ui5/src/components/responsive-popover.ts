@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5ResponsivePopover from "@ui5/webcomponents/dist/ResponsivePopover";
 import "@ui5/webcomponents/dist/ResponsivePopover.js";
 

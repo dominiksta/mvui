@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5Link from "@ui5/webcomponents/dist/Link";
 import "@ui5/webcomponents/dist/Link.js";
 

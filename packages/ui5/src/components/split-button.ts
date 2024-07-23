@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5SplitButton from "@ui5/webcomponents/dist/SplitButton";
 import "@ui5/webcomponents/dist/SplitButton.js";
 

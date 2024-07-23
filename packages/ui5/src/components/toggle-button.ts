@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5ToggleButton from "@ui5/webcomponents/dist/ToggleButton";
 import "@ui5/webcomponents/dist/ToggleButton.js";
 

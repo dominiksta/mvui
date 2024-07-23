@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5ProgressIndicator from "@ui5/webcomponents/dist/ProgressIndicator";
 import "@ui5/webcomponents/dist/ProgressIndicator.js";
 

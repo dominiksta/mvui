@@ -2,7 +2,7 @@
 // ----------------------------------------------------------------------
 
 import { createStyle } from "@ui5/webcomponents-base/dist/ManagedStyles";
-import '@mvui/sap-ui5-fonts';
+import '@mvuijs/sap-ui5-fonts';
 
 createStyle('', 'data-ui5-font-face');
 
@@ -11,4 +11,4 @@ createStyle('', 'data-ui5-font-face');
 
 export * as config from './config';
 export * from './components';
-export { Theme } from '@mvui/ui5/src/theme';
+export { Theme } from '@mvuijs/ui5/src/theme';

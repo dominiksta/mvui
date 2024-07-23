@@ -24,7 +24,7 @@ your component to be used outside of Mvui.
 
 {{<codeview>}}
 ```typescript
-import { Component, rx, h } from "@mvui/core";
+import { Component, rx, h } from "@mvuijs/core";
 
 @Component.register
 class MyButton extends Component {

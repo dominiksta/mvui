@@ -2,8 +2,8 @@
  * 
  */
 
-import { Component } from '@mvui/core';
-import { style, MVUI_GLOBALS } from "@mvui/core";
+import { Component } from '@mvuijs/core';
+import { style, MVUI_GLOBALS } from "@mvuijs/core";
 
 function setDefaultStyles() {
   const styleEl = document.createElement('style');

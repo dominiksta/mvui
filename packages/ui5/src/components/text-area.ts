@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5TextArea from "@ui5/webcomponents/dist/TextArea";
 import "@ui5/webcomponents/dist/TextArea.js";
 

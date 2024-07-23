@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5RadioButton from "@ui5/webcomponents/dist/RadioButton";
 import "@ui5/webcomponents/dist/RadioButton.js";
 

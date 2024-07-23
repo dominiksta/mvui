@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import { default as Ui5Breadcrumbs } from "@ui5/webcomponents/dist/Breadcrumbs";
 import "@ui5/webcomponents/dist/Breadcrumbs.js";
 

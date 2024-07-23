@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5Toolbar from "@ui5/webcomponents/dist/Toolbar";
 import Ui5ToolbarButton from "@ui5/webcomponents/dist/ToolbarButton";
 import Ui5ToolbarSelect from "@ui5/webcomponents/dist/ToolbarSelect";

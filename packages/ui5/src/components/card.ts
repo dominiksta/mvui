@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5Card from "@ui5/webcomponents/dist/Card";
 import Ui5CardHeader from "@ui5/webcomponents/dist/CardHeader";
 import "@ui5/webcomponents/dist/Card.js";

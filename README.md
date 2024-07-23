@@ -7,7 +7,7 @@
 Yes, this is a new frontend framework, and no, I am not joking.
 
 ```typescript
-import { Component, rx, h } from '@mvui/core';
+import { Component, rx, h } from '@mvuijs/core';
 
 @Component.register
 export class CounterComponent extends Component {

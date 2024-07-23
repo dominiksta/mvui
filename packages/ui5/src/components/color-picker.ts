@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5ColorPicker from "@ui5/webcomponents/dist/ColorPicker";
 import "@ui5/webcomponents/dist/ColorPicker.js";
 

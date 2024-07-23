@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5SegmentedButton from "@ui5/webcomponents/dist/SegmentedButton";
 import Ui5SegmentedButtonItem from "@ui5/webcomponents/dist/SegmentedButtonItem";
 import "@ui5/webcomponents/dist/SegmentedButton.js";

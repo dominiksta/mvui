@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5MultiComboBox from "@ui5/webcomponents/dist/MultiComboBox";
 import Ui5MultiComboBoxItem from "@ui5/webcomponents/dist/MultiComboBoxItem";
 import Ui5MultiComboBoxGroupItem from "@ui5/webcomponents/dist/MultiComboBoxGroupItem";

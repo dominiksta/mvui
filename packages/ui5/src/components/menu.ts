@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5Menu from "@ui5/webcomponents/dist/Menu";
 import Ui5MenuItem from "@ui5/webcomponents/dist/MenuItem";
 import "@ui5/webcomponents/dist/Menu.js";

@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5TimePicker from "@ui5/webcomponents/dist/TimePicker";
 import "@ui5/webcomponents/dist/TimePicker.js";
 

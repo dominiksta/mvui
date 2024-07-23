@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5StepInput from "@ui5/webcomponents/dist/StepInput";
 import "@ui5/webcomponents/dist/StepInput.js";
 

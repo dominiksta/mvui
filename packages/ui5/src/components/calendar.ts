@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5Calendar from "@ui5/webcomponents/dist/Calendar";
 import Ui5CalendarDate from "@ui5/webcomponents/dist/CalendarDate";
 import "@ui5/webcomponents/dist/Calendar.js";

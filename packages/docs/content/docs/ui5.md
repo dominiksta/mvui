@@ -28,12 +28,12 @@ custom nested components.
 Fundamentally, there is nothing stopping you from using any web component library in
 mvui. To provide type-safety for events and slots however, creating wrappers is
 necessary. Because of this, mvui provides wrappers to all UI5 Web Components in the
-`@mvui/ui5` package. You can read about available components, their arguments, events,
+`@mvuijs/ui5` package. You can read about available components, their arguments, events,
 etc. in the [official documentation](https://sap.github.io/ui5-webcomponents/components/).
 
 ```typescript
-import { Component, h } from '@mvui/core';
-import * as ui5 from '@mvui/ui5';
+import { Component, h } from '@mvuijs/core';
+import * as ui5 from '@mvuijs/ui5';
 
 export default class UI5Test extends Component {
   render() {

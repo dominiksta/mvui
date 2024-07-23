@@ -5,8 +5,8 @@
 
    @example
    ```typescript
-   import { Component, style } from '@mvui/core';
-   import * as ui5 from '@mvui/ui5';
+   import { Component, style } from '@mvuijs/core';
+   import * as ui5 from '@mvuijs/ui5';
 
    @Component.register
    class MyComponent extends Component {

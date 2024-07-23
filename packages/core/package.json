@@ -1,5 +1,5 @@
 {
-  "name": "@mvui/core",
+  "name": "@mvuijs/core",
   "version": "0.0.1",
   "description": "Minimum Viable UI",
   "repository": {
@@ -15,6 +15,7 @@
   "module": "./dist/es6/index.js",
   "types": "./dist/es6/index.d.ts",
   "scripts": {
+    "prepare": "npm run build",
     "build": "tsc",
     "build:minified": "node esbuild.mjs",
     "dev": "tsc --watch",

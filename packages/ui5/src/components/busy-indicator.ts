@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import { default as Ui5BusyIndicator } from "@ui5/webcomponents/dist/BusyIndicator";
 import "@ui5/webcomponents/dist/BusyIndicator.js";
 

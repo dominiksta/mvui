@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import { default as Ui5Button } from "@ui5/webcomponents/dist/Button";
 import "@ui5/webcomponents/dist/Button.js";
 

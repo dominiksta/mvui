@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5TabContainer from "@ui5/webcomponents/dist/TabContainer";
 import Ui5Tab from "@ui5/webcomponents/dist/Tab";
 import Ui5TabSeparator from "@ui5/webcomponents/dist/TabSeparator";

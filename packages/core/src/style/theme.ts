@@ -32,7 +32,7 @@ type ThemeDef = { [key: string]: string };
 
    // main.ts (or anywhere else)
    // ----------------------------------------------------------------------
-   import { Component, style } from '@mvui/core';
+   import { Component, style } from '@mvuijs/core';
    import { theme, darkTheme } from './theme';
 
    style.setTheme('my-app', darkTheme);

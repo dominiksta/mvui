@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import { default as Ui5Input } from "@ui5/webcomponents/dist/Input";
 import { default as Ui5SuggestionItem } from "@ui5/webcomponents/dist/SuggestionItem";
 import { default as Ui5SuggestionGroupItem } from "@ui5/webcomponents/dist/SuggestionGroupItem";

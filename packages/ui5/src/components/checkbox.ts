@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5CheckBox from "@ui5/webcomponents/dist/CheckBox";
 import "@ui5/webcomponents/dist/CheckBox.js";
 

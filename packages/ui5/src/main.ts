@@ -1,4 +1,4 @@
-import { Component, h, rx, style } from "@mvui/core";
+import { Component, h, rx, style } from "@mvuijs/core";
 import AvatarColorScheme from "@ui5/webcomponents/dist/types/AvatarColorScheme";
 import ButtonDesign from "@ui5/webcomponents/dist/types/ButtonDesign";
 import * as ui5 from ".";

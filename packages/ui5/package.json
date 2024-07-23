@@ -1,5 +1,5 @@
 {
-  "name": "@mvui/ui5",
+  "name": "@mvuijs/ui5",
   "version": "1.0.0",
   "description": "",
   "module": "dist/es6/index.js",
@@ -21,8 +21,8 @@
   },
   "homepage": "https://github.com/dominiksta/mvui#readme",
   "dependencies": {
-    "@mvui/core": "file:../core",
-    "@mvui/sap-ui5-fonts": "file:fonts",
+    "@mvuijs/core": "file:../core",
+    "@mvuijs/sap-ui5-fonts": "file:fonts",
     "@ui5/webcomponents": "^1.19.0",
     "@ui5/webcomponents-icons": "^1.19.0",
     "@ui5/webcomponents-icons-business-suite": "^1.19.0",

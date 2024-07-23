@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Toast from "@ui5/webcomponents/dist/Toast";
 import "@ui5/webcomponents/dist/Toast.js";
 

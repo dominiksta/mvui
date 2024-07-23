@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import { default as Ui5Avatar } from "@ui5/webcomponents/dist/Avatar";
 import "@ui5/webcomponents/dist/Avatar.js";
 

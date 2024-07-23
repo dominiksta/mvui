@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5RangeSlider from "@ui5/webcomponents/dist/RangeSlider";
 import "@ui5/webcomponents/dist/RangeSlider.js";
 

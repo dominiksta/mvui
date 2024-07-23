@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5Switch from "@ui5/webcomponents/dist/Switch";
 import "@ui5/webcomponents/dist/Switch.js";
 

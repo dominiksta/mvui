@@ -1,5 +1,5 @@
 {
-  "name": "@mvui/sap-ui5-fonts",
+  "name": "@mvuijs/sap-ui5-fonts",
   "version": "1.0.0",
   "description": "The SAP 72 font family",
   "main": "index.js",

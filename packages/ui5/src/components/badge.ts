@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import { default as Ui5Badge } from "@ui5/webcomponents/dist/Badge";
 import "@ui5/webcomponents/dist/Badge.js";
 

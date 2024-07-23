@@ -1,4 +1,4 @@
-import { TemplateElement } from "@mvui/core";
+import { TemplateElement } from "@mvuijs/core";
 import Ui5Table from "@ui5/webcomponents/dist/Table";
 import Ui5TableColumn from "@ui5/webcomponents/dist/TableColumn";
 import Ui5TableRow from "@ui5/webcomponents/dist/TableRow";
