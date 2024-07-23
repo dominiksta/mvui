@@ -1,4 +1,5 @@
 name: test-core
+
 on:
   push:
     paths:

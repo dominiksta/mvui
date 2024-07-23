@@ -1,0 +1,36 @@
+name: Publish Package to npmjs
+
+on:
+  release:
+    types: [published]
+  workflow-dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      # copy/paste from test-core
+      - name: Cypress run
+        uses: cypress-io/github-action@v5
+        with:
+          working-directory: packages/core
+          component: true
+          install-command: npm install
+      - name: Publish @mvuijs/core
+        run: npm --workspace=packages/core publish --acess public --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish @mvuijs/ui5
+        run: npm --workspace=packages/ui5 publish --access public --dry-run
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
