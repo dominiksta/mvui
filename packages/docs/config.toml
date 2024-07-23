@@ -19,8 +19,12 @@ theme = 'hugo-book'
 
 [module]
     [[module.mounts]]
-        source="../core/dist/minified"
+        source="../core/dist/min"
         target="static/js/mvui/core"
+
+    [[module.mounts]]
+        source="../ui5/dist/min"
+        target="static/js/mvui/ui5"
 
     [[module.mounts]]
         source="static"
