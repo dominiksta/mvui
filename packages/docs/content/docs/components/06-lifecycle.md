@@ -26,7 +26,7 @@ because you are expected to define them in the `render()` method.
 
 {{<codeview output-height="150px">}}
 ```typescript
-import { Component, rx, h } from '@mvui/core';
+import { Component, rx, h } from '@mvuijs/core';
 
 const lifecycle = new rx.State(['initial']);
 
@@ -76,7 +76,7 @@ for your sanity as a non-expert in reactive programming).
 
 {{<codeview output-height="150px">}}
 ```typescript
-import { Component, rx, h } from '@mvui/core';
+import { Component, rx, h } from '@mvuijs/core';
 
 @Component.register
 export default class Wrapper extends Component {
@@ -104,7 +104,7 @@ to be reset on unmount, you can define it as a class field.
 
 {{<codeview output-height="150px">}}
 ```typescript
-import { Component, rx, h } from '@mvui/core';
+import { Component, rx, h } from '@mvuijs/core';
 
 @Component.register
 class LifecycleTest extends Component {

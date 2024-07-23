@@ -5,6 +5,8 @@ weight: 100
 
 # UI5
 
+## Why
+
 The mvui team endeavours to provide enterprise ready solutions, empowering developers with
 a state-of-the-art framework to facilitate rapid iteration. Our continuing mission is and
 has always been to help businesses navigate the complex space of modern technology like
@@ -28,18 +30,45 @@ custom nested components.
 Fundamentally, there is nothing stopping you from using any web component library in
 mvui. To provide type-safety for events and slots however, creating wrappers is
 necessary. Because of this, mvui provides wrappers to all UI5 Web Components in the
-`@mvui/ui5` package. You can read about available components, their arguments, events,
-etc. in the [official documentation](https://sap.github.io/ui5-webcomponents/components/).
+`@mvuijs/ui5` package. Also, the package bundles the required fonts so that you can use
+the package for offline applications (with something like electron). You can read about
+available components, their arguments, events, etc. in the [official
+documentation](https://sap.github.io/ui5-webcomponents/components/).
 
+## How
+
+First, install the package with `npm install @mvuijs/ui5`. All Components are available as
+single import (e.g. `import { input } from '@mvuijs/ui5')`, but you may import them all
+with a `*` import for convenience (`import * as ui5 from '@mvuijs/ui5'`),
+
+Below is a simple example of the UI5 input and
+[DateTimePicker](https://sap.github.io/ui5-webcomponents/components/DateTimePicker/),
+showing the use of two-way bindings for the date. Two-way bindings work because Mvui
+listens to `change` events when using two-way bindings by default.
+
+{{<codeview output-height="600px">}}
 ```typescript
-import { Component, h } from '@mvui/core';
-import * as ui5 from '@mvui/ui5';
+import { Component, h, rx } from '@mvuijs/core';
+import * as ui5 from '@mvuijs/ui5';
 
+const INITIAL_DATE = '2024-01-01 01:02:03';
+
+@Component.register
 export default class UI5Test extends Component {
   render() {
+    const date = new rx.State(INITIAL_DATE);
+
     return [
-      ui5.button('Hi'),
+      // in production, you should really validate the dates string format. this
+      // is more for demonstrational purposes
+      ui5.input({ fields: { value: rx.bind(date) }}),
+      ui5.dateTimePicker({ fields: {
+        value: rx.bind(date),
+        formatPattern: 'YYYY-MM-dd hh:mm:ss'
+      }}),
+      ui5.button({ events: { click: _ => date.next(INITIAL_DATE) } }, 'Reset'),
     ]
   }
 }
 ```
+{{</codeview>}}

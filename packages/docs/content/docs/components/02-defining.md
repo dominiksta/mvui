@@ -13,7 +13,7 @@ You *could* go the default `customElements.define('my-component', MyComponent)` 
 mvui provides some convenience features which will make life easier.
 
 ```typescript
-import { Component, h } from "@mvui/core";
+import { Component, h } from "@mvuijs/core";
 
 @Component.register
 export default class MyComponent extends Component {
@@ -32,7 +32,7 @@ that what you wanted was `'<app-my-component>'`. You can customize the tag name 
 specifying both a *prefix* and a *suffix*:
 
 ```typescript
-import { Component, h } from "@mvui/core";
+import { Component, h } from "@mvuijs/core";
 
 @Component.register
 export default class MyComponent extends Component {
@@ -61,7 +61,7 @@ displays toast notifications on screen. You can avoid conflicts in your tag name
 
 ```typescript
 // in some global startup file:
-import { MVUI_GLOBALS } from "@mvui/core";
+import { MVUI_GLOBALS } from "@mvuijs/core";
 
 // This code has to run *before you load the 'toaster'* library and your own
 // components!

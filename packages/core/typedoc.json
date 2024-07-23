@@ -1,6 +1,5 @@
 {
   "entryPointStrategy": "resolve",
-  "tsconfig": "./src/tsconfig.esm2015.json",
   "entryPoints": ["src/index.ts"],
   "out": "../docs/content/reference",
   "theme": "markdown",

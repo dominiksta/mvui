@@ -1,4 +1,4 @@
-import { Component, h, rx, style } from '@mvui/core';
+import { Component, h, rx, style } from '@mvuijs/core';
 // import 'https://unpkg.com/@babel/standalone/babel.min.js'; // TODO
 import Babel from 'https://esm.sh/@babel/standalone@7.21.4/babel.min.js';
 
@@ -11,7 +11,8 @@ function injectImportMap(window_) {
   scriptEl.type = "importmap";
   scriptEl.innerHTML = JSON.stringify({
     'imports': {
-      '@mvui/core': '/js/mvui/core/mvui-core.js',
+      '@mvuijs/core': '/js/mvui/core/mvui-core.js',
+      '@mvuijs/ui5': '/js/mvui/ui5/mvui-ui5.js',
     }
   });
   window_.document.body.appendChild(scriptEl);

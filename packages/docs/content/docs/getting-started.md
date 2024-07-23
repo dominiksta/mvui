@@ -7,5 +7,5 @@ weight: 100
 # Getting Started
 
 ```bash
-npm install @mvui/core
+npm install @mvuijs/core
 ```

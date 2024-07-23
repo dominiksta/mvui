@@ -1,4 +1,4 @@
-import { Component, h, rx, style } from '@mvui/core';
+import { Component, h, rx, style } from '@mvuijs/core';
 import { Sandbox } from './sandbox.js';
 import '/js/ace-builds/src-noconflict/ace.js';
 

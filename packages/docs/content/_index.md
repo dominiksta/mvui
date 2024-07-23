@@ -11,7 +11,7 @@ bookToC: false
 
 {{<codeview>}}
 ```typescript
-import { Component, rx, h } from "@mvui/core";
+import { Component, rx, h } from "@mvuijs/core";
 
 @Component.register
 export default class CounterComponent extends Component {

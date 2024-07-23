@@ -6,18 +6,21 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "composite": true,
-    // "noEmit": true,
+    "removeComments": false,
+    "declaration": true,
+    "declarationMap": true,
     "lib": [
       "esnext",
       "dom",
       "dom.iterable"
     ],
-    "target": "esnext",
+    "target": "es6",
     "baseUrl": "./src",
+    "rootDir": "./src",
     "paths": {
       "$thispkg": ["."]
     },
-    "outDir": "./lib"
+    "outDir": "./dist/es6"
   },
   "include": [
     "src",
