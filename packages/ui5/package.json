@@ -2,12 +2,12 @@
   "name": "@mvui/ui5",
   "version": "1.0.0",
   "description": "",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "module": "dist/es6/index.js",
+  "types": "dist/es6/index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack-dev-server",
-    "build": "tsc -b ./tsconfig.compile.json",
+    "build": "tsc",
     "clean": "rm -rf dist/"
   },
   "repository": {
