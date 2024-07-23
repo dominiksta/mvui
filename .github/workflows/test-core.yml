@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'packages/core/**'
-  workflow_dispatch:
+  workflow-dispatch:
 
 jobs:
   cypress-run:
