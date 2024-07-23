@@ -12,12 +12,12 @@
     "url": "https://github.com/dominiksta/mvui/issues"
   },
   "homepage": "https://github.com/dominiksta/mvui#readme",
-  "module": "./dist/esm2015/index.js",
-  "types": "./dist/types/index.d.ts",
+  "module": "./dist/es6/index.js",
+  "types": "./dist/es6/index.d.ts",
   "scripts": {
-    "build": "tsc -b ./src/tsconfig.esm2015.json ./src/tsconfig.types.json",
+    "build": "tsc",
     "build:minified": "node esbuild.mjs",
-    "dev": "tsc -b --watch ./src/tsconfig.esm2015.json ./src/tsconfig.types.json",
+    "dev": "tsc --watch",
     "clean": "rm -rf dist",
     "test": "cypress open --component --browser=electron",
     "test:headless": "cypress run --component"

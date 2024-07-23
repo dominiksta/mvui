@@ -1,11 +1,16 @@
-Reference for the Core of Mvui.
+---
+title: "Why Classes"
+weight: 100
+---
 
-```typescript
-// more to come
-```
+## Why the Class Syntax?
 
-
-## Why the class Syntax?
+You may have wondered why Mvui uses a `class` based syntax rather then one based on
+`functions`, as all of the cool kids seem to do these days. This might seem especially
+confusing given the fact that Mvui really encourages functional programming in many
+scenarios. The short answer is that there is no way to type events and generic components
+without the class syntax and that its only barely more verbose. The long answer is the
+rest of this page.
 
 ### It really is not that big of a difference
 
@@ -116,44 +121,5 @@ class UserComp extends Component {
 ```
 
 This is a generic component that uses its generic type in its custom events. With a
-functional syntax, this would not be possible for mvui, at least not without some
-significant complications. The reason is the scoping of these paremeters.
-
-```typescript
-// how should MyEvents be able to know about T here?
-const MyComponent = define<MyEvents>(function<T>() {
-  // ...
-})
-```
-
-Here are two more attempts to show
-
-```js
-function MyComponent<T>({
-  value: new rx.Prop(undefined),
-}: {
-  value: rx.Prop<T | undefined>,
-}) {
-  // how would this know which component you are "inside of" right now?
-  const dispatch = createDispatch<MyEvents>(); 
-
-  return define<MyEvents<T>>([ h.div(value) ]);
-}
-
-// return TemplateElement creator function
-```
-
-
-```js
-const MyComponent = define.outer(
-  function<T> (self, {
-    value = new rx.Prop(undefined),
-  }: {
-    value: rx.Prop<T | undefined>,
-  }) {
-    const dispatch = self.createDispatch<MyEvents>();
-
-    return define.inner<MyEvents<T>>([ h.div(value) ]);
-  }
-)
-```
+functional syntax, this would not be possible for mvui, at least not to our current
+knowledge.
