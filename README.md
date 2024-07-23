@@ -4,7 +4,7 @@
 
 *"Minimum Viable UI"*
 
-Yes, this is a new frontend framework, and no, I am not joking.
+Yes, this is a new frontend framework, and no, this is not a joke.
 
 ```typescript
 import { Component, rx, h } from '@mvuijs/core';
@@ -27,13 +27,10 @@ export class CounterComponent extends Component {
 
 ## Projects Status
 
-There is still some cleanup work to be done. This should be considered pre-alpha for the
-time being. However, the code should be reasonably clean and short, so if you are
-interested in how to implement a simple frontend framework, then you can perhaps find some
-educational use in this repository.
-
-My intention is to write at least one actual application with Mvui before publishing it to
-npm.
+Mvui is almost ready for release. There is still some cleanup left to be done and some
+documentation to write and publish. But it has been used in practice for a while now in
+[Wournal](https://github.com/dominiksta/wournal/) and seems to be stable. There are also
+plenty of unit tests.
 
 ## Dear God Why Yet Another Frontend Framework?
 
