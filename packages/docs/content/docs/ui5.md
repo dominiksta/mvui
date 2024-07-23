@@ -30,8 +30,10 @@ custom nested components.
 Fundamentally, there is nothing stopping you from using any web component library in
 mvui. To provide type-safety for events and slots however, creating wrappers is
 necessary. Because of this, mvui provides wrappers to all UI5 Web Components in the
-`@mvuijs/ui5` package. You can read about available components, their arguments, events,
-etc. in the [official documentation](https://sap.github.io/ui5-webcomponents/components/).
+`@mvuijs/ui5` package. Also, the package bundles the required fonts so that you can use
+the package for offline applications (with something like electron). You can read about
+available components, their arguments, events, etc. in the [official
+documentation](https://sap.github.io/ui5-webcomponents/components/).
 
 ## How
 
