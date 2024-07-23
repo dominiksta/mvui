@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/dominiksta/mvui#readme",
   "dependencies": {
-    "@mvuijs/core": "file:../core",
+    "@mvuijs/core": "0.0.1",
     "@mvuijs/sap-ui5-fonts": "file:fonts",
     "@ui5/webcomponents": "1.19.0",
     "@ui5/webcomponents-icons": "1.19.0",
