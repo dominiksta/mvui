@@ -9,7 +9,7 @@
     "bundle:ui5": "cd ../ui5 && npm run build:minified && cd ../docs",
     "bundle:mvui": "cd ../core && npm run build:minified && cd ../docs",
     "bundle:all": "npm run bundle:mvui && npm run bundle:ui5",
-    "build": "npm run bundle:all && npm run gendoc:api && hugo",
+    "build:site": "npm run bundle:all && npm run gendoc:api && hugo",
     "dev": "npm run bundle:all && hugo serve"
   },
   "devDependencies": {

@@ -10,7 +10,7 @@
     "build": "tsc",
     "build:minified": "node esbuild.mjs",
     "clean": "rm -rf dist/",
-    "prepare": "npm run build && npm run build:minified"
+    "prepublishOnly": "npm run build && npm run build:minified"
   },
   "repository": {
     "type": "git",
