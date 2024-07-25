@@ -2,6 +2,7 @@
 title: "Streams"
 slug: "streams"
 weight: 03
+bookToC: false
 ---
 
 # Streams

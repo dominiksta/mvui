@@ -2,6 +2,7 @@
 title: "Data Fetching"
 slug: "data-fetching"
 weight: 05
+bookToC: false
 ---
 
 # Data Fetching

@@ -7,6 +7,7 @@ import from, { StreamInput } from "./creation/from";
    explanations of what it does already online which will explain better then any
    docstring here could.
 
+   @see {@link http}
    @see https://rxjs.dev/api/operators/switchMap
    @see https://blog.angular-university.io/rxjs-switchmap-operator/
    @see https://youtu.be/Byttv3YpjQk?si=diaiWakSuzCPrSJM&t=528

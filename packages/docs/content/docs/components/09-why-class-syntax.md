@@ -1,6 +1,7 @@
 ---
 title: "Why Classes"
 weight: 100
+bookToC: false
 ---
 
 ## Why the Class Syntax?

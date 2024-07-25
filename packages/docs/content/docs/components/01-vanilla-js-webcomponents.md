@@ -1,31 +1,23 @@
 ---
-title: "Overview"
-slug: overview
+title: "Web Components"
+slug: vanilla_js_web_components
 weight: 01
+bookToC: false
 ---
 
-# Overview
-
-This chapter will cover the component model of mvui. We will discuss component definition,
-rendering lifecycle, props, attributes, styling, events and slots.
-
-We will also discuss the very basics of reactivity to get you started, but since this is a
-rather complex topic, reactivity will be covered more in depth in [its own
-chapter](/docs/reactivity/overview/).
-
-## Vanilla JS Web Components
+# Vanilla JS Web Components
 
 An mvui component is fundamentally a standard web component. It is therefore necessary to
 understand the basic concepts of web components to use mvui effectively. If you have
 already used web components, you can skip this section.
 
-### What?
+## What?
 
 An in-depth introduction to web components in general is out of scope for this
 documentation, but here is a brief summary:
 
 - Web components are JavaScript classes that extend `HTMLElement`. They can then set
-  `this.innerHTML` to render their content, typically after they are added to the dom.
+  `this.innerHTML` to render their content, typically after they are added to the DOM.
 - In order to add web components to the DOM, one must first register the component to the
   custom elements registry to give it a tag name.
 - Web components are usually isolated from one another using the *Shadow DOM*. This means
@@ -43,7 +35,7 @@ customElements.define('my-web-component', MyWebComponent);
 ```
 {{</codeview>}}
 
-### Why?
+## Why?
 
 The key advantage of web components is that once written, they can be used in just about
 any context:
@@ -59,7 +51,7 @@ any context:
   this documentation is an mvui web component that can be used directly from markdown with
   the Hugo static site generator.
 
-### Why Not?
+## Why Not?
 
 The browser API for web components is perhaps sufficient for small one-off components, but
 it should really be considered a basic building block for frameworks to build on. For

@@ -2,6 +2,7 @@
 title: "Defining"
 slug: "defining"
 weight: 02
+bookToC: false
 ---
 
 # Defining

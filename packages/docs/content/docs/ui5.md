@@ -1,9 +1,10 @@
 ---
 title: "UI5"
-weight: 100
+weight: 103
+bookToC: false
 ---
 
-# UI5
+# SAP UI5 Web Components Integration
 
 ## Why
 
