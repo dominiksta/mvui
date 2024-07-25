@@ -109,40 +109,4 @@ describe('styling', () => {
     const btnThirdParty = thirdParty.shadowRoot!.querySelector('button')!;
     expect(getComputedStyle(btnThirdParty).color).to.be.eq('rgb(0, 0, 0)');
   });
-
-  it('pierce shadow dom', async () => {
-    @Component.register
-    class ShadowDOMPiercingComponent extends Component {
-
-      static styles = style.sheet({
-        'button': {
-          background: 'white !important',
-        }
-      });
-
-      pierceShadow = style.sheet({
-        'button': {
-          background: 'green',
-          color: 'white',
-        },
-      });
-
-      render() {
-        return [
-          StyledComponent.t()
-        ]
-      }
-    }
-
-    const comp = mount(ShadowDOMPiercingComponent);
-    const styled = await comp.query<StyledComponent>('app-styled-component');
-    const btn = await styled.query<HTMLButtonElement>('button');
-    expect(getComputedStyle(btn).backgroundColor).to.be.eq('rgb(255, 0, 0)');
-    expect(getComputedStyle(btn).color).to.be.eq('rgb(255, 255, 255)');
-
-    const thirdParty = await styled.query<ThirdPartyComponent>('third-party-component');
-    const btnThird = thirdParty.shadowRoot!.querySelector('button')!;
-    expect(getComputedStyle(btnThird).backgroundColor).to.be.eq('rgb(0, 128, 0)');
-    expect(getComputedStyle(btnThird).color).to.be.eq('rgb(255, 255, 255)');
-  });
 })

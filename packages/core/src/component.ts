@@ -16,7 +16,6 @@ import { isBinding } from "./rx/bind";
 import { isSubscribable, Subscribable } from "./rx/interface";
 import { Prop } from "./rx/prop";
 import { isParentRoot, customElementConnected, getParentNode } from "./util/dom";
-import { pierceShadow } from "./style/pierce-shadow";
 import { Fragment } from "./fragment";
 
 // these symbols are used for properties that should be accessible from anywhere in mvui
@@ -147,29 +146,6 @@ export default abstract class Component<
    * ```
    */
   protected styles = new State<style.MvuiCSSSheet>([]);
-
-  /**
-     Works exactly like {@link styles}, except that all styles specified here will be
-     propagated even through shadow roots.
-
-     You should only use this as a last resort. The contents of a (third party) components
-     shadow root are not part of its API and may therefore change at any time. You should
-     prefer using CSS parts or CSS variables instead.
-
-     Be aware that heavy usage of this feature will degrade performance, as we have to do
-     some real gymnastics to get this to work.
-   */
-  protected pierceShadow: style.MvuiCSSSheet = [];
-
-  private setupPierceShadow() {
-    if (this.pierceShadow.length === 0) return;
-    this.subscribe(customElementConnected().pipe(
-      filter(el => el.shadowRoot !== null && isParentRoot(this, el)),
-      tap(el => {
-        pierceShadow(this.pierceShadow, el.shadowRoot!, this.tagName)
-      }),
-    ));
-  }
 
   [STYLE_OVERRIDES]: style.MvuiCSSSheet = [];
 
@@ -307,8 +283,6 @@ export default abstract class Component<
     MVUI_GLOBALS.APP_DEBUG && this.flash.next('green');
 
     (this.shadowRoot || this).innerHTML = '';
-
-    this.setupPierceShadow();
 
     this._lifecycleHooks = { removed: [], render: [] };
     try {
