@@ -13,7 +13,6 @@
   },
   "workspaces": [
     "packages/core",
-    "packages/ui5",
     "packages/docs"
   ]
 }

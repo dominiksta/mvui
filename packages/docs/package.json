@@ -6,9 +6,8 @@
   "scripts": {
     "gendoc:api-fix": "node scripts/insert-frontmatter-alias.js",
     "gendoc:api": "cd ../core && typedoc && cd ../docs && npm run gendoc:api-fix",
-    "bundle:ui5": "cd ../ui5 && npm run build:minified && cd ../docs",
     "bundle:mvui": "cd ../core && npm run build:minified && cd ../docs",
-    "bundle:all": "npm run bundle:mvui && npm run bundle:ui5",
+    "bundle:all": "npm run bundle:mvui",
     "build:site": "npm run bundle:all && npm run gendoc:api && hugo",
     "dev": "npm run bundle:all && hugo serve"
   },

@@ -12,7 +12,7 @@ function injectImportMap(window_) {
   scriptEl.innerHTML = JSON.stringify({
     'imports': {
       '@mvuijs/core': '/js/mvui/core/mvui-core.js',
-      '@mvuijs/ui5': '/js/mvui/ui5/mvui-ui5.js',
+      '@mvuijs/ui5': 'https://unpkg.com/@mvuijs/ui5@1.19.0/dist/min/mvui-ui5.js',
     }
   });
   window_.document.body.appendChild(scriptEl);
