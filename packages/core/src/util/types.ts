@@ -14,13 +14,5 @@ export type RecursivePartial<T> = {
     T[P];
 };
 
-
-// credits: https://jobs.ataccama.com/blog/how-to-convert-object-props-with-undefined-type-to-optional-properties-in-typescript
-type GetMandatoryKeys<T> = {
-  [P in keyof T]: T[P] extends Exclude<T[P], undefined> ? P : never
-}[keyof T];
-
-export type UndefinedToOptional<T> = Partial<T> & Pick<T, GetMandatoryKeys<T>>;
-
 // can sometimes help clean up types
 export type Expand<T> = { [P in keyof T]: T[P] };

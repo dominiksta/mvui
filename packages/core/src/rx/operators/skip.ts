@@ -1,7 +1,15 @@
 import Stream, { OperatorFunction } from "../stream";
 
 /**
- * TODO
+   Skip `count` emissions from the source {@link Stream}.
+
+   @example
+   ```typescript
+   rx.of([1, 2, 3]).pipe(rx.skip(1)).subscribe(console.log);
+   // prints
+   // 2
+   // 3
+   ```
 
    @group Stream Operators
  */

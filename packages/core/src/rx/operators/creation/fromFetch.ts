@@ -1,15 +1,13 @@
 import Stream from "../../stream";
 
 /**
-   A thin wrapper around `fetch`. Functionally equivalent to `rx.from(fetch(...)`, but
+   A thin wrapper around `fetch`. Functionally equivalent to `rx.from(fetch(...))`, but
    requests will be cancelled on completion.
 
    @example
    ```typescript
    rx.fromFetch('/test').subscribe(async v => console.log(await v.json()));
    ```
-
-   TODO: point to switchMap, concatMap, etc.
 
    @group Stream Creation Operators
 

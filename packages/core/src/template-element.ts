@@ -22,7 +22,24 @@ export type TemplateElementCreator<
 ) => TemplateElement<T, Params, Props>;
 
 /**
- * TODO
+   The internal representation of any element in a {@link Component}s template. Do not
+   instantiate these yourself. Instead, use the {@link h} constant/namespace:
+
+   @example
+   ```
+   class MyComponent extends Component {
+     render() {
+       return [
+         h.div('hi'),
+         h.span('double hi'),
+         h.custom('custom-web-component'),
+         // ...
+       ]
+     }
+   }
+   ```
+
+   @internal
  */
 export class TemplateElement<
   T extends HTMLElement,

@@ -4,6 +4,12 @@ Changelog
 `0.0.3` - _unreleased_
 ----------------------------------------------------------------------
 
+### Added
+
+- Exported a few types you may sometimes want to import: `Fragment`, `rx.OptionalProp`,
+  `rx.PropOptions`, `rx.StreamInput`, `rx.StreamInterop`, `rx.StreamInteropRxJS`,
+  `rx.ObserverDefinitionInterop`.
+
 ### Breaking Changes
 
 - Removed `Component.pierceShadow`. This feature was way too hacky and usage could quickly

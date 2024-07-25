@@ -1,7 +1,16 @@
 import Stream, { OperatorFunction } from "../stream";
 
 /**
-   TODO
+   Emits the values from the source {@link Stream} unchanged, unless the emission takes
+   too long. The timeout for the first emission and subsequent emissions can be specified
+   seperately.
+
+   @example
+   ```typescript
+    rx.interval(50).pipe(rx.timeout(20)).subscribe({
+      error() { console.log('this errors!'); }
+    });
+   ```
 
    @group Stream Operators
  */

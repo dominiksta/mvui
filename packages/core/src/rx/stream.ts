@@ -94,7 +94,17 @@ export default class Stream<T> implements Subscribable<T> {
   /** @ignore */
   pipe<A>(op1: OperatorFunction<T, A>): Stream<A>;
   /**
-   * TODO
+     Pipe this Stream through a series of operators. Operator functions can be looked up
+     in the {@link rx} namespace.
+
+     @example
+     ```
+     rx.of([0, 1, 2, 3]).pipe(
+       rx.map(n => n + 1),
+       rx.filter(n => n !== 2),
+     ).subscribe(console.log);
+     // prints 1, 3, 4
+     ```
    */
   pipe<A, B>(op1: OperatorFunction<T, A>, op2: OperatorFunction<A, B>): Stream<B>;
   /** @ignore */

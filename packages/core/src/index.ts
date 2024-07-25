@@ -7,3 +7,5 @@ export * as style from './style';
 export * as util from './util';
 export * from './template-element';
 export { default as configurePrefixes } from './util/configure-prefixes';
+
+export type { Fragment } from './fragment';

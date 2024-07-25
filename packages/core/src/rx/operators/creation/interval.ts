@@ -1,7 +1,18 @@
 import Stream from "../../stream";
 
 /**
-   TODO
+   Create a {@link Stream} that emits a new increasing number starting at zero every `ms`
+   milliseconds.
+
+   @example
+   ```typescript
+   rx.interval(100).subscribe(console.log);
+   // prints in 100 ms intervals:
+   // 0
+   // 1
+   // 2
+   // ...
+   ```
 
    @group Stream Creation Operators
  */

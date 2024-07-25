@@ -1,21 +1,28 @@
 import { Observer } from "../../interface";
 import Stream from "../../stream";
 
-type ObserverDefinitionInterop<T> =
+/** @see {@link StreamInterop} and {@link StreamInteropRxJS} */
+export type ObserverDefinitionInterop<T> =
   Partial<Observer<T>> | ((value: T) => void) | undefined;
 
-type StreamInterop<T> = {
+/** Stream interop with [Symbol.observable](https://tc39.es/proposal-observable/) */
+export type StreamInterop<T> = {
   [Symbol.observable]: () => {
     subscribe: (obs: ObserverDefinitionInterop<T>) => { unsubscribe: () => void }
   }
 };
 
-// we cannot just use StreamInterop because of the way that rxjs implements
-// Symbol.observable. it works with plain js but typescript gets confused
-type StreamInteropRxJS<T> = {
+/**
+   Stream interop with RxJS.
+
+   We cannot just use StreamInterop because of the way that RxJS implements
+   Symbol.observable. It works with plain js but typescript gets confused.
+ */
+export type StreamInteropRxJS<T> = {
   subscribe: (obs: ObserverDefinitionInterop<T>) => { unsubscribe: () => void }
 };
 
+/** Anything that can be converted to a {@link Stream} */
 export type StreamInput<T> = Stream<T>
   | Iterable<T>
   | Promise<T>

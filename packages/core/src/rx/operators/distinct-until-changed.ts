@@ -2,7 +2,17 @@ import { identity } from "../../util/other";
 import Stream, { OperatorFunction } from "../stream";
 
 /**
-   TODO
+   Create a {@link Stream} that will only emit new values when the value of its input
+   stream has changed.
+
+   @example
+   ```typescript
+   rx.of([1, 1, 2, 3]).pipe(rx.distinctUntilChanged()).subscribe(console.log);
+   // prints
+   // 1
+   // 2
+   // 3
+   ```
 
    @group Stream Operators
  */

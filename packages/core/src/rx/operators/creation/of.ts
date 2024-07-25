@@ -1,7 +1,16 @@
 import Stream from "../../stream";
 
 /**
-   TODO
+   Create a {@link Stream} from an array. All values are emitted instantly.
+
+   @example
+   ```typescript
+   rx.of([1, 2, 3]).subscribe(console.log);
+   // prints instantly:
+   // 1
+   // 2
+   // 3
+   ```
 
    @group Stream Creation Operators
  */

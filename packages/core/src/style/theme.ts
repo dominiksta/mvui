@@ -2,8 +2,6 @@ import { State, Stream } from '../rx';
 import { camelToDash } from '../util/strings';
 import { MvuiCSSRuleset, util } from './sheet';
 
-type ThemeDef = { [key: string]: string };
-
 /**
    Set up some theme variables to be consumed throughout the application.
 
@@ -46,7 +44,7 @@ type ThemeDef = { [key: string]: string };
    }
    ```
  */
-export function themeVariables<T extends ThemeDef>(
+export function themeVariables<T extends { [key: string]: string }>(
   libName: string, variables: T
 ): T {
   const ret: T = {} as any;
@@ -56,13 +54,13 @@ export function themeVariables<T extends ThemeDef>(
   return ret;
 }
 
-const themes: { [libName: string]: ThemeDef } = { };
+const themes: { [libName: string]: { [key: string]: string } } = { };
 
 /**
    Set the current theme. See {@link themeVariables} for more details and an example.
  */
 export function setTheme(
-  libName: string, def: ThemeDef
+  libName: string, def: { [key: string]: string }
 ) {
   const wrapperSheet: MvuiCSSRuleset[] = [{
     selector: ':root',
@@ -78,7 +76,7 @@ export function setTheme(
 }
 
 /** Get the current theme (after calling {@link setTheme}). */
-export const getTheme = (libName: string): ThemeDef | false =>
+export const getTheme = (libName: string): { [key: string]: string } | false =>
   (libName in themes) ? themes[libName] : false;
 
 

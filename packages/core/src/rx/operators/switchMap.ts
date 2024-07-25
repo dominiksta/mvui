@@ -2,7 +2,14 @@ import Stream, { OperatorFunction } from "../stream";
 import from, { StreamInput } from "./creation/from";
 
 /**
-   TODO
+   Switch from one Stream to another. This is really useful for robust asynchronous
+   reactivity. It is analogous to the RxJS operator of the same name. There are a million
+   explanations of what it does already online which will explain better then any
+   docstring here could.
+
+   @see https://rxjs.dev/api/operators/switchMap
+   @see https://blog.angular-university.io/rxjs-switchmap-operator/
+   @see https://youtu.be/Byttv3YpjQk?si=diaiWakSuzCPrSJM&t=528
 
    @group Stream Operators
  */

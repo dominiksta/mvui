@@ -21,7 +21,10 @@ function isCustomElement(tagName: string): boolean {
 }
 
 /**
-   TODO
+   Like {@link fromEvent}, except it subscribes to a bunch of default likely relevant
+   events. Used internally for change detection for data bindings.
+
+   @see {@link fromEvent} and {@link rx.bind}
 
    @group Stream Creation Operators
  */

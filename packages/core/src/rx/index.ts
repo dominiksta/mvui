@@ -43,12 +43,13 @@
 
 export * from './util';
 export * from './operators';
-export { default as Stream } from "./stream";
+export { default as Stream, OperatorFunction } from "./stream";
 export { default as MulticastStream } from "./multicast-stream";
 export { default as ReplayStream } from "./replay-stream";
 export { default as State, LinkedState } from "./state";
 export { derive, DerivedState } from "./derived-state";
 export { default as prop } from "./prop";
+export type { Prop, OptionalProp, PropOptions } from './prop';
 export { default as bind } from "./bind";
 export { default as Context } from "./context";
 export { default as Store } from "./store";

@@ -2,7 +2,8 @@ import State from "./state";
 
 function identity<T>(v: T) { return v; };
 
-type PropOptions<T> = {
+/** Options for {@link prop}s */
+export type PropOptions<T> = {
   reflect?: boolean | string,
   converter?: {
     toString: (v: T) => string, fromString: (v: string) => T
@@ -20,6 +21,23 @@ export default function prop<T>(
   options?: PropOptions<T> & { defaultValue: T }
 ): OptionalProp<T>;
 
+/**
+   Use to specify a coponents props.
+
+   @example
+   ```typescript
+   class MyComponent extends Component {
+     props = {
+       value: rx.prop('hi'),
+     }
+     render() {
+       return [
+         h.input({ fields: { value: rx.bind(this.props.value) } } ),
+       ];
+     }
+   }
+   ```
+ */
 export default function prop<T>(
     options?: PropOptions<T> & { optional?: true, defaultValue?: T}
 ): Prop<T> | OptionalProp<T> {
@@ -31,6 +49,15 @@ export default function prop<T>(
 }
 
 
+/**
+   Internal class representing a prop. Do not instantiate this yourself. Use {@link prop}
+   instead.
+
+   @see {@link prop}
+
+   @noInheritDoc
+   @internal
+ */
 export class Prop<T> extends State<T> {
 
   /** @ignore */
@@ -106,5 +133,14 @@ export class Prop<T> extends State<T> {
   }
 }
 
+/**
+   Internal class representing a prop. Do not instantiate this yourself. Use {@link prop}
+   instead.
+
+   @see {@link prop}
+
+   @noInheritDoc
+   @internal
+ */
 export class OptionalProp<T> extends Prop<T> { private __optionalPropMarker = Symbol(); }
 
