@@ -12,6 +12,7 @@
     "dev": "npm run bundle:all && hugo serve"
   },
   "devDependencies": {
+    "esbuild": "0.17.11",
     "typedoc": "^0.23.24",
     "typedoc-plugin-markdown": "^4.0.0-next.3",
     "typedoc-plugin-no-inherit": "^1.4.0"
