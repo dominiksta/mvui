@@ -10,6 +10,11 @@ Changelog
   `rx.PropOptions`, `rx.StreamInput`, `rx.StreamInterop`, `rx.StreamInteropRxJS`,
   `rx.ObserverDefinitionInterop`.
 
+### Fixed
+
+- Passing a callback function in a template would pass the callback directly to the `next`
+  method of `State`, causing it to be interpreted as a transformation function.
+
 ### Breaking Changes
 
 - Removed `Component.pierceShadow`. This feature was way too hacky and usage could quickly

@@ -614,7 +614,7 @@ export default abstract class Component<
         ), v => {
           // console.debug(`prop changed detected: ${v}`, thisEl);
           ignoreNextDown = true;
-          bind.next(v);
+          bind.next(funcToHigherOrder(v));
         });
 
         // dataflow: downwards
@@ -685,19 +685,19 @@ export default abstract class Component<
               if (ignoreNextDown) { ignoreNextDown = false; return; }
               else { ignoreNextDown = true; }
               // console.debug(`${ignoreNext}: setting binding ${v}`);
-              bind!.next(v);
+              bind!.next(funcToHigherOrder(v));
             });
 
             // dataflow: downwards
             this.subscribe(bind, (v) => {
               if (ignoreNextDown) { ignoreNextDown = false; return; }
               else { ignoreNextDown = true; }
-              thisEl.props[prop].next(v);
+              thisEl.props[prop].next(funcToHigherOrder(v));
             });
           } else if (isSubscribable(val)) {
-            this.subscribe(val, (v) => thisEl.props[prop].next(v));
+            this.subscribe(val, (v) => thisEl.props[prop].next(funcToHigherOrder(v)));
           } else {
-            thisEl.props[prop].next(val);
+            thisEl.props[prop].next(funcToHigherOrder(val));
           }
         }
       }
@@ -986,3 +986,14 @@ export type ComponentTemplateElement<
   CompT extends Component<infer I> ? I : never,
   CompT['props']
 >;
+
+
+
+/**
+   When calling the `next` method on a `State` object or similar, a passed function will
+   be interpreted as a transformer of the previous value.  In general, this makes sense
+   but not in templates. Therefore, this function is equivalent to the identity function
+   except that `func` will be transformed to `() => func`.
+ */
+const funcToHigherOrder = <T>(val: T): T | (() => T) =>
+  typeof val === 'function' ? () => val : val;
