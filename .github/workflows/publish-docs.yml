@@ -49,8 +49,7 @@ jobs:
         id: pages
         uses: actions/configure-pages@v5
       - name: Install Node.js dependencies
-        working-directory: ./packages/docs
-        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+        run: npm --workspace=packages/docs ci
       - name: Build JS bundles & API docs
         working-directory: ./packages/docs
         run: npm run bundle:all && npm run gendoc:api
