@@ -65,8 +65,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          working-directory: ./packages/docs
-          path: ./public
+          path: ./packages/docs/public
 
   # Deployment job
   deploy:
@@ -79,5 +78,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          working-directory: ./packages/docs
