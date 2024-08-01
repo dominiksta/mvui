@@ -18,14 +18,30 @@ async function evalEsm(text) {
   return await import(dataUri);
 }
 
+function showLogs() {
+  const pre = document.createElement('pre');
+  document.body.appendChild(pre);
+  const origConsoleLog = console.log;
+  console.log = (text, ...args) => {
+    if (!(typeof text === 'string' || typeof text === 'number'))
+      text = JSON.stringify(text);
+    pre.innerHTML = pre.innerHTML + text + '\n';
+    origConsoleLog.apply([text, ...args]);
+  }
+}
+
 async function displayComponent() {
   const code = window.__USER_CODE;
   try {
+    document.body.innerHTML = '';
+    showLogs();
     const module = await evalEsm(code);
 
-    document.body.innerHTML = '';
     setDefaultStyles();
-    document.body.appendChild(new module.default());
+    if (module.default) {
+      // we have exported a default web component
+      document.body.appendChild(new module.default());
+    }
   } catch (e) {
     displayError(e);
   }

@@ -44,7 +44,7 @@ export default class CounterComponent extends Component {
 {{<columns>}}
 ## It's Tiny
 
-Mvui is less than 2000 lines of well documented and tested code with no dependencies. You
+Mvui is around 3000 lines of well documented and tested code with *no dependencies*. You
 could probably maintain it yourself if you had to.
 
 <--->
@@ -59,24 +59,25 @@ would never want to use anything but Mvui ;)
 ## Fully Typesafe
 
 Have typescript yell at you in the templates - not just for
-[props](/reference/classes/component/#props), but also for [events and
-slots](/reference/classes/component/#type-parameters) in your templates!
+[props](/docs/components/props-and-attributes/), but also for
+[events](/docs/components/events/) and [slots](/docs/components/slots/) in your templates!
 
 <--->
 ## Fine-Grained Reactivity
 
 State is managed with a combination of [Redux-like
-selectors](/reference/rx/classes/derivedstate/) for synchronous reactivity and [RxJS-like
-operators](/reference/rx/rx/#functions) for asynchronous reactivity.
+selectors](/docs/reactivity/synchronous/#deriving-state) for synchronous reactivity and
+[RxJS-like operators](/docs/reactivity/asynchronous/#operators) for asynchronous
+reactivity.
 
 {{</columns>}}
 
 {{<columns>}}
 ## Its JS all the way down
 
-Templates and [CSS](/reference/classes/component/#styles-1) is defined using a simple
-javascript syntax. No special editor plugins needed for indentation, syntax-highlighting
-or auto-completion.
+Templates and [CSS](/docs/components/styling/) is defined using a simple javascript
+syntax. No special editor plugins needed for indentation, syntax-highlighting or
+auto-completion.
 
 <--->
 ## (Don't fear the class)
@@ -96,4 +97,6 @@ object orientation if you so desire.
   CMS you want because they are just web components, but you can not pre-render components
   in a Next.js/SvelteKit/Angular Universal/Solid Start etc. kind of way.
 
-- It is not exactly battle tested - yet. Feel free to improve this :p
+- It is not exactly battle tested - yet. Feel free to improve this :p If you want to get a
+  taste of what Mvui can be used to build though, you can have a look at
+  [Wournal](https://github.com/dominiksta/wournal/).

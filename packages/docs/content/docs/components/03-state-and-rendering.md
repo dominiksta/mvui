@@ -69,3 +69,27 @@ export default class CounterComponent extends Component {
 
 In general though, the `render()` method of a component is a good default place to define
 state.
+
+## Two-Way Bindings
+
+Mvui allows for two-way bindings of state to arbitrary fields, props and attributes of
+child components. This also works with third-party or custom components as long as they
+fire a `change` or `keyup` event to notify the parent.
+
+{{<codeview>}}
+```typescript
+import { Component, rx, h } from "@mvuijs/core";
+
+@Component.register
+export default class MyComponent extends Component {
+  render() {
+    const value = new rx.State('initial');
+    return [
+      h.input({ fields: { value: rx.bind(value) }}),
+      h.input({ fields: { value: rx.bind(value) }}),
+      h.span(value),
+    ];
+  }
+}
+```
+{{</codeview>}}

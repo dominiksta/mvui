@@ -18,7 +18,7 @@ div, as well as styling an individual element reactively:
 import { Component, rx, h, style } from "@mvuijs/core";
 
 @Component.register
-export default class CounterComponent extends Component {
+export default class MyComponent extends Component {
   // By default, you should use this syntax, because it is by far the most
   // optimized - and arguably the most readable, but that is a matter of taste.
   static styles = style.sheet({
@@ -65,7 +65,7 @@ const SHARED_STYLES = style.sheet({
 });
 
 @Component.register
-export default class CounterComponent extends Component {
+export default class MyComponent extends Component {
   static styles = [
     ...style.sheet({
       'div': {
@@ -141,3 +141,48 @@ export default class MyComponent extends Component {
 
 ## Advanced: Style Overrides
 
+Usually, web components do not allow you to overwrite their styles. In general, this is a
+good thing, because the styling is arguably part of the components internal structure and
+not part of its API. The way to allow styling as part of a components API is usually done
+through [CSS parts](https://developer.mozilla.org/en-US/docs/Web/CSS/::part) or [CSS
+variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties). However,
+sometimes you might just want to be able to say "I know what I'm doing, let me change
+these styles!". For these situations, Mvui lets you overwrite the styling of *other Mvui
+components*. This currently does not work for generic web components because there is no
+reasonable way to overwrite styles in a Shadow DOM. Below is an example of one Mvui
+component overwriting the styling of another Mvui component.
+
+{{<codeview>}}
+```typescript
+import { Component, h, style } from "@mvuijs/core";
+
+@Component.register
+class StyledComponent extends Component {
+  static styles = style.sheet({ 'div': {
+    background: 'red', width: '20px', height: '20px'
+  }});
+  render() { return [ h.div('') ]; }
+}
+
+
+@Component.register
+export default class StyleOverridingComponent extends Component {
+  render() {
+    return [
+      StyledComponent.t({
+        styleOverrides: style.sheet({
+          'div': { background: 'blue !important' }
+        })
+      })
+    ]
+  }
+}
+```
+{{</codeview>}}
+
+Note that if you *really* want to overwrite the styling of a third party web component,
+you *can* do that programatically by pushing a stylesheet to the shadow roots
+`adoptedStyleSheets` field (see [this](https://stackoverflow.com/a/47633167) post on
+StackOverflow). However, this will break as soon as you create the element again and you
+have to take care to not add it mulitple times... it's a big headache that you probably
+don't want to deal with.

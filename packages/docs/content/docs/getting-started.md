@@ -81,3 +81,41 @@ is Wournals color palette editor.
 If you have built an application with Mvui yourself and want to see it included here,
 please [open a pull request](https://github.com/dominiksta/wournal/pulls) and it will
 likely be added!
+
+## Using from a CDN
+
+In general, we recommend setting up a project with NPM and a build system. However you
+*can* also use Mvui over a CDN like `unpkg`. It is recommended to use `importmap`s and
+scripts of `type="module"` for this purpose.
+
+```html
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <title>Mvui Hello World</title>
+    </head>
+    <body>
+        <!-- the ui5 import is of course optional -->
+        <script type="importmap">
+         {
+           "imports": {
+             "@mvuijs/core": "https://unpkg.com/@mvuijs/core@0.0.2/dist/min/mvui-core.js",
+             "@mvuijs/ui5": "https://unpkg.com/@mvuijs/ui5@1.19.0/dist/min/mvui-ui5.js"
+           }
+         }
+        </script>
+
+        <script type="module">
+         import { Component, h } from '@mvuijs/core';
+
+         class App extends Component {
+           render() { return [ h.div('Hello, World!') ] }
+         }
+         App.register();
+
+         document.body.appendChild(new App());
+        </script>
+    </body>
+</html>
+```
