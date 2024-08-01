@@ -4,7 +4,8 @@
 
 *"Minimum Viable UI"*
 
-Yes, this is a new frontend framework, and no, this is not a joke.
+Yes, this is a new frontend framework, and no, this is not a joke. See [the
+docs](https://dominiksta.github.io/mvui/) for details.
 
 ```typescript
 import { Component, rx, h } from '@mvuijs/core';
