@@ -1,6 +1,6 @@
 import { Component, h, rx, style } from '@mvuijs/core';
 import { Sandbox } from './sandbox.js';
-import '/js/ace-builds/src-noconflict/ace.js';
+import '/mvui/js/ace-builds/src-noconflict/ace.js';
 
 
 function getEditorHeight(editor){
@@ -66,7 +66,7 @@ export default class Codeview extends Component {
         editor.resize();
       })
 
-      ace.config.set('basePath', '/js/ace-builds/src-min-noconflict/');
+      ace.config.set('basePath', '/mvui/js/ace-builds/src-min-noconflict/');
       editor.session.setMode('ace/mode/typescript');
 
       this.onRemoved(style.currentTheme$.subscribe(async theme => {

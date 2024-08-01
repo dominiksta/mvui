@@ -48,8 +48,8 @@ console.log(plusOne.value);
 {{</codeview>}}
 
 And lastly, there are more frontend framework specific features such as a redux-like
-`Store`, a react-like `Context` or the [`handleStatus`](/docs/reactivity/data-fetching/)
-operator.
+`Store`, a react-like `Context` or the
+[`handleStatus`](/mvui/docs/reactivity/data-fetching/) operator.
 
 It should be mentioned that RxJS is of course a lot more feature-rich for asynchronous
 reactivity and battle-tested. There are likely some edge-cases where Mvui behaves slightly

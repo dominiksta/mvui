@@ -12,4 +12,4 @@ rendering lifecycle, props, attributes, styling, events and slots.
 
 We will also discuss the very basics of reactivity to get you started, but since this is a
 rather complex topic, reactivity will be covered more in depth in [its own
-chapter](/docs/reactivity/overview/).
+chapter](/mvui/docs/reactivity/overview/).

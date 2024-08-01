@@ -11,7 +11,7 @@ Props are the primary way of passing data *down* the component tree.
 
 
 Props are declared with the `props` class field as objects of the type
-[`prop`](/reference/rx/functions/prop/). You can then set them in a template elements
+[`prop`](/mvui/reference/rx/functions/prop/). You can then set them in a template elements
 parameters.
 
 {{<hint info>}}

@@ -11,7 +11,7 @@ function injectImportMap(window_) {
   scriptEl.type = "importmap";
   scriptEl.innerHTML = JSON.stringify({
     'imports': {
-      '@mvuijs/core': '/js/mvui/core/mvui-core.js',
+      '@mvuijs/core': '/mvui/js/mvui/core/mvui-core.js',
       '@mvuijs/ui5': 'https://unpkg.com/@mvuijs/ui5@1.19.0/dist/min/mvui-ui5.js',
     }
   });
@@ -31,7 +31,7 @@ async function injectUserCode(window_, code) {
 
 async function getToInject() {
   // TODO: force cache
-  const resp = await fetch('/js/app/codeview/injected-in-iframe.js');
+  const resp = await fetch('/mvui/js/app/codeview/injected-in-iframe.js');
   return await resp.text();
 }
 

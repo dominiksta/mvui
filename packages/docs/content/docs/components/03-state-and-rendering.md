@@ -10,8 +10,8 @@ bookToC: false
 How a frontend framework handels rendering when some state is updated is arguably one of
 the most essential things about it. Roughly speaking, Mvui will render each component
 **only once**, when it is attached to the DOM (specifics will be discussed in the page on
-[Component Lifecycle](/docs/components/lifecycle/)). On a state change, Mvui will then
-only replace the relevant elements in the DOM.
+[Component Lifecycle](/mvui/docs/components/lifecycle/)). On a state change, Mvui will
+then only replace the relevant elements in the DOM.
 
 Recall the "counter" example from earlier:
 
@@ -41,7 +41,7 @@ is more similar to frameworks like Solid rather then React.
 
 What the example also shows is the most basic state container: `rx.State`. There are many
 more advanced state management mechanisms, but these will be covered later in the chapter
-on [reactivity](/docs/reactivity/overview/). Again, much like Solid, there is nothing
+on [reactivity](/mvui/docs/reactivity/overview/). Again, much like Solid, there is nothing
 stopping you from declaring state *anywhere*, even completely outside of the component
 tree:
 

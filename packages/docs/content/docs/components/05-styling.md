@@ -90,7 +90,7 @@ overwriting rules apply.
 
 CSS @-Rules have to be a little different syntactically, because some of them allow
 specifying a kind of "nested" sheet. All of them are available under the
-[`style.at`](/reference/style/variables/at) namespace. Below is an example of using a
+[`style.at`](/mvui/reference/style/variables/at) namespace. Below is an example of using a
 media query to make a component behave differently depending on the screen size.
 
 ```typescript

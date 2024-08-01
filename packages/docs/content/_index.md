@@ -3,7 +3,7 @@ title: "Home"
 date: 2023-03-05T22:27:45+01:00
 bookToC: false
 ---
-<img src="/icon.svg"  width="128" height="128" style="vertical-align: middle"> 
+<img src="/mvui/icon.svg"  width="128" height="128" style="vertical-align: middle">
 <div style="display: inline-block; vertical-align: middle">
   <span style="font-size: 250%; font-family: Ubuntu Mono; margin: 0px 10px">Mvui</span>
   <i style="font-size: 130%">"Minimum Viable UI"</i>
@@ -30,11 +30,11 @@ export default class CounterComponent extends Component {
 {{</codeview>}}
 
 <p style="text-align: center">
-<a class="get-started-btn" href="/docs/getting-started">
+<a class="get-started-btn" href="/mvui/docs/getting-started">
 => Get Started
 </a>
 
-<a style="background: #333333" class="get-started-btn" href="/reference/modules/">
+<a style="background: #333333" class="get-started-btn" href="/mvui/reference/modules/">
 => API Reference
 </a>
 </p>
@@ -59,15 +59,15 @@ would never want to use anything but Mvui ;)
 ## Fully Typesafe
 
 Have typescript yell at you in the templates - not just for
-[props](/docs/components/props-and-attributes/), but also for
-[events](/docs/components/events/) and [slots](/docs/components/slots/) in your templates!
+[props](docs/components/props-and-attributes/), but also for
+[events](docs/components/events/) and [slots](docs/components/slots/) in your templates!
 
 <--->
 ## Fine-Grained Reactivity
 
 State is managed with a combination of [Redux-like
-selectors](/docs/reactivity/synchronous/#deriving-state) for synchronous reactivity and
-[RxJS-like operators](/docs/reactivity/asynchronous/#operators) for asynchronous
+selectors](docs/reactivity/synchronous/#deriving-state) for synchronous reactivity and
+[RxJS-like operators](docs/reactivity/asynchronous/#operators) for asynchronous
 reactivity.
 
 {{</columns>}}
@@ -75,7 +75,7 @@ reactivity.
 {{<columns>}}
 ## Its JS all the way down
 
-Templates and [CSS](/docs/components/styling/) is defined using a simple javascript
+Templates and [CSS](docs/components/styling/) is defined using a simple javascript
 syntax. No special editor plugins needed for indentation, syntax-highlighting or
 auto-completion.
 
