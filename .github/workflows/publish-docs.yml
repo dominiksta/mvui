@@ -51,6 +51,9 @@ jobs:
       - name: Install Node.js dependencies
         working-directory: ./packages/docs
         run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
+      - name: Build JS bundles & API docs
+        working-directory: ./packages/docs
+        run: npm run bundle:all && npm run gendoc:api
       - name: Build with Hugo
         working-directory: ./packages/docs
         env:
