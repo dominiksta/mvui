@@ -6,7 +6,7 @@ import Stream from "../../stream";
 // auxclick, dblclick, copy, focusin, focusout, mousedown, mouseup, wheel
 const RELEVANT_EVENTS = [
   'change', 'blur', 'click', 'contextmenu', 'cut', 'focus', 'keydown',
-  'keyup', 'paste', 'pointerdown', 'pointerup', 'wheel'
+  'keyup', 'paste', 'pointerdown', 'pointerup'
 ];
 
 // https://stackoverflow.com/a/22545622
