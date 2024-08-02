@@ -22,8 +22,8 @@ functional syntax. The functional example is only one line of code less.
 ```typescript
 class MyComponent extends Component {
   props = {
-    value1: new Prop(1),
-    value2: new Prop(2),
+    value1: rx.prop({ defaultValue: 1 }),
+    value2: rx.prop({ defaultValue: 2 }),
   }
 
   render() {
@@ -38,11 +38,11 @@ class MyComponent extends Component {
 
 ```typescript
 function MyComponent({
-  value1 = new Prop(1),
-  value2 = new Prop(2),
+  value1 = rx.prop({ defaultValue: 1 }),
+  value2 = rx.prop({ defaultValue: 2 }),
 }: {
-  value1: Prop<number>,
-  value2: Prop<number>,
+  value1: rx.Prop<number>,
+  value2: rx.Prop<number>,
 }) {
   const state = new State(0);
 
@@ -93,7 +93,7 @@ Consider the folling (working) example:
 
 ```typescript
 type MyEvents<T> = {
-  change: T
+  change: CustomEvent<T>
 }
 
 class GenericComp<T> extends Component<MyEvents<T>> {
