@@ -69,7 +69,7 @@ export default class Codeview extends Component {
       ace.config.set('basePath', '/mvui/js/ace-builds/src-min-noconflict/');
       editor.session.setMode('ace/mode/typescript');
 
-      this.onRemoved(style.currentTheme$.subscribe(async theme => {
+      this.onRemoved(style.currentTheme.subscribe(async theme => {
         editor.setTheme(
           theme === 'dark' ? 'ace/theme/tomorrow_night_bright' :  'ace/theme/tomorrow'
         );

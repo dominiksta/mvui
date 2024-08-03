@@ -4,10 +4,10 @@
 
    @example
    ```typescript
-   const state$ = new rx.State(0);
-   state$.map(v => v + 1).subscribe(console.log);
+   const state = new rx.State(0);
+   state.map(v => v + 1).subscribe(console.log);
 
-   state$.next(1); state$.next(2);
+   state.next(1); state.next(2);
 
    // Logs: 1 2 3
    ```

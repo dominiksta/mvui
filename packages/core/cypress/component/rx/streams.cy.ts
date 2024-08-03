@@ -7,12 +7,12 @@ context('Reactivity', () => {
     it('subscribing to a synchronous definition returns the correct result',
       attempt(() => {
 
-        const obs$ = new rx.Stream<number>(observer => {
+        const obs = new rx.Stream<number>(observer => {
           observer.next(1); observer.next(2); observer.next(3);
         })
 
         const result: number[] = [];
-        obs$.subscribe(v => result.push(v));
+        obs.subscribe(v => result.push(v));
         expect(result.length).to.be.eq(3);
         expect(result).to.deep.eq([1, 2, 3]);
       }))
@@ -59,7 +59,7 @@ context('Reactivity', () => {
 
 
     it('error handling', attempt(() => {
-      const obs$ = new rx.Stream<number>(observer => {
+      const obs = new rx.Stream<number>(observer => {
         observer.next(1);
         observer.next(2);
         // note that if we threw in a setTimeout here, the error would not be caught. while
@@ -72,7 +72,7 @@ context('Reactivity', () => {
       let result: number[] = [];
       let calledError = false;
 
-      obs$.map(v => v + 1).subscribe({
+      obs.map(v => v + 1).subscribe({
         next(v) { result.push(v) },
         error(e) {
           calledError = true;
@@ -114,24 +114,24 @@ context('Reactivity', () => {
 
     it('streams are unicast', attempt(() => {
       let resource = 0;
-      const obs$ = new rx.Stream<number>(observer => {
+      const obs = new rx.Stream<number>(observer => {
         resource++;
         observer.next(1); observer.next(2); observer.next(3);
       })
 
-      obs$.subscribe();
-      obs$.subscribe();
+      obs.subscribe();
+      obs.subscribe();
 
       expect(resource).to.eq(2);
     }))
 
     it('pipe', attempt(() => {
-      const obs$ = new rx.Stream<number>(observer => {
+      const obs = new rx.Stream<number>(observer => {
         observer.next(1); observer.next(2); observer.next(3);
       })
 
       const result: number[] = [];
-      obs$.pipe(
+      obs.pipe(
         rx.map(v => v + 1), rx.map(v => v + 2),
       ).subscribe(v => result.push(v));
       expect(result.length).to.eq(3);
@@ -139,36 +139,36 @@ context('Reactivity', () => {
     }))
 
     it('map operator', attempt(() => {
-      const obs$ = new rx.Stream<number>(observer => {
+      const obs = new rx.Stream<number>(observer => {
         observer.next(1); observer.next(2); observer.next(3);
       })
 
       const result: number[] = [];
-      obs$.map(v => v + 3).subscribe(v => result.push(v));
+      obs.map(v => v + 3).subscribe(v => result.push(v));
       expect(result.length).to.eq(3);
       expect(result).to.deep.eq([4, 5, 6]);
     }))
 
     it('filter operator', attempt(() => {
-      const obs$ = new rx.Stream<number>(observer => {
+      const obs = new rx.Stream<number>(observer => {
         observer.next(1); observer.next(2); observer.next(3);
       })
 
       const result: number[] = [];
-      obs$.filter(v => v === 2 || v === 3).subscribe(v => result.push(v));
+      obs.filter(v => v === 2 || v === 3).subscribe(v => result.push(v));
       expect(result.length).to.eq(2);
       expect(result).to.deep.eq([2, 3]);
     }))
 
 
     it('map & filter chain', attempt(() => {
-      const obs$ = new rx.Stream<number>(observer => {
+      const obs = new rx.Stream<number>(observer => {
         observer.next(1); observer.next(2); observer.next(3);
         observer.next(4); observer.next(5); observer.next(6);
       })
 
       let result: (number | string)[] = [];
-      obs$.map(v => v + 2)
+      obs.map(v => v + 2)
         .filter(v => v % 2 === 0)
         .map(v => v === 4 ? 'hi' : v)
         .subscribe(v => result.push(v));
@@ -177,7 +177,7 @@ context('Reactivity', () => {
       expect(result).to.deep.eq(['hi', 6, 8]);
 
       result = [];
-      obs$.pipe(
+      obs.pipe(
         rx.map(v => v + 2),
         rx.filter(v => v % 2 === 0),
         rx.map(v => v === 4 ? 'hi' : v),
@@ -189,7 +189,7 @@ context('Reactivity', () => {
 
 
     it('custom operators', attempt(() => {
-      const obs$ = new rx.Stream<number>(observer => {
+      const obs = new rx.Stream<number>(observer => {
         observer.next(1); observer.next(2); observer.next(3);
         observer.next(4); observer.next(5); observer.next(6);
       })
@@ -202,7 +202,7 @@ context('Reactivity', () => {
         );
 
       const result: (number | string)[] = [];
-      obs$.pipe(
+      obs.pipe(
         customOperator(),
       ).subscribe(v => result.push(v));
 

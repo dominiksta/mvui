@@ -3,78 +3,78 @@ import { attempt } from '../../support/helpers';
 
 describe('state', () => {
   it('subscribe & unsubscribe', attempt(() => {
-    const subj$ = new rx.State(1);
+    const subj = new rx.State(1);
     const result: number[] = [];
 
-    expect((subj$ as any).observers.length).to.be.eq(0);
+    expect((subj as any).observers.length).to.be.eq(0);
 
-    const unsubcribe = subj$.subscribe(v => result.push(v));
+    const unsubcribe = subj.subscribe(v => result.push(v));
 
-    expect((subj$ as any).observers.length).to.be.eq(1);
+    expect((subj as any).observers.length).to.be.eq(1);
     expect(result).to.deep.eq([1]);
-    subj$.next(2);
+    subj.next(2);
     expect(result).to.deep.eq([1, 2]);
-    subj$.next(3);
+    subj.next(3);
     expect(result).to.deep.eq([1, 2, 3]);
     unsubcribe();
-    expect((subj$ as any).observers.length).to.be.eq(0);
-    subj$.next(4);
+    expect((subj as any).observers.length).to.be.eq(0);
+    subj.next(4);
     expect(result).to.deep.eq([1, 2, 3]);
-    expect((subj$ as any).observers.length).to.be.eq(0);
+    expect((subj as any).observers.length).to.be.eq(0);
   }))
 
 
   it('subscribe & unsubscribe with operator chain', attempt(() => {
-    const subj$ = new rx.State(1);
+    const subj = new rx.State(1);
     const result: number[] = [];
 
-    expect((subj$ as any).observers.length).to.be.eq(0);
+    expect((subj as any).observers.length).to.be.eq(0);
 
-    const unsubcribe = subj$
+    const unsubcribe = subj
       .map(v => v + 1)
       .map(v => v + 1)
       .subscribe(v => result.push(v));
 
-    expect((subj$ as any).observers.length).to.be.eq(1);
+    expect((subj as any).observers.length).to.be.eq(1);
 
     expect(result).to.deep.eq([3]);
-    subj$.next(2);
+    subj.next(2);
     expect(result).to.deep.eq([3, 4]);
-    subj$.next(3);
+    subj.next(3);
     expect(result).to.deep.eq([3, 4, 5]);
     unsubcribe();
-    subj$.next(4);
+    subj.next(4);
     expect(result).to.deep.eq([3, 4, 5]);
 
-    expect((subj$ as any).observers.length).to.be.eq(0);
+    expect((subj as any).observers.length).to.be.eq(0);
   }))
 
   it('completing', attempt(() => {
-    const subj$ = new rx.State(1);
+    const subj = new rx.State(1);
     const result: number[] = [];
     let completed = false;
 
-    subj$
+    subj
       .map(v => v + 2)
       .subscribe({
         next(v) { result.push(v) },
         complete() { completed = true; }
       });
 
-    expect((subj$ as any).observers.length).to.be.eq(1);
+    expect((subj as any).observers.length).to.be.eq(1);
 
     expect(result).to.deep.eq([3]);
-    subj$.next(2);
+    subj.next(2);
     expect(result).to.deep.eq([3, 4]);
-    subj$.next(3);
+    subj.next(3);
     expect(result).to.deep.eq([3, 4, 5]);
     expect(completed).to.be.false;
-    subj$.complete();
+    subj.complete();
     expect(completed).to.be.true;
-    subj$.next(4);
+    subj.next(4);
     expect(result).to.deep.eq([3, 4, 5]);
 
-    expect((subj$ as any).observers.length).to.be.eq(0);
+    expect((subj as any).observers.length).to.be.eq(0);
   }))
 
   it('partial linked state', attempt(() => {

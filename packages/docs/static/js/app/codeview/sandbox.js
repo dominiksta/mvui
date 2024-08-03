@@ -95,7 +95,7 @@ export class Sandbox extends Component {
 
       isLoading.next(false);
 
-      this.onRemoved(style.currentTheme$.subscribe(async theme => {
+      this.onRemoved(style.currentTheme.subscribe(async theme => {
         if (!this.props.autoBackground.value) return;
         win.document.body.style.backgroundColor =
           theme === 'dark' ? 'black' : 'white';

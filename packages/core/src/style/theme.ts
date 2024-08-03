@@ -81,7 +81,7 @@ export const getTheme = (libName: string): { [key: string]: string } | false =>
 
 
 // TODO: share with refcount
-const _currentTheme$ = new Stream<'dark' | 'light'>(observer => {
+const _currentTheme = new Stream<'dark' | 'light'>(observer => {
   if (!window.matchMedia) {
     observer.next('light');
     return;
@@ -105,7 +105,7 @@ const _currentTheme$ = new Stream<'dark' | 'light'>(observer => {
 });
 
 /** Subscribe to this to get the current browser theme. */
-export const currentTheme$ = new State<'dark' | 'light'>(
+export const currentTheme = new State<'dark' | 'light'>(
   window.matchMedia
     ? (
       window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -114,4 +114,4 @@ export const currentTheme$ = new State<'dark' | 'light'>(
     )
     : "dark"
 );
-_currentTheme$.subscribe(currentTheme$);
+_currentTheme.subscribe(currentTheme);

@@ -44,11 +44,11 @@ export default function combineLatest<T extends { [key: string]: Stream<any> }>(
 export default function combineLatest(
   ...args: any[]
 ): any {
-  if (args[0] instanceof Array) { // combineLatest([obs1$, obs2$])
+  if (args[0] instanceof Array) { // combineLatest([obs1, obs2])
     return _combineLatestArr(args[0]);
-  } else if (args.length > 1) { // combineLatest(obs1$, obs2$)
+  } else if (args.length > 1) { // combineLatest(obs1, obs2)
     return _combineLatestArr(args);
-  } else { // combineLatest({o1: obs1$, o2: obs2$})
+  } else { // combineLatest({o1: obs1, o2: obs2})
     return _combineLatestObj(args[0]);
   }
 }

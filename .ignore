@@ -3,3 +3,4 @@
 /packages/docs/static/js/ace-builds/
 /packages/docs/themes/hugo-book/
 package-lock.json
+.git/

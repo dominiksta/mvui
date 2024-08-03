@@ -20,6 +20,7 @@ Changelog
 - Removed `Component.pierceShadow`. This feature was way too hacky and usage could quickly
   degreade performance. Hopefully browsers will allow overwriting Shadow DOM CSS natively
   in the future.
+- Renamed `style.currentTheme$` to `style.currentTheme` for consistency.
 - Advanced: Removed `wheel` event from `fromAllEvents`. This means `rx.bind` will no
   longer update a value on a mouse wheel event.
 

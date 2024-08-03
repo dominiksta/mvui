@@ -597,7 +597,7 @@ export default abstract class Component<
     // --- setup attributes, events, props, class fields
     if (el.params) {
 
-      let events$: Stream<Event> | undefined;
+      let events: Stream<Event> | undefined;
 
       const bindAttrOrField = <T>(
         bind: State<T>,
@@ -607,8 +607,8 @@ export default abstract class Component<
         let ignoreNextDown = false;
 
         // dataflow: upwards
-        if (!events$) events$ = fromAllEvents(thisEl);
-        this.subscribe(events$.pipe(
+        if (!events) events = fromAllEvents(thisEl);
+        this.subscribe(events.pipe(
           map(_ => getter()),
           distinctUntilChanged(),
         ), v => {

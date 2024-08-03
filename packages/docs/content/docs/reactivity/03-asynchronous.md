@@ -50,7 +50,7 @@ rx.interval(2000).pipe(
 
 Fundamentally, there are two different *types* of operators: **creation** operators (such
 as `rx.interval`) which create a `Stream` and **transformation** operators, which
-transform an existing `Stream` with a function (like `rx.map`, `rx.filter` and `rx.take`).
+transform an existing `Stream` with a function (like `rx.map`, `rx.filter` and `rx.take`). For a list of available operators, see the [API docs](/mvui/reference/rx/rx/#stream-operators).
 
 With these basic concepts, you can build complex processing pipelines with little
 code. For example, you can process user events from an input, debounce them, make HTTP API

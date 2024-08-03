@@ -8,10 +8,10 @@ import { identity } from "../util/other";
  *
  * @example
  * ```typescript
- * const state$ = new State(1);
- * state$.map(v => v + 1).subscribe(console.log);
+ * const state = new State(1);
+ * state.map(v => v + 1).subscribe(console.log);
  *
- * state$.next(4); state$.next(3);
+ * state.next(4); state.next(3);
  *
  * // Logs: 2 5 4
  *

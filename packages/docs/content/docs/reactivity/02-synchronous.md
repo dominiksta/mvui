@@ -117,13 +117,13 @@ the store.
 
 {{<codeview output-height="100px">}}
 ```typescript
-import { rx } from '@mvuijs/core';
+import { rx, util } from '@mvuijs/core';
 
 const store = new rx.Store({
   initialState: { p1: 4, p2: 'hi' },
   reducers: {
-    lower: v => ({ ...v, p2: v.p2.toLowerCase() }),
-    upper: v => ({ ...v, p2: v.p2.toUpperCase() }),
+    lower: v => util.patchObject(v, { p2: v.p2.toLowerCase() }),
+    upper: v => util.patchObject(v, { p2: v.p2.toUpperCase() }),
     concat: (v, add: string) => ({ ...v, p2: v.p2 + add }),
   },
   selectors: {
@@ -132,7 +132,7 @@ const store = new rx.Store({
 });
 
 const unsub = store.state.subscribe(console.log);
-store.reduce.lower();
+store.reduce.upper();
 store.reduce.concat(' hey');
 unsub();
 console.log(store.select.appendWorld.value);
