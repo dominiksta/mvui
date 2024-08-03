@@ -1,7 +1,7 @@
 ---
 title: "Lifecycle"
 slug: "lifecycle"
-weight: 06
+weight: 07
 bookToC: false
 ---
 

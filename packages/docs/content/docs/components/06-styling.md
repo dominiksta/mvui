@@ -1,7 +1,7 @@
 ---
 title: "Styling"
 slug: "styling"
-weight: 05
+weight: 06
 bookToC: false
 ---
 

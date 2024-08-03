@@ -1,7 +1,7 @@
 ---
 title: "Slots"
 slug: "slots"
-weight: 08
+weight: 09
 bookToC: false
 ---
 

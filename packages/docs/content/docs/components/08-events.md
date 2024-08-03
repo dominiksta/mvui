@@ -1,7 +1,7 @@
 ---
 title: "Events"
 slug: "events"
-weight: 07
+weight: 08
 bookToC: false
 ---
 
