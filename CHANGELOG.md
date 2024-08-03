@@ -4,18 +4,18 @@ Changelog
 `0.0.3` - _unreleased_
 ----------------------------------------------------------------------
 
-### Added
+**Added**
 
 - Exported a few types you may sometimes want to import: `Fragment`, `rx.OptionalProp`,
   `rx.PropOptions`, `rx.StreamInput`, `rx.StreamInterop`, `rx.StreamInteropRxJS`,
   `rx.ObserverDefinitionInterop`.
 
-### Fixed
+**Fixed**
 
 - Passing a callback function in a template would pass the callback directly to the `next`
   method of `State`, causing it to be interpreted as a transformation function.
 
-### Breaking Changes
+**Breaking Changes**
 
 - Removed `Component.pierceShadow`. This feature was way too hacky and usage could quickly
   degreade performance. Hopefully browsers will allow overwriting Shadow DOM CSS natively
@@ -26,8 +26,8 @@ Changelog
 
 `0.0.2` - _2024-07-24_
 ----------------------------------------------------------------------
-**Working First Alpha Release**
+*Working First Alpha Release*
 
 `0.0.1` - _2024-07-23_
 ----------------------------------------------------------------------
-**Initial Test Release**
+*Initial Test Release*
