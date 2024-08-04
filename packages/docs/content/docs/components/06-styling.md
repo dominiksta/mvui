@@ -7,8 +7,6 @@ bookToC: false
 
 # Styling
 
-TODO theming
-
 ## Basics
 
 CSS Styling in Mvui is done entirely in JS/TS. Styles are declared as objects that
