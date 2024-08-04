@@ -7,10 +7,11 @@ bookToC: false
 
 # Asynchronous Reactivity
 
-Asynchronous reactivity in Mvui is achieved with the `Stream` primitive. The idea is that
-a `Stream` represents an asynchronous, well, stream of data. For example, you can use the
-`rx.interval` function to create a stream of increasing numbers in a given interval, much
-like the JS builtin `setInterval`:
+Asynchronous reactivity in Mvui is achieved with the `Stream` primitive. (In fact, a
+`State` object is a subclass of a `Stream`) The idea is that a `Stream` represents an
+asynchronous, well, stream of data. For example, you can use the `rx.interval` function to
+create a stream of increasing numbers in a given interval, much like the JS builtin
+`setInterval`:
 
 {{<codeview>}}
 ```typescript
@@ -34,7 +35,9 @@ provided. These are *pure*(ish) functions that transform the incoming data in so
 and they can be chained together with the `pipe` method of a `Stream`. Below is an example
 using the `map` and `filter` operators, which function like their plain JS array
 equivalents. The example also uses the `take` operator, which *completes* (more on that
-later) the stream after *n* values were emitted.
+later) the stream after *n* values were emitted. The `take` operator is also a good
+example of a non-pure operator, because it obviously needs to store some internal state to
+keep track of how many values were already emitted.
 
 {{<codeview>}}
 ```typescript

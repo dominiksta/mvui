@@ -52,7 +52,7 @@ jobs:
         run: npm --workspace=packages/docs ci
       - name: Build JS bundles & API docs
         working-directory: ./packages/docs
-        run: npm run bundle:all && npm run gendoc:api
+        run: npm run bundle:all && npm run gendoc:api && npm run copy-changelog
       - name: Build with Hugo
         working-directory: ./packages/docs
         env:

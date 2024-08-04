@@ -39,7 +39,9 @@ removed from the DOM.
 ### Deriving State
 
 You can synchronously derive state from other existing state. `DerivedState` objects still
-have a `.value` field that you can query without subscribing.
+have a `.value` field that you can query without subscribing. Note that the values are
+*memoized*, meaning that they will only recompute when the "parent" state has actually
+changed.
 
 {{<codeview>}}
 ```typescript
@@ -91,12 +93,25 @@ objects to the form fields.
 
 {{<codeview>}}
 ```typescript
-import { rx } from '@mvuijs/core';
+import { Component, h, rx } from '@mvuijs/core';
 
-const user = new rx.State({ name: 'l33th4x0r', pwhash: 'x772allll2' });
-const pwhash = user.partial('pwhash');
-user.subscribe(console.log);
-pwhash.next('deadbeef');
+@Component.register
+export default class SomeForm extends Component {
+  render() {
+    const state = new rx.State({
+      field1: 'field1-init',
+      field2: 'field2-init',
+    });
+
+    return [
+      h.form([
+        h.input({ fields: { value: rx.bind(state.partial('field1')) }}),
+        h.input({ fields: { value: rx.bind(state.partial('field2')) }}),
+      ]),
+      h.pre(state.derive(JSON.stringify)),
+    ]
+  }
+}
 ```
 {{</codeview>}}
 

@@ -70,7 +70,7 @@ export default class Wrapper extends Component {
 
 ## Closing Local Resources (e.g. Subscriptions)
 
-You can use `this.onRemoved(<callback>)` to clean up manual resources like manual
+You can use `this.onRemoved(<callback>)` to clean up resources like manual
 subscriptions. While you generally speaking should try to avoid manual subscriptions for a
 more declarative style, there are some use cases where they may be required (or desirable
 for your sanity as a non-expert in reactive programming).

@@ -7,6 +7,8 @@ bookToC: false
 
 # Styling
 
+TODO theming
+
 ## Basics
 
 CSS Styling in Mvui is done entirely in JS/TS. Styles are declared as objects that
@@ -106,6 +108,70 @@ class MyComponent extends Component {
   // ...
 }
 ```
+
+## Theming
+
+Mvui allows you to define themes with CSS variables and reference them with JS
+symbols. This can be used for example to create a dark and a light theme (for which the
+`currentTheme` `Stream` is also provided).
+
+{{<codeview>}}
+```typescript
+import { Component, h, style } from '@mvuijs/core';
+
+type MyAppTheme = { background: string }
+const lightTheme: MyAppTheme = { foreground: 'black' };
+const darkTheme: MyAppTheme = { foreground: 'orange' };
+
+export const theme = style.themeVariables('myapp', lightTheme);
+
+// style.currentTheme.subscribe(curr => {
+//   style.setTheme('myapp', theme === 'light' ? lightTheme : darkTheme);
+// });
+
+@Component.register
+export default class MyApp extends Component {
+  static styles = style.sheet({
+    ':host': {
+      backgroundColor: theme.background,
+      color: theme.foreground,
+    }
+  });
+
+  render() {
+    return [
+      h.div('hi'),
+      h.button(
+        { events: { click: _ => { style.setTheme('myapp', darkTheme) }} },
+        'set dark theme'
+      )
+    ]
+  }
+}
+```
+{{</codeview>}}
+
+## Global Styles
+
+You can also define global styles by applying them directly to a `<style>` tag in the
+body. Note that these will actually overwrite Shadow DOM styling!
+
+{{<codeview>}}
+```typescript
+import { Component, h, style } from '@mvuijs/core';
+
+style.util.applySheetAsStyleTag(document.body, style.sheet({
+  '*': {
+    color: 'green',
+  },
+}))
+
+@Component.register
+export default class App extends Component {
+  render = () => [ h.div('hi') ];
+}
+```
+{{</codeview>}}
 
 ## Advanced: Static vs Instance Styles
 
