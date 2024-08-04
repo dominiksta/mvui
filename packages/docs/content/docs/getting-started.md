@@ -100,7 +100,7 @@ scripts of `type="module"` for this purpose.
         <script type="importmap">
          {
            "imports": {
-             "@mvuijs/core": "https://unpkg.com/@mvuijs/core@0.0.2/dist/min/mvui-core.js",
+             "@mvuijs/core": "https://unpkg.com/@mvuijs/core@0.0.3/dist/min/mvui-core.js",
              "@mvuijs/ui5": "https://unpkg.com/@mvuijs/ui5@1.19.0/dist/min/mvui-ui5.js"
            }
          }
