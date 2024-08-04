@@ -7,7 +7,7 @@ bookToC: false
 
 # Overview
 
-This chapter will cover the component model of mvui. We will discuss component definition,
+This chapter will cover the component model of Mvui. We will discuss component definition,
 rendering lifecycle, props, attributes, styling, events and slots.
 
 We will also discuss the very basics of reactivity to get you started, but since this is a

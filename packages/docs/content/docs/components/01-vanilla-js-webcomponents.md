@@ -7,8 +7,8 @@ bookToC: false
 
 # Vanilla JS Web Components
 
-An mvui component is fundamentally a standard web component. It is therefore necessary to
-understand the basic concepts of web components to use mvui effectively. If you have
+An Mvui component is fundamentally a standard web component. It is therefore necessary to
+understand the basic concepts of web components to use Mvui effectively. If you have
 already used web components, you can skip this section.
 
 ## What?
@@ -48,7 +48,7 @@ any context:
 - Content Management Systems (CMS) may support manual editing of HTML or just putting HTML
   in markdown. Convincing a CMS to use components from say React can be challenging, while
   Web Components are pretty much just work. In fact, the live code sandbox that is used in
-  this documentation is an mvui web component that can be used directly from markdown with
+  this documentation is an Mvui web component that can be used directly from markdown with
   the Hugo static site generator.
 
 ## Why Not?
@@ -59,7 +59,7 @@ example, there is no concept of reactivity and "templating" is done by just usin
 strings. In general, most will consider the API not very pleasant to work with in
 comparison to modern frontend frameworks.
 
-This is where frameworks like mvui, [LitElement](https://lit.dev),
+This is where frameworks like Mvui, [LitElement](https://lit.dev),
 [SlimJS](https://slimjs.com/#/welcome) or [Fast
 Element](https://www.fast.design/docs/fast-element/defining-elements) come in: They
 provide relatively small abstractions to significantly improve experience of working with

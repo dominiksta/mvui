@@ -78,7 +78,7 @@ function OtherComponent() {
 
 Libraries like Solid and React can get around this problem by simply not using events in
 their component system and instead relying on passing callbacks. This is not an option for
-mvui as it is supposed to be a web components first library.
+Mvui as it is supposed to be a web components first library.
 
 We could possibly come up with a different syntax like this:
 
@@ -122,5 +122,5 @@ class UserComp extends Component {
 ```
 
 This is a generic component that uses its generic type in its custom events. With a
-functional syntax, this would not be possible for mvui, at least not to our current
+functional syntax, this would not be possible for Mvui, at least not to our current
 knowledge.

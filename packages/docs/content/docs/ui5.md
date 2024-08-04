@@ -8,7 +8,7 @@ bookToC: false
 
 ## Why
 
-The mvui team endeavours to provide enterprise ready solutions, empowering developers with
+The Mvui team endeavours to provide enterprise ready solutions, empowering developers with
 a state-of-the-art framework to facilitate rapid iteration. Our continuing mission is and
 has always been to help businesses navigate the complex space of modern technology like
 Artificial Intelligence (AI) and Blockchain more effectively with standardized tooling. We
@@ -20,7 +20,7 @@ library. They will also probably stick around for a long time because SAP is adv
 them to enterprise customers, which usually expect stability and long term support.
 
 Are they the prettiest components in the world? Arguably no. But they fit the intended use
-case of mvui very well: Projects that are specifically built to require minimal long term
+case of Mvui very well: Projects that are specifically built to require minimal long term
 maintenance. They are also much more feature complete than most component libraries: They
 have dark mode support, high contrast themes for accesibility, right-to-left language
 support, many responsive components (like a menu that looks like a right-click menu on
@@ -29,8 +29,8 @@ components like wizards, calendars that support different calendar types or tree
 custom nested components.
 
 Fundamentally, there is nothing stopping you from using any web component library in
-mvui. To provide type-safety for events and slots however, creating wrappers is
-necessary. Because of this, mvui provides wrappers to all UI5 Web Components in the
+Mvui. To provide type-safety for events and slots however, creating wrappers is
+necessary. Because of this, Mvui provides wrappers to all UI5 Web Components in the
 `@mvuijs/ui5` package. Also, the package bundles the required fonts so that you can use
 the package for offline applications (with something like electron). You can read about
 available components, their arguments, events, etc. in the [official

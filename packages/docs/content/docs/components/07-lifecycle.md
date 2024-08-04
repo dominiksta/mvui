@@ -13,11 +13,11 @@ The `render()` method of a component will be called *every time the component is
 to the DOM. This is generally speaking a good place to declare component local
 state. There are cases where you might need to run code *after* the component is done
 rendering (code you write in the render method will run just *before* rendering) or when
-it is unmounted. For these situations, mvui provides two lifecycle hooks:
+it is unmounted. For these situations, Mvui provides two lifecycle hooks:
 
 - `this.onRemoved(<callback>)` will run the callback on unmount
 - `this.onRendered(<callback>)` will run the callback after the component is
-  rendered. Recall that components in mvui will only render once when mounted and
+  rendered. Recall that components in Mvui will only render once when mounted and
   subsequent state changes will only update the relevant DOM.
 
 {{<hint info>}}

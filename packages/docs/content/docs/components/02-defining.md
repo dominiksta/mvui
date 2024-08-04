@@ -7,11 +7,11 @@ bookToC: false
 
 # Defining
 
-All web components, including mvui components, must be registered to the "custom elements
+All web components, including Mvui components, must be registered to the "custom elements
 registry". This assigns them a fixed, unique tag name (like `<my-component>`).
 
 You *could* go the default `customElements.define('my-component', MyComponent)` way, but
-mvui provides some convenience features which will make life easier.
+Mvui provides some convenience features which will make life easier.
 
 ```typescript
 import { Component, h } from "@mvuijs/core";
@@ -28,7 +28,7 @@ export default class MyComponent extends Component {
 MyComponent.register();
 ```
 
-But wait, where did we specify the tag name? In this case, we didn't, and mvui will assume
+But wait, where did we specify the tag name? In this case, we didn't, and Mvui will assume
 that what you wanted was `'<app-my-component>'`. You can customize the tag name by
 specifying both a *prefix* and a *suffix*:
 
@@ -54,10 +54,10 @@ classnames.
 
 You may have noticed that the property we used to specify the prefix was not called
 `tagNamePrefix` but `tagNameLibrary`. The reason is that you can change the tag name
-prefixes of other mvui libraries to avoid naming conflicts.
+prefixes of other Mvui libraries to avoid naming conflicts.
 
 Let's pretend you have are writing library called `toaster`, which you use to control your
-actual toaster. But you want to use an mvui component library also called `toaster`, that
+actual toaster. But you want to use an Mvui component library also called `toaster`, that
 displays toast notifications on screen. You can avoid conflicts in your tag names like so:
 
 ```typescript
