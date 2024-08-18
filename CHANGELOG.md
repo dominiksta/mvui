@@ -1,6 +1,14 @@
 Changelog
 ======================================================================
 
+`0.0.4` - _unreleased_
+----------------------------------------------------------------------
+
+**Fixed**:
+
+- You can use `Component`s as props and fields. Previously they were erroneously treated
+  as `Subscribable` because they have a `subscribe` method.
+
 `0.0.3` - _2024-08-04_
 ----------------------------------------------------------------------
 

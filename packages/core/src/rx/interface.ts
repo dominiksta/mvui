@@ -5,7 +5,7 @@ export interface Subscribable<T> {
 export function isSubscribable<T>(input: unknown): input is Subscribable<T> {
   return (
     input !== null && input !== undefined && typeof input === 'object'
-    && 'subscribe' in input
+    && Symbol.observable in input
   );
 }
 
