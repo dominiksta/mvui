@@ -1,4 +1,4 @@
-import memoizeOne from "./memoize-one";
+import memoizeOne, { EqualityFn, isEqualJSON, isEqualScalar } from "./memoize-one";
 import { Derivable } from "./derivable";
 import Stream from "./stream";
 import { Observer } from "./interface";
@@ -75,14 +75,20 @@ export class DerivedState<T> extends Stream<T> {
     }
   }
 
+  private equality: EqualityFn;
+
   /**
    * Do not use this constructor directly. Instead, always use rx.{@link derive}.
    */
   private constructor(
     private parents: Derivable<any>[],
-    private derivationFunction: (...args: any[]) => T
+    private derivationFunction: (...args: any[]) => T,
+    equality: Equality,
   ) {
     super(_observer => undefined);
+    if (equality === 'scalar') this.equality = isEqualScalar;
+    else if (equality === 'json') this.equality = isEqualJSON;
+    else this.equality = equality;
   }
 
   /** @ignore */
@@ -91,7 +97,7 @@ export class DerivedState<T> extends Stream<T> {
 
     if (this.observers.length === 1) {
       let complete = false;
-      const memoized = memoizeOne(this.derivationFunction.bind(this));
+      const memoized = memoizeOne(this.derivationFunction.bind(this), this.equality);
       for (let i = 0; i < this.parents.length; i++) {
         if (i === this.parents.length - 1) complete = true;
         this.parentUnsubscribers.push(this.parents[i].subscribe(value => {
@@ -117,22 +123,31 @@ export class DerivedState<T> extends Stream<T> {
   }
 
   /** Shorthand for rx.{@link derive}(this, definition) */
-  derive<ReturnT>(definition: (value: T) => ReturnT): DerivedState<ReturnT> {
-    return DerivedState.__create(this, definition);
+  derive<ReturnT>(
+    definition: (value: T) => ReturnT,
+    equality: Equality = 'scalar',
+  ): DerivedState<ReturnT> {
+    return DerivedState.__create(this, definition, equality);
   }
 
   /** @ignore */
   static __create(...args: any[]): any {
-    return new DerivedState(args.slice(0, -1), args[args.length - 1]);
+    return new DerivedState(
+      args.slice(0, -2), args[args.length - 2], args[args.length - 1]
+    );
   }
 }
+
+export type Equality =
+  'scalar' | 'json' | ((first: any, second: any) => boolean);
 
 // nasty type definition incoming:
 
 /** @ignore */
 export function derive<R, A>(
   sa: Derivable<A>,
-  def: (a: A) => R
+  def: (a: A) => R,
+  equality?: Equality,
 ): DerivedState<R>;
 
 /**
@@ -154,50 +169,59 @@ export function derive<R, A>(
  */
 export function derive<R, A, B>(
   sa: Derivable<A>, sb: Derivable<B>,
-  def: (a: A, b: B) => R
+  def: (a: A, b: B) => R,
+  equality?: Equality,
 ): DerivedState<R>;
 
 /** @ignore */
 export function derive<R, A, B, C>(
   sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>,
-  def: (a: A, b: B, c: C) => R
+  def: (a: A, b: B, c: C) => R,
+  equality?: Equality,
 ): DerivedState<R>;
 
 /** @ignore */
 export function derive<R, A, B, C, D>(
   sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
-  def: (a: A, b: B, c: C, d: D) => R
+  def: (a: A, b: B, c: C, d: D) => R,
+  equality?: Equality,
 ): DerivedState<R>;
 
 /** @ignore */
 export function derive<R, A, B, C, D, E>(
   sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
   se: Derivable<E>,
-  def: (a: A, b: B, c: C, d: D, e: E) => R
+  def: (a: A, b: B, c: C, d: D, e: E) => R,
+  equality?: Equality,
 ): DerivedState<R>;
 
 /** @ignore */
 export function derive<R, A, B, C, D, E, F>(
   sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
   se: Derivable<E>, sf: Derivable<F>,
-  def: (a: A, b: B, c: C, d: D, e: E, f: F) => R
+  def: (a: A, b: B, c: C, d: D, e: E, f: F) => R,
+  equality?: Equality,
 ): DerivedState<R>;
 
 /** @ignore */
 export function derive<R, A, B, C, D, E, F, G>(
   sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
   se: Derivable<E>, sf: Derivable<F>, sg: Derivable<G>,
-  def: (a: A, b: B, c: C, d: D, e: E, f: F, g: G) => R
+  def: (a: A, b: B, c: C, d: D, e: E, f: F, g: G) => R,
+  equality?: Equality,
 ): DerivedState<R>;
 
 /** @ignore */
 export function derive<R, A, B, C, D, E, F, G, H>(
   sa: Derivable<A>, sb: Derivable<B>, sc: Derivable<C>, sd: Derivable<D>,
   se: Derivable<E>, sf: Derivable<F>, sg: Derivable<G>, sh: Derivable<H>,
-  def: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H) => R
+  def: (a: A, b: B, c: C, d: D, e: E, f: F, g: G, h: H) => R,
+  equality?: Equality,
 ): DerivedState<R>;
 
 /** @ignore */
 export function derive(...args: any[]): any {
+  // caller has not provided equalityfunction
+  if (typeof args[args.length - 2] !== 'function') args.push('scalar');
   return DerivedState.__create(...args);
 }

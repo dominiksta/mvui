@@ -227,8 +227,7 @@ describe('derived state', () => {
   }))
 
 
-  it('memoization', attempt(() => {
-
+  it('memoization:basic', attempt(() => {
     const state1 = new rx.State(5);
 
     let count = 0;
@@ -254,6 +253,60 @@ describe('derived state', () => {
     state1.next(6);
 
     expect(count).to.be.eq(2);
+
+    unsub();
+  }));
+
+  it('memoization: scalar equality', attempt(() => {
+    let count = 0;
+    let emissionCount = 0;
+    let val = 0;
+    const stateNested = new rx.State([{ val: 1 }, { val: 2 }]);
+
+    const unsub = stateNested.derive(list => list[0])
+      .derive(el => { count++; return el.val })
+      .subscribe(v => { emissionCount++; val = v; });
+
+    expect(count).to.eq(1);
+    expect(emissionCount).to.eq(1);
+    expect(val).to.eq(1);
+
+    // while this does recreate the surrounding array, the list items are not
+    // recreated. memoizing equality on them can lead to really unintuitive results.
+    stateNested.next(v => [...v]);
+    expect(count).to.eq(2);
+    expect(emissionCount).to.eq(2);
+    expect(val).to.eq(1);
+
+    unsub();
+  }));
+
+  it('memoization: json equality', attempt(() => {
+    let count = 0;
+    let emissionCount = 0;
+    let val = 0;
+    const stateNested = new rx.State([{ val: 1 }, { val: 2 }]);
+
+    const unsub = stateNested
+      .derive(list => list[0], 'json')
+      .derive(el => { count++; return el.val; }, 'json')
+      .subscribe(v => { emissionCount++; val = v; });
+
+    expect(count).to.eq(1);
+    expect(emissionCount).to.eq(1);
+    expect(val).to.eq(1);
+
+    stateNested.next(v => [...v]);
+    expect(count).to.eq(1);
+    expect(emissionCount).to.eq(2);
+    expect(val).to.eq(1);
+
+    stateNested.next(v => [...v]);
+    stateNested.next(v => [...v]);
+    stateNested.next(v => [...v]);
+    expect(count).to.eq(1);
+    expect(emissionCount).to.eq(5);
+    expect(val).to.eq(1);
 
     unsub();
   }))

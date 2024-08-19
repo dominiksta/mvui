@@ -1,16 +1,22 @@
 // shameless copy-paste from
 // https://github.com/alexreardon/memoize-one/blob/master/src/memoize-one.ts
 
-function isEqual(first: any, second: any): boolean {
+export function isEqualScalar(first: any, second: any): boolean {
+  if (typeof first === 'object' || typeof second === 'object') return false;
   if (first === second) return true;
   // Special case for NaN (NaN !== NaN)
   if (Number.isNaN(first) && Number.isNaN(second)) return true;
   return false;
 }
 
+export function isEqualJSON(first: any, second: any): boolean {
+  return JSON.stringify(first) === JSON.stringify(second);
+}
+
 function areInputsEqual(
   newInputs: readonly any[],
   lastInputs: readonly any[],
+  isEqual: EqualityFn,
 ): boolean {
   if (newInputs.length !== lastInputs.length) return false;
   for (let i = 0; i < newInputs.length; i++)
@@ -18,10 +24,7 @@ function areInputsEqual(
   return true;
 }
 
-export type EqualityFn<TFunc extends (...args: any[]) => any> = (
-  newArgs: Parameters<TFunc>,
-  lastArgs: Parameters<TFunc>,
-) => boolean;
+export type EqualityFn = (first: any, second: any) => boolean;
 
 export type MemoizedFn<TFunc extends (this: any, ...args: any[]) => any> = {
   clear: () => void;
@@ -37,7 +40,7 @@ type Cache<TFunc extends (this: any, ...args: any[]) => any> = {
 
 export default function memoizeOne<TFunc extends (this: any, ...newArgs: any[]) => any>(
   resultFn: TFunc,
-  isEqual: EqualityFn<TFunc> = areInputsEqual,
+  isEqual: EqualityFn = isEqualScalar,
 ): MemoizedFn<TFunc> {
   let cache: Cache<TFunc> | null = null;
 
@@ -46,7 +49,11 @@ export default function memoizeOne<TFunc extends (this: any, ...newArgs: any[]) 
     this: ThisParameterType<TFunc>,
     ...newArgs: Parameters<TFunc>
   ): ReturnType<TFunc> {
-    if (cache && cache.lastThis === this && isEqual(newArgs, cache.lastArgs)) {
+    if (
+      cache
+      && cache.lastThis === this
+      && areInputsEqual(newArgs, cache.lastArgs, isEqual)
+    ) {
       return cache.lastResult;
     }
 

@@ -4,6 +4,11 @@ Changelog
 `0.0.4` - _unreleased_
 ----------------------------------------------------------------------
 
+**Breaking Changes**:
+
+- Advanced: `rx.derive` no longer memoizes `object`s by default. Some derived state may
+  therefore update more frequently.
+
 **Fixed**:
 
 - You can use `Component`s as props and fields. Previously they were erroneously treated
@@ -11,6 +16,15 @@ Changelog
 
 `0.0.3` - _2024-08-04_
 ----------------------------------------------------------------------
+
+**Breaking Changes**
+
+- Removed `Component.pierceShadow`. This feature was way too hacky and usage could quickly
+  degreade performance. Hopefully browsers will allow overwriting Shadow DOM CSS natively
+  in the future.
+- Renamed `style.currentTheme$` to `style.currentTheme` for consistency.
+- Advanced: Removed `wheel` event from `fromAllEvents`. This means `rx.bind` will no
+  longer update a value on a mouse wheel event.
 
 **Added**
 
@@ -22,15 +36,6 @@ Changelog
 
 - Passing a callback function in a template would pass the callback directly to the `next`
   method of `State`, causing it to be interpreted as a transformation function.
-
-**Breaking Changes**
-
-- Removed `Component.pierceShadow`. This feature was way too hacky and usage could quickly
-  degreade performance. Hopefully browsers will allow overwriting Shadow DOM CSS natively
-  in the future.
-- Renamed `style.currentTheme$` to `style.currentTheme` for consistency.
-- Advanced: Removed `wheel` event from `fromAllEvents`. This means `rx.bind` will no
-  longer update a value on a mouse wheel event.
 
 `0.0.2` - _2024-07-24_
 ----------------------------------------------------------------------

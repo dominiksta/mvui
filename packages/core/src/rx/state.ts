@@ -1,6 +1,6 @@
 import { Observer } from "./interface";
 import MulticastStream from "./multicast-stream";
-import { derive, DerivedState } from "./derived-state";
+import { derive, DerivedState, Equality } from "./derived-state";
 import { identity } from "../util/other";
 
 /**
@@ -64,8 +64,11 @@ export default class State<T> extends MulticastStream<T> {
   }
 
   /** Shorthand for rx.{@link derive}(this, definition) */
-  derive<ReturnT>(definition: (value: T) => ReturnT): DerivedState<ReturnT> {
-    return derive(this, definition);
+  derive<ReturnT>(
+    definition: (value: T) => ReturnT,
+    equality: Equality = 'scalar',
+  ): DerivedState<ReturnT> {
+    return derive(this, definition, equality);
   }
 
   /** Shorthand for rx.derive(this, identity) */
