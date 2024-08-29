@@ -464,7 +464,7 @@ export default abstract class Component<
     this.onAdded(sub);
 
     this.onRemoved(() => {
-      console.assert(unsub);
+      console.assert(unsub !== undefined);
       unsub();
     });
     return subscribable;
