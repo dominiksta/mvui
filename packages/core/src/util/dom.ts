@@ -29,6 +29,19 @@ export function isParentRoot(parent: Node, child: Node): boolean {
   return false;
 }
 
+/**
+ * Get the active element (like document.activeElement, except it "pierces" shadow
+ * roots). Thanks to
+ * https://www.abeautifulsite.net/posts/finding-the-active-element-in-a-shadow-root/
+ */
+export function getActiveElement(root: Document | ShadowRoot = document): Element | null {
+  const activeEl = root.activeElement;
+  if (!activeEl) return null;
+  return (activeEl.shadowRoot)
+    ? getActiveElement(activeEl.shadowRoot)
+    : activeEl;
+}
+
 function fromCustomElementConnected() {
   return new Stream<HTMLElement>(observer => {
     const oldDefine = customElements.define;

@@ -1,14 +1,3 @@
-import './rx/operators.cy';
-import './rx/derived-state.cy';
-import './rx/multicast-streams.cy';
-import './rx/operators.cy';
-import './rx/state.cy';
-import './rx/store.cy';
-import './rx/share.cy';
-import './rx/streams.cy';
-import './rx/rxjs-interop.cy';
-import './http.cy';
-
 import './attribute-reflection.cy';
 import './bindings.cy';
 import './classes.cy';
@@ -23,3 +12,14 @@ import './styles.cy';
 import './template-children.cy';
 import './template-references.cy';
 import './web-component-to-mvui.cy';
+
+import './rx/operators.cy';
+import './rx/derived-state.cy';
+import './rx/multicast-streams.cy';
+import './rx/operators.cy';
+import './rx/state.cy';
+import './rx/store.cy';
+import './rx/share.cy';
+import './rx/streams.cy';
+import './rx/rxjs-interop.cy';
+import './http.cy';

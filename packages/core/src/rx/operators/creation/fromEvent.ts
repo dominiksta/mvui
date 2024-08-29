@@ -1,4 +1,5 @@
 import Stream from "../../stream";
+import share from "../share";
 
 /**
    Create a {@link Stream} from certain events of a given HTMLElement. Usually, you
@@ -38,7 +39,7 @@ import Stream from "../../stream";
 export default function fromEvent<T extends keyof HTMLElementEventMap>(
   el: HTMLElement, eventType: T
 ): Stream<HTMLElementEventMap[T]> {
-  return new Stream(observer => {
+  return new Stream<HTMLElementEventMap[T]>(observer => {
     const listener = observer.next.bind(observer);
 
     el.addEventListener(eventType, listener);
@@ -46,5 +47,5 @@ export default function fromEvent<T extends keyof HTMLElementEventMap>(
     return function teardown() {
       el.removeEventListener(eventType, listener);
     }
-  })
+  }).pipe(share())
 }

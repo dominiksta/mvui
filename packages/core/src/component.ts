@@ -1,13 +1,12 @@
 import {
   TemplateElement,
   ParamSpec as _ParamSpec,
-  TemplateElementChild, TemplateElementChildren, ComponentTemplate
+  TemplateElementChild, TemplateElementChildren, ComponentTemplate, TEMPLATE_TRACKED
 } from "./template-element";
 import { Constructor, MaybeSubscribable, ToStringable } from "./util/types";
 import {
   Stream, State, Context, fromAllEvents, fromEvent, map,
   distinctUntilChanged, skip, MulticastStream, throttleTime, debounceTime,
-  tap, filter
 } from "./rx";
 import { camelToDash } from "./util/strings";
 import { MVUI_GLOBALS } from "./globals";
@@ -15,7 +14,7 @@ import * as style from "./style";
 import { isBinding } from "./rx/bind";
 import { isSubscribable, Subscribable } from "./rx/interface";
 import { Prop } from "./rx/prop";
-import { isParentRoot, customElementConnected, getParentNode } from "./util/dom";
+import { customElementConnected, getParentNode, getActiveElement } from "./util/dom";
 import { Fragment } from "./fragment";
 
 // these symbols are used for properties that should be accessible from anywhere in mvui
@@ -577,8 +576,10 @@ export default abstract class Component<
   // ----------------------------------------------------------------------
 
   private _template?: ComponentTemplate;
+  private keyedElements = new Map<string, HTMLElement>();
 
   private _renderComponentTemplate(template: ComponentTemplate) {
+    this.keyedElements.clear();
     const addTo = (this.shadowRoot || this);
     for (const el of template) {
       if (el instanceof TemplateElement)
@@ -592,7 +593,20 @@ export default abstract class Component<
   private _renderTemplateElement<T extends HTMLElement>(
     el: TemplateElement<T>
   ): T {
+    const hasKey = (el as any)[TEMPLATE_TRACKED];
+    if (hasKey) {
+      const got = this.keyedElements.get(hasKey);
+      if (got) {
+        // console.debug(`got element for key ${hasKey}`);
+        return got as T;
+      }
+    }
+
     const thisEl = el.creator();
+    if (hasKey) {
+      // console.debug(`creating el for key ${hasKey}`);
+      this.keyedElements.set(hasKey, thisEl);
+    }
 
     // --- setup attributes, events, props, class fields
     if (el.params) {
@@ -642,7 +656,7 @@ export default abstract class Component<
           maybeBindAttrOrField(
             el.params.fields[prop],
             () => thisEl[prop],
-            (v) => { (thisEl as any)[prop] = v }
+            (v) => (thisEl as any)[prop] = v
           )
         }
       }
@@ -654,15 +668,17 @@ export default abstract class Component<
             // the camelToDash transformations here are actually not an mvui specific
             // assumption: html attributes are forced to be all lowercase by the browser
             () => thisEl.getAttribute(attr),
-            (v) => thisEl.setAttribute(camelToDash(attr), v),
+            (v) => v === undefined
+              ? thisEl.removeAttribute(camelToDash(attr))
+              : thisEl.setAttribute(camelToDash(attr), v),
           );
         }
       }
 
       if (el.params.events) {
         for (let key in el.params.events) {
-          this.onRemoved(fromEvent(thisEl, key as any).subscribe(
-            (el.params.events as any)[key])
+          this.subscribe(
+            fromEvent(thisEl, key as any), (el.params.events as any)[key]
           );
         }
       }
@@ -755,8 +771,7 @@ export default abstract class Component<
           if (children instanceof Array && children.length === 0) return;
           thisEl.innerText = '';
           thisEl.innerHTML = '';
-        }
-        else {
+        } else {
           Array.from(thisEl.children).filter(el => el.slot === slot)
             .forEach(el => thisEl.removeChild(el));
         }
@@ -799,34 +814,118 @@ export default abstract class Component<
         t: TemplateElementChild[],
         slot: string
       ) => {
-        const includesString = t.map(
-          child => typeof child === 'string'
-        ).includes(true);
-        const addTo = (slot !== 'default' && includesString)
-          ? createWrapper()
-          : thisEl;
-        for (let child of t) {
-          addSingleChild(child, slot, addTo);
+        const includesString =
+          t.map(child => typeof child === 'string').includes(true);
+        const keyed = t.map(child =>
+          child instanceof TemplateElement && TEMPLATE_TRACKED in child
+        );
+
+        if (!keyed.includes(true)) {
+
+          clear();
+          const addTo = (slot !== 'default' && includesString)
+            ? createWrapper() : thisEl;
+          for (const child of t) addSingleChild(child, slot, addTo);
+
+        } else {
+
+          if (keyed.includes(false)) throw new Error(
+            'Either all or no child elements must have the `key` template attribute'
+          );
+          const rendered = t.map(child => {
+            const el = child as TemplateElement<any>;
+            return {
+              key: (el as any)[TEMPLATE_TRACKED] as string,
+              rendered: this._renderTemplateElement(el) as HTMLElement
+            };
+          })
+          const keys = t.map(child => (child as any)[TEMPLATE_TRACKED] as string);
+          const prevEls = Array.from(thisEl.children);
+          const prevKeys = prevEls.map(v => v.getAttribute('mvui-key')!);
+
+          for (let child of rendered)
+            child.rendered.setAttribute('mvui-key', child.key);
+
+          // remove deleted
+          for (let i = 0; i < prevKeys.length; i++) {
+            if (!keys.includes(prevKeys[i])) {
+              prevEls[i].remove();
+              this.keyedElements.delete(prevKeys[i]);
+              // console.debug(`removing el with key=${prevKeys[i]}`);
+            }
+          }
+
+          const isSameOrder = (() => {
+            if (prevKeys.length === 0) return false;
+            let prevPos = -1;
+            for (let i = 0; i < keys.length; i++) {
+              const newPrevPos = prevKeys.findIndex(k => k === keys[i]);
+              // console.debug({ newPrevPos, 'keys[i]': keys[i], prevKeys });
+              if (newPrevPos !== -1 && newPrevPos <= prevPos) return false;
+              prevPos = newPrevPos;
+            }
+            return true;
+          })();
+          // console.debug({ isSameOrder });
+
+          const prevFocus = getActiveElement(this.shadowRoot || document);
+
+          if (isSameOrder) { // add only new
+            let prevPos = 0;
+            let pastStart = false;
+            let pastEnd = false;
+            for (let i = 0; i < rendered.length; i++) {
+              const idx = prevKeys.findIndex(k => k === rendered[i].key);
+
+              if (idx !== -1) { // prev element found
+                prevPos = idx;
+                pastStart = true;
+                if (prevPos === prevEls.length - 1) pastEnd = true;
+                continue;
+              }
+
+              if (!pastStart) {
+                thisEl.prepend(rendered[i].rendered);
+              } else {
+                if (!pastEnd) {
+                  prevEls[prevPos].after(rendered[i].rendered);
+                } else {
+                  thisEl.append(rendered[i].rendered);
+                }
+              }
+            }
+
+          } else { // reorder all
+            for (let child of rendered) {
+              // console.debug(`adding el with key=${child.key}`);
+              thisEl.appendChild(child.rendered);
+            }
+          }
+
+          if (prevFocus instanceof HTMLElement) prevFocus.focus();
         }
-      }
+      };
 
       const addChildren = (
         t: TemplateElementChild | TemplateElementChild[],
         slot: string
       ) => {
-        clear();
-        if (t === undefined) return;
-        else if ((
-          typeof t === 'string' || typeof t === 'number'
-        ) && slot === 'default') thisEl.innerText = t.toString();
-        else if (t instanceof Array) addMultipleChildren(t, slot); // case (1, 2, 4)
-        else {
-          const addTo = (
-            slot === 'default' || t instanceof TemplateElement
-          ) ? thisEl : createWrapper();
-          addSingleChild(t, slot, addTo); // case (3, 5)
+        if (t instanceof Array) {
+          addMultipleChildren(t, slot); // case (1, 2, 4)
+        } else {
+          clear();
+          if (t === undefined) return;
+          else if ((
+            typeof t === 'string' || typeof t === 'number'
+          ) && slot === 'default') thisEl.innerText = t.toString();
+          else {
+            const addTo = (
+              slot === 'default' || t instanceof TemplateElement
+            ) ? thisEl : createWrapper();
+            addSingleChild(t, slot, addTo); // case (3, 5)
+          }
         }
-      }
+      };
 
       if (children instanceof Stream)
         this.subscribe(children, v => addChildren(v, slot));

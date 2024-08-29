@@ -1,6 +1,22 @@
 import { TemplateElement } from "./template-element";
 import { Stream } from "./rx";
 
+/** @see {@link fragment} */
+export class Fragment<T> {
+  #id: string;
+  get id() { return this.#id; }
+
+  static readonly MARKER = '__mvui_fragment';
+
+  constructor(
+    public stream: Stream<T>,
+    public template: (value: T) => TemplateElement<any>[]
+  ) {
+    this.#id = crypto.randomUUID();
+  }
+}
+
+
 /**
    Fragments can group elements together in you template without grouping them in the
    DOM. They serve the same purpose they also do in other frameworks such as React.
@@ -25,16 +41,8 @@ import { Stream } from "./rx";
    }
    ```
  */
-export class Fragment<T> {
-  #id: string;
-  get id() { return this.#id; }
-
-  static readonly MARKER = '__mvui_fragment';
-
-  constructor(
-    public stream: Stream<T>,
-    public template: (value: T) => TemplateElement<any>[]
-  ) {
-    this.#id = crypto.randomUUID();
-  }
+export function fragment<T>(
+  stream: Stream<T>, template: (value: T) => TemplateElement<any>[]
+): Fragment<T> {
+  return new Fragment(stream, template);
 }

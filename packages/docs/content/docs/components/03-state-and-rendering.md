@@ -93,3 +93,80 @@ export default class MyComponent extends Component {
 }
 ```
 {{</codeview>}}
+
+## Reactive Lists
+
+One rather common thing to encounter in your frontend-journey is wanting to let the user
+*edit* a *list* of some data. While *displaying* such data can be done with simple state
+derivation, Mvui provides the special `h.foreach` helper for editing reactive list data.
+
+Consider the following example:
+
+{{<codeview>}}
+```typescript
+import { Component, rx, h } from "@mvuijs/core";
+
+@Component.register
+export default class MyComponent extends Component {
+  render() {
+    const list = new rx.State(['one', 'two', 'three']);
+    return [
+      h.section(
+        list.derive(l => l.map((listEl, i) => h.input({
+          fields: { value: listEl },
+          events: {
+            keyup: e => {
+              list.value[i] = (e.target as HTMLInputElement).value;
+              list.next(l => [...l]);
+            }
+          }
+        }))),
+      ),
+      h.section(h.pre(list.derive(JSON.stringify))),
+    ];
+  }
+}
+```
+{{</codeview>}}
+
+When you type in one of the input fields, the value updates immediatly but will lose
+focus. (This is the same behaviour React will bother you with if you forget to provide a
+`key` attribute.) To fix this (and have the code be slightly more readable), you can use
+the mentioned `h.foreach` helper:
+
+{{<codeview>}}
+```typescript
+import { Component, rx, h } from "@mvuijs/core";
+
+@Component.register
+export default class MyComponent extends Component {
+  render() {
+    const list = new rx.State(['one', 'two', 'three']);
+    return [
+      h.section(
+        h.foreach(list, 'pos', (listEl, i) => h.input({
+          fields: { value: listEl },
+          events: {
+            keyup: e => {
+              list.value[i] = (e.target as HTMLInputElement).value;
+              list.next(l => [...l]);
+            }
+          }
+        })),
+      ),
+      h.section(h.pre(list.derive(JSON.stringify))),
+    ];
+  }
+}
+```
+{{</codeview>}}
+
+`h.foreach` fixes many more behavioural issues around editing reactive lists. In general,
+you should prefer using it over regular state derivation. Also, if you can, you should
+provide a `trackBy` function that uniquely identifies list elements with a string. In
+some/many scenarious this is not possible or necessary, and so you can do what we have
+done in the example above and simply provide the string `'pos'` as a `trackBy` function,
+which will instruct Mvui to track identify the values by their position in the list. This
+can and will cause weird behaviour if you do complex reordering operations on the list. As
+long as you only do simple things like edit elements in place, maybe add or remove single
+elements, you should be fine with just `'pos'` though.

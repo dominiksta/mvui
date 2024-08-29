@@ -186,6 +186,8 @@ export type TemplateElementParams<
   ref?: { current: HTMLElement },
 };
 
+export const TEMPLATE_TRACKED = Symbol();
+
 type GetMandatoryPropKeys<T> = {
   [P in keyof T]: T[P] extends OptionalProp<any> ? never : P
 }[keyof T];

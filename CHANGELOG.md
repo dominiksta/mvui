@@ -9,10 +9,20 @@ Changelog
 - Advanced: `rx.derive` no longer memoizes `object`s by default. Some derived state may
   therefore update more frequently.
 
+**Added**:
+
+- `h.foreach` helper to render multiple elements from a reactive value. This was kind of
+  possible previously by just using `rx.derive` or `rx.map`, but `h.foreach` allows
+  skipping re-renders to retain focus. The idea is very similar to [key in
+  React](https://react.dev/learn/rendering-lists) or [trackBy in
+  Angular](https://stackoverflow.com/questions/42108217/how-to-use-trackby-with-ngfor).
+
 **Fixed**:
 
 - You can use `Component`s as props and fields. Previously they were erroneously treated
   as `Subscribable` because they have a `subscribe` method.
+- The `rx.fromEvent` operator is now shared by default. This should at least slightly
+  reduce the amount of active event listeners.
 
 `0.0.3` - _2024-08-04_
 ----------------------------------------------------------------------

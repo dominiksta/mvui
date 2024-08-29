@@ -1,14 +1,9 @@
-import { Fragment } from "./fragment";
+import foreach from "./foreach";
+import { fragment } from "./fragment";
 import { Stream } from "./rx";
 import {
   TemplateElement, TemplateElementCreator
 } from "./template-element";
-
-function fragment<T>(
-  stream: Stream<T>, template: (value: T) => TemplateElement<any>[]
-): Fragment<T> {
-  return new Fragment(stream, template);
-}
 
 /**
  * A collection of functions that create a TemplateElement for all standard html elements.
@@ -27,7 +22,8 @@ const h: {
   TemplateElementCreator<HTMLElementTagNameMap[key]>
 } & {
   custom: typeof TemplateElement.fromCustom,
-  fragment: typeof fragment
+  fragment: typeof fragment,
+  foreach: typeof foreach,
 } = {
   a          : TemplateElement.fromCustom('a'),
   abbr       : TemplateElement.fromCustom('abbr'),
@@ -143,6 +139,7 @@ const h: {
 
   custom     : TemplateElement.fromCustom,
   fragment   : fragment,
+  foreach    : foreach,
 } as any;
 
 export default h;
