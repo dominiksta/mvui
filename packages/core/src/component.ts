@@ -215,9 +215,6 @@ export default abstract class Component<
   // initialization
   // ----------------------------------------------------------------------
 
-  private lifecycleState: "created" | "added" | "rendered" | "removed"
-    = "created";
-
   constructor() {
     super();
 
@@ -225,7 +222,9 @@ export default abstract class Component<
       this.attachShadow({mode: 'open'});
     }
 
-    this.lifecycleState = "created";
+    if ((this.constructor as any).styles) style.util.applySheet(
+      (this.constructor as any).styles, this, 'component_static'
+    );
   }
 
   static getTagName(constructor?: Function): string {
@@ -260,14 +259,26 @@ export default abstract class Component<
   // ----------------------------------------------------------------------
 
   private _lifecycleHooks: {
-    render: (() => any)[], removed: (() => any)[],
+    render: (() => any)[], removed: (() => any)[], added: (() => any)[],
   } = {
-    render: [], removed: []
+    render: [], removed: [], added: [],
+  }
+
+  private _lifecycleHasRendered = false;
+  private _lifecycleIsMounted = false;
+
+
+  /**
+   * Run a given function everytime the component is added to the DOM. Runs after
+   * rendering is done.
+   */
+  onAdded(callback: () => any) {
+    this._lifecycleHooks.added.push(callback);
   }
 
   /**
-   * Run a given function when the component is done rendering. A render happens each time
-     the component is added to the DOM.
+   * Run a given function when the component is done rendering. Renders only happen once
+   * when the component is added to the DOM for the first time.
    */
   onRendered(callback: () => any) {
     this._lifecycleHooks.render.push(callback);
@@ -278,55 +289,54 @@ export default abstract class Component<
     this._lifecycleHooks.removed.push(callback);
   }
 
+  /**
+     Remove an existing lifecycle hook. See {@link onAdded}, {@link onRendered} and {@link
+     onRemoved}.
+   */
+  removeLifecycleHook(kind: 'added' | 'render' | 'removed', callback: () => any) {
+    const hooks = this._lifecycleHooks[kind];
+    const idx = hooks.findIndex(callback);
+    if (idx === -1)
+      throw new Error('provided callback was not registered as lifecycle hook');
+    this._lifecycleHooks[kind].splice(idx, 1);
+  }
+
   private connectedCallback() {
     MVUI_GLOBALS.APP_DEBUG && this.flash.next('green');
-
-    (this.shadowRoot || this).innerHTML = '';
-
-    this._lifecycleHooks = { removed: [], render: [] };
-    try {
-      this._template = this.render();
-      this.lifecycleState = "added";
-      this._renderComponentTemplate(this._template);
-    } catch(e) {
-      console.warn(`Mvui: Error while rendering ${this.tagName}`);
-      throw e;
-    }
-
-    if ((this.constructor as any).styles)
-      style.util.applySheet(
-        (this.constructor as any).styles, this, 'component_static'
-      );
-
-    if (this[STYLE_OVERRIDES])
-      style.util.applySheetAsStyleTag(
-        this, this[STYLE_OVERRIDES], 'component_instance_overrides'
-      );
-
-    for (let ref of this.queryRefs) ref.resolve(ref.query());
+    this._lifecycleIsMounted = true;
 
     this.attrReflectionObserver.observe(this, { attributes: true });
 
     for (let attrName of this.getAttributeNames())
       this._maybeReflectToProp(attrName);
 
-    for (let prop in this.props) {
-      this.subscribe(this.props[prop], value => {
-        this._maybeReflectToAttribute(prop, value);
-      });
+    try {
+      if (!this._lifecycleHasRendered) {
+        (this.shadowRoot || this).innerHTML = '';
+        this._template = this.render();
+        this._lifecycleHooks.added.forEach(f => f());
+        this._renderComponentTemplate(this._template);
+        this._lifecycleHasRendered = true;
+        this._lifecycleHooks.render.forEach(f => f());
+      } else {
+        this._lifecycleHooks.added.forEach(f => f());
+      }
+    } catch(e) {
+      console.warn(`Mvui: Error while rendering ${this.tagName}`);
+      throw e;
     }
 
-    this.subscribe(this.styles, styles =>
-      style.util.applySheetAsStyleTag(this, styles, 'component_instance')
-    );
+    for (let ref of this.queryRefs) ref.resolve(ref.query());
 
-    this.setupFlash();
-
-    this.lifecycleState = "rendered"; this._lifecycleHooks.render.forEach(f => f());
+    if (this[STYLE_OVERRIDES])
+      style.util.applySheet(
+        this[STYLE_OVERRIDES], this, 'component_instance_overrides'
+      );
   }
 
   private disconnectedCallback() {
-    this.lifecycleState = "removed"; this._lifecycleHooks.removed.forEach(f => f());
+    this._lifecycleIsMounted = false;
+    this._lifecycleHooks.removed.forEach(f => f());
     this.attrReflectionObserver.disconnect();
     MVUI_GLOBALS.APP_DEBUG && this.flash.next('red');
   }
@@ -442,10 +452,21 @@ export default abstract class Component<
     subscribable: T,
     observer?: ((value: T extends Subscribable<infer I> ? I : never) => void)
   ): T {
-    this.onRemoved(subscribable.subscribe(v => {
-      if (MVUI_GLOBALS.APP_DEBUG) this.flash.next();
-      if (observer) observer(v);
-    }));
+    let unsub: () => void;
+    const sub = () => {
+      unsub = subscribable.subscribe(v => {
+        if (MVUI_GLOBALS.APP_DEBUG) this.flash.next();
+        if (observer) observer(v);
+      });
+    };
+
+    if (this._lifecycleIsMounted) sub();
+    this.onAdded(sub);
+
+    this.onRemoved(() => {
+      console.assert(unsub);
+      unsub();
+    });
     return subscribable;
   }
 
@@ -457,18 +478,18 @@ export default abstract class Component<
   private setupFlash() {
     let prevOutline = this.style.outline;
     let isFlashing = false;
-    this.onRemoved(this.flash.pipe(throttleTime(100)).subscribe(color => {
+    this.subscribe(this.flash.pipe(throttleTime(100)), color => {
       if (!color) color = 'blue';
       if (!isFlashing) {
         prevOutline = this.style.outline;
         isFlashing = true;
       }
       this.style.outline = `1px solid ${color}`;
-    }));
-    this.onRemoved(this.flash.pipe(debounceTime(400)).subscribe(_ => {
+    });
+    this.subscribe(this.flash.pipe(debounceTime(400)), _ => {
       this.style.outline = prevOutline;
       isFlashing = false;
-    }));
+    });
   }
 
   // ----------------------------------------------------------------------
@@ -580,6 +601,19 @@ export default abstract class Component<
 
   private _renderComponentTemplate(template: ComponentTemplate) {
     this.keyedElements.clear();
+
+    this.setupFlash();
+
+    for (let prop in this.props) {
+      this.subscribe(this.props[prop], value => {
+        this._maybeReflectToAttribute(prop, value);
+      });
+    }
+
+    this.subscribe(this.styles, styles =>
+      style.util.applySheet(styles, this, 'component_instance')
+    );
+
     const addTo = (this.shadowRoot || this);
     for (const el of template) {
       if (el instanceof TemplateElement)
@@ -1045,7 +1079,7 @@ export default abstract class Component<
       );
       return res;
     };
-    if (this.lifecycleState === "rendered") return queryFun();
+    if (this._lifecycleHasRendered) return queryFun();
     return new Promise<T>(resolve => {
       this.queryRefs.push({ resolve, query: queryFun });
     });
@@ -1068,7 +1102,7 @@ export default abstract class Component<
       );
       return res;
     };
-    if (this.lifecycleState === "rendered") return queryFun();
+    if (this._lifecycleHasRendered) return queryFun();
     return new Promise(resolve => {
       this.queryRefs.push({ resolve, query: queryFun });
     });

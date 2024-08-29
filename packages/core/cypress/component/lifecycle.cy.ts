@@ -1,4 +1,5 @@
 import { Component, h, rx } from "$thispkg";
+import { getContainerEl } from "@cypress/mount-utils";
 import { attempt } from "../support/helpers";
 
 const lifecycle = new rx.State<string>('initial');
@@ -6,12 +7,10 @@ const lifecycle = new rx.State<string>('initial');
 @Component.register
 class LifecycleTestComponent extends Component {
 
-  stickyCounter = new rx.State(100);
-
   render() {
     const counter = new rx.State(0);
 
-    lifecycle.next('added');
+    this.onAdded(() => lifecycle.next('added'));
     this.onRendered(() => lifecycle.next('rendered'));
     this.onRemoved(() => lifecycle.next('removed'));
 
@@ -19,13 +18,8 @@ class LifecycleTestComponent extends Component {
       h.button({
         fields: { id: 'inc' },
         events: { click: _ => counter.next(c => c + 1)},
-      }),
-      h.button({
-        fields: { id: 'incSticky' },
-        events: { click: _ => this.stickyCounter.next(c => c + 1)},
-      }),
+      }, 'inc'),
       h.div({ fields: { id: 'display' }}, counter),
-      h.div({ fields: { id: 'displaySticky' }}, this.stickyCounter),
     ];
   }
 }
@@ -35,28 +29,32 @@ describe('lifecycle', () => {
 
     lifecycle.next('initial');
 
-    const doc = new Document();
+    const doc = getContainerEl();
     const comp = new LifecycleTestComponent();
+    console.log(comp);
 
     const lifecycles: string[] = [];
-    lifecycle.pipe(rx.skip(1)).subscribe(l => lifecycles.push(l));
+    lifecycle.pipe(rx.skip(1)).subscribe(l => {
+      lifecycles.push(l);
+      console.log(lifecycles);
+    });
 
     doc.appendChild(comp);
 
     let btn           = await comp.query('#inc');
-    let btnSticky     = await comp.query('#incSticky');
     let display       = await comp.query('#display');
-    let displaySticky = await comp.query('#displaySticky');
 
     expect(lifecycles).to.deep.eq(['added', 'rendered']);
     expect(display.innerText).to.be.eq('0');
-    expect(displaySticky.innerText).to.be.eq('100');
 
     btn.click(); expect(display.innerText).to.be.eq('1');
     btn.click(); expect(display.innerText).to.be.eq('2');
 
-    btnSticky.click(); expect(displaySticky.innerText).to.be.eq('101');
-    btnSticky.click(); expect(displaySticky.innerText).to.be.eq('102');
+    const lifecyclesPrev = {
+      'added': (comp as any)._lifecycleHooks.added.length,
+      'removed': (comp as any)._lifecycleHooks.removed.length,
+      'render': (comp as any)._lifecycleHooks.render.length,
+    };
 
     doc.removeChild(comp);
 
@@ -67,21 +65,23 @@ describe('lifecycle', () => {
     console.log(lifecycles);
     doc.appendChild(comp);
 
+    console.log((comp as any)._lifecycleHooks);
+
     console.log(lifecycles);
-    expect(lifecycles).to.deep.eq([
-      'added', 'rendered', 'removed', 'added', 'rendered'
-    ]);
+    expect(lifecycles).to.deep.eq(['added', 'rendered', 'removed', 'added']);
 
     btn           = await comp.query('#inc');
-    btnSticky     = await comp.query('#incSticky');
     display       = await comp.query('#display');
-    displaySticky = await comp.query('#displaySticky');
 
-    expect(display.innerText).to.be.eq('0');
-    expect(displaySticky.innerText).to.be.eq('102');
+    expect(display.innerText).to.be.eq('2');
 
-    btn.click(); expect(display.innerText).to.be.eq('1');
-    btnSticky.click(); expect(displaySticky.innerText).to.be.eq('103');
+    btn.click(); expect(display.innerText).to.be.eq('3');
+
+    for (const t of ['added', 'render', 'removed']) {
+      expect((comp as any)._lifecycleHooks[t].length)
+        .to.eq((lifecyclesPrev as any)[t], 'lifecycle hooks amount not changed');
+    }
+
   }));
 
 })

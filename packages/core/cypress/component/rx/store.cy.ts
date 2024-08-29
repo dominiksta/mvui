@@ -206,12 +206,13 @@ describe('Stores', () => {
     class StoreComponent extends Component {
       render() {
         // console.log('render');
-        const store = this.subscribe(new rx.Store({
+        const store = new rx.Store({
           initialState: { p1: 4, p2: 'hi', deep: { nesting: 'ye' }},
           reducers: {
             concat: (v, add: string) => ({ ...v, p2: v.p2 + add }),
           },
-        }));
+        });
+        this.subscribe(store);
 
         const effect = store.effect(
           (reduce, payload: rx.Stream<void>) => payload.pipe(
@@ -268,12 +269,13 @@ describe('Stores', () => {
     class PartialBindingsStoreComponent extends Component {
       render() {
         // console.log('render');
-        const store = this.subscribe(new rx.Store({
+        const store = new rx.Store({
           initialState: { p1: 4, p2: 'hi', deep: { nesting: 'ye' }},
           reducers: {
             concat: (v, add: string) => ({ ...v, p2: v.p2 + add }),
           },
-        }));
+        });
+        this.subscribe(store);
 
         store.subscribe(v => bindVal = v.deep.nesting);
 
