@@ -6,6 +6,12 @@ Changelog
 
 **Breaking Changes**:
 
+- Intermediate: The component lifecycle has changed to only render *once* on the first
+  component mount instead of every mount. This means that `render()` functions will now
+  only be called once per component instance. The new `onAdded()` method can be used to
+  run code on every mount from now on. Please Refer to [the
+  documentation](https://dominiksta.github.io/mvui/docs/components/props-and-attributes/)
+  for more details.
 - Advanced: `rx.derive` no longer memoizes `object`s by default. Some derived state may
   therefore update more frequently.
 
