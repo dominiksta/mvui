@@ -1,8 +1,19 @@
 Changelog
 ======================================================================
 
+`0.0.5` - _unreleased_
+----------------------------------------------------------------------
+
+**Fixed**:
+
+- Static stylesheets for components not using the shadow dom were not applied
+
 `0.0.4` - _2024-08-29_
 ----------------------------------------------------------------------
+
+**Known Issues**:
+
+- Static stylesheets for components not using the shadow dom are not applied
 
 **Breaking Changes**:
 

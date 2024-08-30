@@ -221,10 +221,6 @@ export default abstract class Component<
     if ((this.constructor as any).useShadow && !this.shadowRoot) {
       this.attachShadow({mode: 'open'});
     }
-
-    if ((this.constructor as any).styles) style.util.applySheet(
-      (this.constructor as any).styles, this, 'component_static'
-    );
   }
 
   static getTagName(constructor?: Function): string {
@@ -316,6 +312,9 @@ export default abstract class Component<
         this._template = this.render();
         this._lifecycleHooks.added.forEach(f => f());
         this._renderComponentTemplate(this._template);
+        if ((this.constructor as any).styles) style.util.applySheet(
+          (this.constructor as any).styles, this, 'component_static'
+        );
         this._lifecycleHasRendered = true;
         this._lifecycleHooks.render.forEach(f => f());
       } else {
