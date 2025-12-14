@@ -9,6 +9,11 @@ bookToC: false
   <i style="font-size: 130%">"Minimum Viable UI"</i>
 </div>
 
+{{% hint warning %}}
+**Deprecation Notice**
+I have regrettably lost interest in the project since i learned about [Blazor](https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor), which I now use professionally and privately. It has been so much of a pleasure to use that I have kind of lost some faith in the Typescript ecosystem. In some sense, the writing of Mvui was the first indicator of that loss of faith and I still like it - but I cannot justify write my own framework for everything in Typescript just to end up with something far less powerful and reliable than what C# gives me out of the box. So, for the time being, consider this repository to be a stale memory of who i used to be as a programmer.
+{{% /hint %}}
+
 {{<codeview>}}
 ```typescript
 import { Component, rx, h } from "@mvuijs/core";
