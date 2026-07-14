@@ -28,12 +28,35 @@ export class CounterComponent extends Component {
 
 ## Projects Status
 
-Mvui is almost ready for release. There is still some cleanup left to be done and some
-documentation to write and publish. But it has been used in practice for a while now in
-[Wournal](https://github.com/dominiksta/wournal/) and seems to be stable. There are also
-plenty of unit tests.
+I have over time regrettably lost interest in this project. There are two main reasons
+for this:
+
+1. I have since converted to the church of C# and Blazor. And yes, this *is* an ad :)
+   I am *begging* you to check out C# and Blazor. You are already using MS-Tooling with
+   TypeScript and VS Code, don't sleep on the Toolchain that they can create when they
+   have full control over the entire stack. For this project, this means though that
+   i am no longer interested in maintaining my own custom Typescript framework.
+2. My taste in Code overall and Typescript more specifically has changed significantly.
+   I now feel that one of the most annoying things about Typescript libraries is the
+   sheer amount of extremely heavy type inference they tend to use, with all sorts
+   of gymnastics, typically just to avoid the dreaded `class` keyword or decorators,
+   in a language that is, fundamentally, object oriented.
+   While Mvui doesn't do the latter, it does rely very heavily on type inference.
+   To the point where a decent-size Mvui project like
+   [Wournal](https://github.com/dominiksta/wournal/) *will* slow down the LSP on
+   any slightly weaker dev box. If I had to do this all over again, I would rely
+   less on type inference. Doing so here would be an enormous refactor that I just
+   don't want to do for a hobby project that I am no longer interested in.
+
+That being said, it *is* reasonably stable. I have used it to develop
+[Wournal](https://github.com/dominiksta/wournal/) and that seems to work as intended.
+There is also a decent amount of unit and e2e tests. In the absurdly unlikely event
+that someone with different tastes would like to pick up the project, there shouldn't
+be anything major stopping you from doing so.
 
 ## Dear God Why Yet Another Frontend Framework?
+
+**Original Reasoning, see Project Status** (Though most of this still applies)
 
 Fundamentally, I (@dominiksta) believe that frontend development is *significantly*
 overcomplicated for small to medium size applications. Mvui is built on this intuition. It
